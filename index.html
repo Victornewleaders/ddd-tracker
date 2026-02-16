@@ -1,17 +1,903 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DDD Intervention Tracker</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #F7F9FC; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Learner Improvement Interventions Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#F7F9FC;color:#1A2332;-webkit-font-smoothing:antialiased}
+:root{--teal:#00838F;--teal-dk:#005662;--teal-lt:#E0F4F4;--teal-md:#4DB6AC;--green:#4CAF50;--green-dk:#2E7D32;--green-lt:#E8F5E9;--orange:#F57C00;--orange-lt:#FFF3E0;--navy:#1A2332;--white:#FFF;--off:#F7F9FC;--grey:#607D8B;--grey-lt:#ECEFF1;--grey-dk:#37474F;--red:#E53935;--red-lt:#FFEBEE;--blue:#1565C0;--blue-lt:#E3F2FD}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes checkmark{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.fade-in{animation:fadeIn .3s ease}
+.shake{animation:shake .4s ease}
+
+.app{max-width:600px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── HEADER ───────────────────────────────────── */
+.hdr{background:var(--navy);position:sticky;top:0;z-index:100}
+.hdr-bar{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange))}
+.hdr-content{padding:14px 20px 0}
+.hdr-title{font-size:16px;font-weight:700;color:white}
+.hdr-sub{font-size:11px;color:var(--grey);margin-top:2px}
+.hdr-user{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;background:rgba(255,255,255,.06);border-radius:8px}
+.hdr-avatar{width:32px;height:32px;border-radius:50%;background:var(--teal);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.hdr-userinfo{flex:1}
+.hdr-username{font-size:13px;font-weight:600;color:white}
+.hdr-userrole{font-size:10px;color:var(--grey)}
+.hdr-logout{background:none;border:none;color:var(--grey);font-size:11px;cursor:pointer;padding:4px 8px;border-radius:4px;font-family:inherit}
+.hdr-logout:hover{color:white;background:rgba(255,255,255,.1)}
+.nav{display:flex;margin-top:8px}
+.nav-btn{flex:1;padding:12px 0;background:none;border:none;border-bottom:3px solid transparent;color:rgba(255,255,255,.45);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+.nav-btn.active{color:white;font-weight:700;border-bottom-color:var(--teal)}
+.nav-btn .nav-icon{font-size:16px;display:block;margin-bottom:2px}
+.content{flex:1;padding:16px 16px 100px}
+
+/* ── LOGIN ────────────────────────────────────── */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:linear-gradient(135deg,var(--navy) 0%,var(--teal-dk) 100%)}
+.login-card{background:white;border-radius:16px;padding:32px 24px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .bar{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange));margin-bottom:16px}
+.login-logo h1{font-size:20px;color:var(--navy);font-weight:700}
+.login-logo p{font-size:13px;color:var(--grey);margin-top:4px}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.login-field input{width:100%;padding:14px 16px;border:1.5px solid var(--grey-lt);border-radius:10px;font-size:16px;font-family:inherit;transition:border-color .2s}
+.login-field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,131,143,.1)}
+.login-field .err{color:var(--red);font-size:12px;margin-top:6px}
+.otp-inputs{display:flex;gap:8px;justify-content:center;margin:20px 0}
+.otp-inputs input{width:48px;height:56px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--grey-lt);border-radius:10px;font-family:inherit;color:var(--navy)}
+.otp-inputs input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,131,143,.1)}
+.login-info{background:var(--teal-lt);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--teal-dk);margin-bottom:16px;line-height:1.5}
+.resend{text-align:center;margin-top:12px}
+.resend button{background:none;border:none;color:var(--teal);font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;text-decoration:underline}
+.resend button:disabled{color:var(--grey);text-decoration:none;cursor:not-allowed}
+
+/* ── FORM ─────────────────────────────────────── */
+.form-section{background:white;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);animation:fadeIn .3s ease}
+.form-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--grey);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.form-section-title .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.field label .req{color:var(--red);margin-left:2px}
+.field label .hint{font-weight:400;font-size:11px;color:var(--grey);display:block;margin-top:2px}
+.field select,.field input,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--grey-lt);border-radius:8px;font-size:15px;font-family:inherit;background:white;color:var(--navy);transition:border-color .2s;-webkit-appearance:none;appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23607D8B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field select:focus,.field input:focus,.field textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,131,143,.1)}
+.field textarea{resize:vertical;min-height:80px}
+
+/* ── STEPS ────────────────────────────────────── */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:20px;padding:0 10px}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;transition:all .3s}
+.step-dot.done{background:var(--green)}
+.step-dot.active{background:var(--teal);animation:pulse 1.5s ease infinite}
+.step-dot.pending{background:var(--grey-lt);color:var(--grey)}
+.step-line{height:2px;flex:1;background:var(--grey-lt);transition:background .3s}
+.step-line.done{background:var(--green)}
+.step-label{font-size:9px;color:var(--grey);text-align:center;margin-top:4px;white-space:nowrap}
+
+/* ── BUTTONS ──────────────────────────────────── */
+.btn{padding:14px 24px;border-radius:10px;font-weight:700;cursor:pointer;font-size:15px;font-family:inherit;border:none;width:100%;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(.98)}
+.btn-teal{background:var(--teal);color:white}
+.btn-blue{background:var(--blue);color:white}
+.btn-orange{background:var(--orange);color:white}
+.btn-green{background:var(--green);color:white}
+.btn-outline{background:white;color:var(--grey-dk);border:1.5px solid var(--grey-lt)}
+.btn-sm{padding:10px 16px;font-size:13px;width:auto;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn-row .btn{flex:1}
+
+/* ── SUCCESS ──────────────────────────────────── */
+.success{text-align:center;padding:40px 20px;animation:fadeIn .4s ease}
+.success-icon{font-size:64px;animation:checkmark .5s ease}
+.success h2{font-size:20px;color:var(--navy);margin:16px 0 8px}
+.success p{font-size:14px;color:var(--grey);line-height:1.5}
+
+/* ── DASHBOARD ────────────────────────────────── */
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.stat-val{font-size:28px;font-weight:800}
+.stat-label{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+
+.chain-card{background:white;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);animation:fadeIn .3s ease}
+.chain-hdr{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--grey-lt);cursor:pointer}
+.chain-hdr:active{background:var(--off)}
+.chain-title{font-size:14px;font-weight:700;color:var(--navy)}
+.chain-meta{font-size:11px;color:var(--grey)}
+.chain-body{padding:16px}
+.chain-body.collapsed{display:none}
+.node{display:flex;gap:10px;margin-bottom:14px}
+.node:last-child{margin-bottom:0}
+.node-line{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0}
+.node-dot{width:28px;height:28px;border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0}
+.node-stem{flex:1;width:2px;background:var(--grey-lt);margin-top:4px}
+.node-content{flex:1;border-radius:10px;padding:12px 14px}
+.node-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.node-text{font-size:13px;color:var(--navy);font-weight:500;line-height:1.4}
+.node-detail{font-size:11px;color:var(--grey);margin-top:6px;line-height:1.4}
+.node-who{font-size:10px;color:var(--teal);margin-top:4px;font-weight:600}
+.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
+.status-pill .sdot{width:6px;height:6px;border-radius:50%}
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.filter-pill{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--grey-lt);background:white;color:var(--grey-dk);cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s}
+.filter-pill.active{background:var(--teal);color:white;border-color:var(--teal)}
+.empty{text-align:center;padding:40px 20px;color:var(--grey)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.5}
+.empty p{font-size:13px;line-height:1.5}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px}
+.spinner{width:36px;height:36px;border:3px solid var(--grey-lt);border-top:3px solid var(--teal);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;animation:fadeIn .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+@media(min-width:600px){
+  .field select,.field input,.field textarea{font-size:14px;padding:10px 12px}
+  .btn{padding:12px 20px;font-size:14px}
+  .otp-inputs input{width:52px;height:60px;font-size:28px}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
+<div id="app" class="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════════
+const SUPA_URL = 'https://bqznmupkqsxxlyiiqrys.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxem5tdXBrcXN4eGx5aWlxcnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMjUwNDEsImV4cCI6MjA4NjcwMTA0MX0.gtltfQ6YjsyqzHZLhtZbAF2XR6D-_plUr7HRJUXg0DY';
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ═══════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════════
+const DDD_TOOLS = ['FET Profiling Tool','Learner Charts','School Dashboard','District Dashboard','Subject Analysis','Attendance Tracker','Provincial Overview','Circular D3 Reports','Custom Analysis'];
+const ACTION_STATUS = ['Planned','In Progress','Completed','Blocked'];
+const STATUS_C = {
+  Completed:     { bg:'var(--green-lt)', fg:'var(--green-dk)', dot:'var(--green)' },
+  'In Progress': { bg:'var(--orange-lt)', fg:'var(--orange)', dot:'var(--orange)' },
+  Planned:       { bg:'var(--blue-lt)', fg:'var(--blue)', dot:'var(--blue)' },
+  Blocked:       { bg:'var(--red-lt)', fg:'var(--red)', dot:'var(--red)' }
+};
+
+const esc = s => s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+const fmtDate = d => d ? new Date(d).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'}) : '—';
+const genId = p => `${p}_${Date.now().toString(36).toUpperCase()}`;
+const initials = name => (name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+const today = () => new Date().toISOString().split('T')[0];
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+const S = {
+  // Auth
+  authState: 'checking',  // checking | login | otp | ready
+  authEmail: '',
+  authError: '',
+  otpSending: false,
+  otpVerifying: false,
+  resendTimer: 0,
+  resendInterval: null,
+  otpValues: ['','','','','',''],
+  otpCode: '',
+  user: null,
+  official: null,
+
+  // Data
+  interventions: [], decisions: [], actions: [], outcomes: [],
+  loading: true, error: null,
+
+  // UI
+  view: 'log', step: 1, filter: 'all', expandedChains: {}, saving: false,
+
+  // Form data
+  dec: { intervention_id:'', ddd_tool:'', data_viewed:'', insight:'', decision_made:'', made_by:'', date: today() },
+  act: { action_taken:'', responsible:'', status:'Planned', target_date:'', notes:'' },
+  act_skip: false,
+  out: { description:'', metric:'', value:'', evidence:'', date: today() },
+  out_skip: false
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════════
+async function checkAuth() {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      S.user = session.user;
+      await loadOfficial(session.user.email);
+      S.authState = 'ready';
+      await loadAll();
+    } else {
+      S.authState = 'login';
+      S.loading = false;
+    }
+  } catch(e) {
+    S.authState = 'login';
+    S.loading = false;
+  }
+  render();
+}
+
+async function loadOfficial(email) {
+  const { data } = await sb.from('officials').select('*').eq('email', email).eq('is_active', true).single();
+  S.official = data || { full_name: email, role: '', province: '', district: '', email };
+  S.dec.made_by = S.official.full_name + (S.official.role ? ` (${S.official.role})` : '');
+}
+
+async function sendOtp() {
+  const email = S.authEmail.trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    S.authError = 'Please enter a valid email address.';
+    render(); return;
+  }
+
+  // Check if email is registered in officials table
+  const { data: officials } = await sb.from('officials').select('email').eq('email', email).eq('is_active', true);
+  if (!officials || officials.length === 0) {
+    S.authError = 'This email is not registered. Please contact Victor at victor@newleaders.co.za to be added.';
+    render(); return;
+  }
+
+  S.otpSending = true; S.authError = ''; render();
+  const { error } = await sb.auth.signInWithOtp({ email });
+  S.otpSending = false;
+
+  if (error) {
+    S.authError = error.message;
+    render(); return;
+  }
+
+  S.authState = 'otp';
+  startResendTimer();
+  render();
+}
+
+function startResendTimer() {
+  S.resendTimer = 60;
+  if (S.resendInterval) clearInterval(S.resendInterval);
+  S.resendInterval = setInterval(() => {
+    S.resendTimer--;
+    // Only update the timer text, NOT the whole page
+    const timerEl = document.getElementById('resend-timer');
+    if (timerEl) {
+      timerEl.innerHTML = S.resendTimer > 0
+        ? `<button disabled>Resend code in ${S.resendTimer}s</button>`
+        : `<button onclick="resendOtp()">Resend code</button>`;
+    }
+    if (S.resendTimer <= 0) clearInterval(S.resendInterval);
+  }, 1000);
+}
+
+function getOtpValue() {
+  const el = document.getElementById('otp-code');
+  return el ? el.value.trim() : (S.otpCode || '');
+}
+
+async function verifyOtp() {
+  const code = getOtpValue();
+  if (code.length < 6) {
+    S.authError = 'Please enter the full verification code from your email.';
+    render(); return;
+  }
+
+  S.otpVerifying = true; S.authError = ''; render();
+
+  const { data, error } = await sb.auth.verifyOtp({
+    email: S.authEmail.trim().toLowerCase(),
+    token: code,
+    type: 'email'
+  });
+
+  S.otpVerifying = false;
+
+  if (error) {
+    S.authError = 'Invalid or expired code. Please try again.';
+    render();
+    const el = document.getElementById('otp-wrap');
+    if (el) { el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 500); }
+    return;
+  }
+
+  S.user = data.user;
+  await loadOfficial(data.user.email);
+  S.authState = 'ready';
+  S.loading = true; render();
+  await loadAll();
+}
+
+async function resendOtp() {
+  const { error } = await sb.auth.signInWithOtp({ email: S.authEmail.trim().toLowerCase() });
+  if (error) { S.authError = error.message; render(); return; }
+  startResendTimer();
+  showToast('New code sent!');
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  S.user = null; S.official = null;
+  S.authState = 'login'; S.authEmail = ''; S.authError = '';
+  S.otpValues = ['','','','','',''];
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════
+async function loadAll() {
+  try {
+    const [i, d, a, o] = await Promise.all([
+      sb.from('interventions').select('*').order('province'),
+      sb.from('decisions').select('*').order('date', { ascending: false }),
+      sb.from('actions').select('*').order('target_date', { ascending: false }),
+      sb.from('outcomes').select('*').order('date', { ascending: false })
+    ]);
+    if (i.error) throw i.error;
+    S.interventions = i.data || [];
+    S.decisions = d.data || [];
+    S.actions = a.data || [];
+    S.outcomes = o.data || [];
+    S.error = null;
+  } catch(e) { S.error = e.message; }
+  S.loading = false;
+  render();
+}
+
+function setupRT() {
+  ['interventions','decisions','actions','outcomes'].forEach(t => {
+    sb.channel(`${t}-auth-rt`).on('postgres_changes', { event: '*', schema: 'public', table: t }, () => loadAll()).subscribe();
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════
+function render() {
+  const app = document.getElementById('app');
+
+  if (S.authState === 'checking') {
+    app.innerHTML = '<div class="login-wrap"><div class="loading"><div class="spinner"></div></div></div>';
+    return;
+  }
+  if (S.authState === 'login') { app.innerHTML = renderLogin(); return; }
+  if (S.authState === 'otp') {
+    app.innerHTML = renderOtp();
+    setTimeout(() => { const el = document.getElementById('otp-code'); if (el) el.focus(); }, 50);
+    return;
+  }
+
+  if (S.loading) {
+    app.innerHTML = '<div class="loading" style="min-height:100vh"><div class="spinner"></div><div style="color:var(--teal);font-size:14px;font-weight:600">Loading interventions...</div></div>';
+    return;
+  }
+  if (S.error) {
+    app.innerHTML = `<div class="loading" style="min-height:100vh"><div style="font-size:48px;margin-bottom:12px">⚠️</div><div style="font-size:14px;color:var(--red);font-weight:600">Connection Error</div><p style="font-size:12px;color:var(--grey);margin:8px 0">${esc(S.error)}</p><button class="btn btn-teal btn-sm" onclick="S.loading=true;render();loadAll()">Retry</button></div>`;
+    return;
+  }
+
+  const o = S.official || {};
+  app.innerHTML = `
+    <header class="hdr">
+      <div class="hdr-bar"></div>
+      <div class="hdr-content">
+        <div class="hdr-title">Learner Improvement Interventions Tracker</div>
+        <div class="hdr-sub">Tracking what we do and what changes</div>
+        <div class="hdr-user">
+          <div class="hdr-avatar">${initials(o.full_name)}</div>
+          <div class="hdr-userinfo">
+            <div class="hdr-username">${esc(o.full_name)}</div>
+            <div class="hdr-userrole">${esc(o.role)}${o.province ? ' — ' + esc(o.province) : ''}</div>
+          </div>
+          <button class="hdr-logout" onclick="logout()">Sign out</button>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';render()"><span class="nav-icon">✏️</span>Log</button>
+        <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()"><span class="nav-icon">📊</span>Dashboard</button>
+      </nav>
+    </header>
+    <div class="content">${S.view === 'log' ? renderLog() : renderDashboard()}</div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LOGIN SCREEN
+// ═══════════════════════════════════════════════════════════════════
+function renderLogin() {
+  return `
+    <div class="login-wrap">
+      <div class="login-card fade-in">
+        <div class="login-logo">
+          <div class="bar"></div>
+          <h1>Learner Improvement Interventions Tracker</h1>
+          <p>Log decisions, actions &amp; outcomes for learner improvement</p>
+        </div>
+        <div class="login-info">
+          Sign in with your registered email address. You'll receive a one-time verification code to confirm your identity.
+        </div>
+        <div class="login-field">
+          <label>Email address</label>
+          <input type="email" id="login-email" placeholder="your.email@example.com"
+            value="${esc(S.authEmail)}"
+            oninput="S.authEmail=this.value;S.authError=''"
+            onkeydown="if(event.key==='Enter')sendOtp()" autofocus>
+          ${S.authError ? `<div class="err">${esc(S.authError)}</div>` : ''}
+        </div>
+        <button class="btn btn-teal" onclick="sendOtp()" ${S.otpSending ? 'disabled' : ''}>
+          ${S.otpSending ? '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div> Sending code...' : 'Continue with Email'}
+        </button>
+        <p style="text-align:center;font-size:11px;color:var(--grey);margin-top:16px">
+          Not registered? Contact Victor at victor@newleaders.co.za to be added.
+        </p>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// OTP SCREEN
+// ═══════════════════════════════════════════════════════════════════
+function renderOtp() {
+  return `
+    <div class="login-wrap">
+      <div class="login-card fade-in">
+        <div class="login-logo">
+          <div class="bar"></div>
+          <h1>Check your email</h1>
+          <p>We sent a verification code to</p>
+          <p style="font-weight:700;color:var(--navy);margin-top:4px">${esc(S.authEmail)}</p>
+        </div>
+        <div id="otp-wrap" style="margin:20px 0">
+          <input id="otp-code" type="text" inputmode="numeric" maxlength="8"
+            style="width:100%;padding:16px;text-align:center;font-size:28px;font-weight:700;letter-spacing:8px;border:2px solid var(--grey-lt);border-radius:10px;font-family:inherit;color:var(--navy)"
+            placeholder="Enter code"
+            value="${S.otpCode||''}"
+            oninput="S.otpCode=this.value.replace(/[^0-9]/g,'');this.value=S.otpCode;S.authError=''"
+            onkeydown="if(event.key==='Enter')verifyOtp()"
+            autofocus>
+        </div>
+        ${S.authError ? `<div style="text-align:center;color:var(--red);font-size:12px;margin-bottom:12px">${esc(S.authError)}</div>` : ''}
+        <button class="btn btn-teal" onclick="verifyOtp()" ${S.otpVerifying ? 'disabled' : ''}>
+          ${S.otpVerifying ? '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div> Verifying...' : 'Verify Code'}
+        </button>
+        <div id="resend-timer" class="resend">
+          ${S.resendTimer > 0
+            ? `<button disabled>Resend code in ${S.resendTimer}s</button>`
+            : `<button onclick="resendOtp()">Resend code</button>`}
+        </div>
+        <p style="text-align:center;margin-top:12px">
+          <button style="background:none;border:none;color:var(--grey);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline"
+            onclick="S.authState='login';S.authError='';S.otpValues=['','','','','',''];S.otpCode='';render()">Use a different email</button>
+        </p>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LOG VIEW
+// ═══════════════════════════════════════════════════════════════════
+function renderLog() {
+  if (S.step === 4) return renderSuccess();
+  const steps = [
+    { n:1, label:'Decision', icon:'D', color:'var(--blue)' },
+    { n:2, label:'Action', icon:'A', color:'var(--orange)' },
+    { n:3, label:'Outcome', icon:'O', color:'var(--green)' }
+  ];
+  return `
+    <div class="steps">
+      ${steps.map((s,i) => `
+        ${i > 0 ? `<div class="step-line ${S.step > s.n ? 'done' : ''}"></div>` : ''}
+        <div style="text-align:center">
+          <div class="step-dot ${S.step > s.n ? 'done' : S.step === s.n ? 'active' : 'pending'}">
+            ${S.step > s.n ? '✓' : s.icon}
+          </div>
+          <div class="step-label">${s.label}</div>
+        </div>
+      `).join('')}
+    </div>
+    ${S.step === 1 ? renderStep1() : ''}
+    ${S.step === 2 ? renderStep2() : ''}
+    ${S.step === 3 ? renderStep3() : ''}
+  `;
+}
+
+function renderStep1() {
+  return `
+    <div class="form-section fade-in">
+      <div class="form-section-title"><div class="dot" style="background:var(--blue)"></div>Log a Decision</div>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.5">
+        What data did you look at, what did you notice, and what did you decide to do?
+      </p>
+      <div class="field">
+        <label>Which intervention is this for?<span class="req">*</span></label>
+        <select onchange="S.dec.intervention_id=this.value">
+          <option value="">Select intervention...</option>
+          ${S.interventions.map(i => `<option value="${i.id}" ${S.dec.intervention_id === i.id ? 'selected' : ''}>${esc(i.entity_name)} — ${esc(i.province)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Which data tool or report did you use?<span class="hint">The dashboard or report you looked at</span></label>
+        <select onchange="S.dec.ddd_tool=this.value">
+          <option value="">Select tool...</option>
+          ${DDD_TOOLS.map(t => `<option ${S.dec.ddd_tool === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>What data did you look at?<span class="hint">E.g. "Maths pass rates for Grade 9 in JTG district"</span></label>
+        <textarea rows="2" placeholder="Describe the specific data you viewed..." oninput="S.dec.data_viewed=this.value">${esc(S.dec.data_viewed)}</textarea>
+      </div>
+      <div class="field">
+        <label>What did the data reveal?<span class="req">*</span><span class="hint">The key insight or pattern you noticed</span></label>
+        <textarea rows="2" placeholder="E.g. 12 schools below 40% in Maths..." oninput="S.dec.insight=this.value">${esc(S.dec.insight)}</textarea>
+      </div>
+      <div class="field">
+        <label>What did you decide to do?<span class="req">*</span><span class="hint">The decision you made based on this insight</span></label>
+        <textarea rows="2" placeholder="E.g. Target intensive maths support to bottom 12 schools..." oninput="S.dec.decision_made=this.value">${esc(S.dec.decision_made)}</textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>Your name</label><input value="${esc(S.dec.made_by)}" oninput="S.dec.made_by=this.value"></div>
+        <div class="field"><label>Date</label><input type="date" value="${S.dec.date}" onchange="S.dec.date=this.value"></div>
+      </div>
+    </div>
+    <button class="btn btn-blue" onclick="submitStep1()" ${S.saving ? 'disabled' : ''}>
+      ${S.saving ? 'Saving...' : 'Next → Log Action'}
+    </button>`;
+}
+
+function renderStep2() {
+  return `
+    <div class="form-section fade-in">
+      <div class="form-section-title"><div class="dot" style="background:var(--orange)"></div>Log an Action</div>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.5">What was done as a result of this decision?</p>
+      <div style="padding:12px;background:var(--blue-lt);border-radius:8px;margin-bottom:16px">
+        <div style="font-size:10px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:1px">Your decision</div>
+        <div style="font-size:13px;color:var(--navy);margin-top:4px;font-weight:500">${esc(S.dec.decision_made)}</div>
+      </div>
+      <div class="field">
+        <label>What action was taken?<span class="req">*</span><span class="hint">Describe what was actually done</span></label>
+        <textarea rows="3" placeholder="E.g. Organised 2-day maths workshop for HODs..." oninput="S.act.action_taken=this.value">${esc(S.act.action_taken)}</textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>Responsible person</label><input placeholder="Who is doing this?" value="${esc(S.act.responsible)}" oninput="S.act.responsible=this.value"></div>
+        <div class="field"><label>Status</label>
+          <select onchange="S.act.status=this.value">
+            ${ACTION_STATUS.map(s => `<option ${S.act.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Target date</label><input type="date" value="${S.act.target_date}" onchange="S.act.target_date=this.value"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="skipAction()">Skip for now</button>
+      <button class="btn btn-orange" onclick="submitStep2()" ${S.saving ? 'disabled' : ''}>
+        ${S.saving ? 'Saving...' : 'Next → Outcome'}
+      </button>
+    </div>`;
+}
+
+function renderStep3() {
+  return `
+    <div class="form-section fade-in">
+      <div class="form-section-title"><div class="dot" style="background:var(--green)"></div>Record an Outcome</div>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.5">Has there been a measurable result? If not yet, you can skip.</p>
+      ${!S.act_skip ? `
+        <div style="padding:12px;background:var(--orange-lt);border-radius:8px;margin-bottom:16px">
+          <div style="font-size:10px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:1px">Action taken</div>
+          <div style="font-size:13px;color:var(--navy);margin-top:4px;font-weight:500">${esc(S.act.action_taken)}</div>
+        </div>` : ''}
+      <div class="field">
+        <label>What measurable change was observed?<span class="req">*</span></label>
+        <textarea rows="3" placeholder="E.g. 8 of 12 targeted schools improved..." oninput="S.out.description=this.value">${esc(S.out.description)}</textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>Metric<span class="hint">What was measured?</span></label><input placeholder="E.g. Maths pass rate" value="${esc(S.out.metric)}" oninput="S.out.metric=this.value"></div>
+        <div class="field"><label>Value<span class="hint">The result</span></label><input placeholder="E.g. 67% improved" value="${esc(S.out.value)}" oninput="S.out.value=this.value"></div>
+      </div>
+      <div class="field"><label>Evidence source<span class="hint">Where can this be verified?</span></label><input placeholder="E.g. School Dashboard — Term 1 vs Term 2" value="${esc(S.out.evidence)}" oninput="S.out.evidence=this.value"></div>
+      <div class="field"><label>Date observed</label><input type="date" value="${S.out.date}" onchange="S.out.date=this.value"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="skipOutcome()">Skip for now</button>
+      <button class="btn btn-green" onclick="submitStep3()" ${S.saving ? 'disabled' : ''}>
+        ${S.saving ? 'Saving...' : 'Submit ✓'}
+      </button>
+    </div>`;
+}
+
+function renderSuccess() {
+  const int = S.interventions.find(i => i.id === S.dec.intervention_id);
+  return `
+    <div class="success fade-in">
+      <div class="success-icon">✅</div>
+      <h2>Logged successfully!</h2>
+      <p>Your contribution to <strong>${esc(int?.entity_name || 'the intervention')}</strong> has been recorded.</p>
+      <div style="margin-top:24px;padding:16px;background:var(--teal-lt);border-radius:10px;text-align:left">
+        <div style="font-size:11px;color:var(--teal-dk);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">D</div>
+          <span style="font-size:12px;color:var(--navy)">${esc(S.dec.decision_made).slice(0,80)}${S.dec.decision_made.length > 80 ? '...' : ''}</span>
+        </div>
+        ${!S.act_skip ? `
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--orange);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">A</div>
+            <span style="font-size:12px;color:var(--navy)">${esc(S.act.action_taken).slice(0,80)}${S.act.action_taken.length > 80 ? '...' : ''}</span>
+          </div>` : ''}
+        ${!S.out_skip && S.out.description ? `
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">O</div>
+            <span style="font-size:12px;color:var(--navy)">${esc(S.out.description).slice(0,80)}${S.out.description.length > 80 ? '...' : ''}</span>
+          </div>` : ''}
+      </div>
+      <div class="btn-row" style="margin-top:24px">
+        <button class="btn btn-teal" onclick="resetForm()">Log Another</button>
+        <button class="btn btn-outline" onclick="S.view='dashboard';render()">View Dashboard</button>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FORM LOGIC
+// ═══════════════════════════════════════════════════════════════════
+function userMeta() {
+  return {
+    logged_by: S.official?.full_name || '',
+    logged_by_email: S.official?.email || S.user?.email || ''
+  };
+}
+
+async function submitStep1() {
+  if (!S.dec.intervention_id) { showToast('Please select an intervention'); return; }
+  if (!S.dec.insight || !S.dec.decision_made) { showToast('Please fill in the insight and decision'); return; }
+  S.saving = true; render();
+  try {
+    const dec = { id: genId('DEC'), ...S.dec, ...userMeta() };
+    const { error } = await sb.from('decisions').insert(dec);
+    if (error) throw error;
+    S.dec.id = dec.id;
+    S.step = 2;
+    await loadAll();
+  } catch(e) { showToast('Error: ' + e.message); }
+  S.saving = false; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function submitStep2() {
+  if (!S.act.action_taken) { showToast('Please describe the action'); return; }
+  S.saving = true; render();
+  try {
+    const act = {
+      id: genId('ACT'),
+      decision_id: S.dec.id,
+      intervention_id: S.dec.intervention_id,
+      ...S.act,
+      target_date: S.act.target_date || null,
+      ...userMeta()
+    };
+    const { error } = await sb.from('actions').insert(act);
+    if (error) throw error;
+    S.act.id = act.id;
+    S.step = 3;
+    await loadAll();
+  } catch(e) { showToast('Error: ' + e.message); }
+  S.saving = false; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipAction() {
+  S.act_skip = true; S.step = 3; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function submitStep3() {
+  if (!S.out.description) { showToast('Please describe the outcome'); return; }
+  S.saving = true; render();
+  try {
+    const out = {
+      id: genId('OUT'),
+      action_id: S.act.id || null,
+      intervention_id: S.dec.intervention_id,
+      ...S.out,
+      ...userMeta()
+    };
+    const { error } = await sb.from('outcomes').insert(out);
+    if (error) throw error;
+    S.step = 4;
+    await loadAll();
+  } catch(e) { showToast('Error: ' + e.message); }
+  S.saving = false; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipOutcome() {
+  S.out_skip = true; S.step = 4; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  S.step = 1;
+  S.dec = { intervention_id:'', ddd_tool:'', data_viewed:'', insight:'', decision_made:'',
+    made_by: S.official?.full_name + (S.official?.role ? ` (${S.official.role})` : ''),
+    date: today() };
+  S.act = { action_taken:'', responsible:'', status:'Planned', target_date:'', notes:'' };
+  S.out = { description:'', metric:'', value:'', evidence:'', date: today() };
+  S.act_skip = false; S.out_skip = false;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+function renderDashboard() {
+  const decs = S.decisions.length;
+  const acts = S.actions.length;
+  const outs = S.outcomes.length;
+  const provs = [...new Set(S.interventions.map(i => i.province))].sort();
+  const filtered = S.filter === 'all' ? S.interventions : S.interventions.filter(i => i.province === S.filter);
+  const withData = filtered.filter(i => S.decisions.some(d => d.intervention_id === i.id));
+
+  return `
+    <div class="stat-row fade-in">
+      <div class="stat"><div class="stat-val" style="color:var(--blue)">${decs}</div><div class="stat-label">Decisions</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--orange)">${acts}</div><div class="stat-label">Actions</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--green)">${outs}</div><div class="stat-label">Outcomes</div></div>
+    </div>
+
+    <div style="background:white;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);text-align:center">
+      <div style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:700">The Contribution Chain</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+        ${[
+          { icon:'📊', label:'Data Insight', bg:'var(--teal)' },
+          { icon:'D', label:'Decision', bg:'var(--blue)' },
+          { icon:'A', label:'Action', bg:'var(--orange)' },
+          { icon:'O', label:'Outcome', bg:'var(--green)' }
+        ].map((n,i) => `
+          ${i > 0 ? '<div style="color:var(--grey-lt);font-size:16px">→</div>' : ''}
+          <div style="text-align:center">
+            <div style="width:36px;height:36px;border-radius:50%;background:${n.bg};color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:${n.icon.length > 1 ? '14' : '12'}px;margin:0 auto 4px">${n.icon}</div>
+            <div style="font-size:9px;color:var(--grey)">${n.label}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-pill ${S.filter === 'all' ? 'active' : ''}" onclick="S.filter='all';render()">All</button>
+      ${provs.map(p => `<button class="filter-pill ${S.filter === p ? 'active' : ''}" onclick="S.filter='${esc(p)}';render()">${esc(p)}</button>`).join('')}
+    </div>
+
+    ${withData.length > 0 ? withData.map(int => renderChainCard(int)).join('') : `
+      <div class="empty"><div class="empty-icon">📋</div>
+        <p>No execution data logged yet${S.filter !== 'all' ? ' for ' + S.filter : ''}.</p>
+        <p style="margin-top:8px">Tap <strong>Log</strong> to start recording.</p>
+      </div>`}
+
+    ${filtered.filter(i => !S.decisions.some(d => d.intervention_id === i.id)).length > 0 ? `
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px">Awaiting Execution Data</div>
+        ${filtered.filter(i => !S.decisions.some(d => d.intervention_id === i.id)).map(int => `
+          <div style="background:white;border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.04)">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">${esc(int.entity_name)}</div>
+              <div style="font-size:11px;color:var(--grey)">${esc(int.province)} — ${esc(int.district)}</div>
+            </div>
+            <button class="btn btn-teal btn-sm" onclick="startLogFor('${int.id}')">Log</button>
+          </div>`).join('')}
+      </div>` : ''}
+  `;
+}
+
+function renderChainCard(int) {
+  const decs = S.decisions.filter(d => d.intervention_id === int.id);
+  const expanded = S.expandedChains[int.id];
+  const intActions = S.actions.filter(a => a.intervention_id === int.id);
+  const intOutcomes = S.outcomes.filter(o => o.intervention_id === int.id);
+
+  return `
+    <div class="chain-card fade-in">
+      <div class="chain-hdr" onclick="S.expandedChains['${int.id}']=!S.expandedChains['${int.id}'];render()">
+        <div>
+          <div class="chain-title">${esc(int.entity_name)}</div>
+          <div class="chain-meta">${esc(int.province)} — ${esc(int.district)}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;gap:3px">
+            ${decs.length ? `<div style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center">${decs.length}</div>` : ''}
+            ${intActions.length ? `<div style="width:18px;height:18px;border-radius:50%;background:var(--orange);color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center">${intActions.length}</div>` : ''}
+            ${intOutcomes.length ? `<div style="width:18px;height:18px;border-radius:50%;background:var(--green);color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center">${intOutcomes.length}</div>` : ''}
+          </div>
+          <span style="font-size:16px;color:var(--grey);transition:transform .2s;transform:rotate(${expanded ? '180' : '0'}deg)">▾</span>
+        </div>
+      </div>
+      <div class="chain-body${expanded ? '' : ' collapsed'}">
+        ${decs.map(dec => {
+          const acts = S.actions.filter(a => a.decision_id === dec.id);
+          return `
+            <div class="node">
+              <div class="node-line">
+                <div class="node-dot" style="background:var(--blue)">D</div>
+                ${acts.length ? '<div class="node-stem"></div>' : ''}
+              </div>
+              <div class="node-content" style="background:var(--blue-lt)">
+                <div class="node-type" style="color:var(--blue)">Decision — ${fmtDate(dec.date)}</div>
+                <div class="node-text">${esc(dec.decision_made)}</div>
+                <div class="node-detail">
+                  ${dec.ddd_tool ? '<strong>Tool:</strong> ' + esc(dec.ddd_tool) + '<br>' : ''}
+                  ${dec.insight ? '<strong>Insight:</strong> ' + esc(dec.insight) + '<br>' : ''}
+                  ${dec.made_by ? 'By: ' + esc(dec.made_by) : ''}
+                </div>
+                ${dec.logged_by ? `<div class="node-who">Logged by: ${esc(dec.logged_by)}</div>` : ''}
+              </div>
+            </div>
+            ${acts.map(act => {
+              const sc = STATUS_C[act.status] || STATUS_C.Planned;
+              const actOuts = S.outcomes.filter(o => o.action_id === act.id);
+              return `
+                <div class="node" style="padding-left:16px">
+                  <div class="node-line">
+                    <div class="node-dot" style="background:var(--orange)">A</div>
+                    ${actOuts.length ? '<div class="node-stem"></div>' : ''}
+                  </div>
+                  <div class="node-content" style="background:var(--orange-lt)">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                      <div class="node-type" style="color:var(--orange)">Action</div>
+                      <span class="status-pill" style="background:${sc.bg};color:${sc.fg}"><span class="sdot" style="background:${sc.dot}"></span>${esc(act.status)}</span>
+                    </div>
+                    <div class="node-text">${esc(act.action_taken)}</div>
+                    <div class="node-detail">${act.responsible ? 'Responsible: ' + esc(act.responsible) + ' | ' : ''}Target: ${fmtDate(act.target_date)}</div>
+                    ${act.logged_by ? `<div class="node-who">Logged by: ${esc(act.logged_by)}</div>` : ''}
+                  </div>
+                </div>
+                ${actOuts.map(out => `
+                  <div class="node" style="padding-left:32px">
+                    <div class="node-line"><div class="node-dot" style="background:var(--green)">O</div></div>
+                    <div class="node-content" style="background:var(--green-lt)">
+                      <div class="node-type" style="color:var(--green-dk)">Outcome — ${fmtDate(out.date)}</div>
+                      <div class="node-text">${esc(out.description)}</div>
+                      <div class="node-detail">
+                        ${out.metric ? '<strong>' + esc(out.metric) + ':</strong> ' + esc(out.value) + '<br>' : ''}
+                        ${out.evidence ? 'Evidence: ' + esc(out.evidence) : ''}
+                      </div>
+                      ${out.logged_by ? `<div class="node-who">Logged by: ${esc(out.logged_by)}</div>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              `;
+            }).join('')}
+          `;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════
+function startLogFor(intId) {
+  S.view = 'log'; S.step = 1; S.dec.intervention_id = intId;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+checkAuth();
+setupRT();
+</script>
 </body>
 </html>
