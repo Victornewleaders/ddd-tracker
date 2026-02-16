@@ -217,24 +217,12 @@ const S = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// AUTH
+// AUTH — temporarily disabled
 // ═══════════════════════════════════════════════════════════════════
 async function checkAuth() {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session?.user) {
-      S.user = session.user;
-      await loadOfficial(session.user.email);
-      S.authState = 'ready';
-      await loadAll();
-    } else {
-      S.authState = 'login';
-      S.loading = false;
-    }
-  } catch(e) {
-    S.authState = 'login';
-    S.loading = false;
-  }
+  S.authState = 'ready';
+  S.official = { full_name: 'User', role: '', province: '', district: '', email: '' };
+  await loadAll();
   render();
 }
 
@@ -402,12 +390,14 @@ function render() {
         <div class="hdr-title">Learner Improvement Interventions Tracker</div>
         <div class="hdr-sub">Tracking what we do and what changes</div>
         <div class="hdr-user">
+          ${o.email ? `
           <div class="hdr-avatar">${initials(o.full_name)}</div>
           <div class="hdr-userinfo">
             <div class="hdr-username">${esc(o.full_name)}</div>
             <div class="hdr-userrole">${esc(o.role)}${o.province ? ' — ' + esc(o.province) : ''}</div>
           </div>
           <button class="hdr-logout" onclick="logout()">Sign out</button>
+          ` : ''}
         </div>
       </div>
       <nav class="nav">
