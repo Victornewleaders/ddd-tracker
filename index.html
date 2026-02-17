@@ -133,6 +133,33 @@ nav.nav{display:flex;max-width:720px;margin:0 auto;border-top:1px solid rgba(255
 .footer{max-width:640px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:8px;border-top:2px solid var(--green)}
 .footer span{font-size:10px;color:#7B8D9E}
 .footer img{height:22px;border-radius:3px;opacity:.7}
+
+/* ── CHAIN VIEW ── */
+.chain{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:12px;overflow:hidden}
+.chain-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--grey-lt)}
+.chain-hdr:hover{background:var(--off)}
+.chain-title{font-size:13px;font-weight:700;color:var(--navy);flex:1}
+.chain-meta{font-size:10px;color:var(--grey);margin-top:2px}
+.chain-dots{display:flex;gap:3px}
+.chain-dot{width:18px;height:18px;border-radius:50%;color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.chain-body{padding:10px 14px}
+.chain-body.collapsed{display:none}
+.node{display:flex;gap:10px;margin-bottom:10px}
+.node-line{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0}
+.node-dot{width:26px;height:26px;border-radius:50%;color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.node-stem{flex:1;width:2px;background:var(--grey-lt);margin:4px 0}
+.node-content{flex:1;padding:10px 12px;border-radius:8px;font-size:12px}
+.node-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.node-text{color:var(--navy);font-weight:600;margin-bottom:4px;font-size:13px}
+.node-detail{font-size:11px;color:var(--grey);line-height:1.5}
+.node-who{font-size:10px;color:var(--grey);margin-top:4px;font-style:italic}
+.ctx-banner{margin-top:6px;padding:6px 10px;background:var(--orange-lt);border-radius:6px;border-left:3px solid var(--orange);font-size:11px}
+.doc-link{margin-top:4px;font-size:11px}
+.doc-link a{color:var(--blue);text-decoration:none}
+.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.sdot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.demo-banner{background:linear-gradient(135deg,var(--blue-lt),var(--teal-lt));border:1px dashed var(--teal);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--teal-dk);text-align:center}
+.demo-banner strong{color:var(--navy)}
 </style>
 </head>
 <body>
@@ -167,7 +194,7 @@ const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36
 const S = {
   loading:true, error:null, authState:'checking',
   official:{full_name:'User',role:'',province:'',district:'',email:''},
-  view:'log', decisions:[], actions:[], outcomes:[], interventions:[],
+  view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{},
   saving:false, submitted:false,
   openSections:{1:true,2:true,3:true,4:true},
   f: {
@@ -202,9 +229,46 @@ async function loadAll() {
       sb.from('interventions').select('*').order('entity_name')
     ]);
     S.decisions = d.data||[]; S.actions = a.data||[]; S.outcomes = o.data||[]; S.interventions = iv.data||[];
+    // If empty, inject demo data so dashboard is useful immediately
+    if (S.decisions.length === 0) injectDemo();
     S.loading = false; S.error = null;
   } catch(e) { S.error = e.message; S.loading = false; }
   render();
+}
+
+function injectDemo() {
+  const demo_decs = [
+    {id:'DEMO_D0',ddd_tool:'FET Promotion Profiles, Learner Chart Report',data_viewed:'Grade 10 Maths results — Lejweleputswa',insight:'Boitumelo Secondary Grade 10 Maths pass rate dropped from 58% to 41% between Term 1 and Term 3 2025. Learner Chart Report showed 35 learners clustered at 25-29% — just below passing threshold.',decision_made:'Target specific learners',contextual_factors:'Teaching outside specialisation | Only 1 qualified Maths educator for 4 Grade 10 classes',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2025-10-14',logged_by:'F Moshoeshoe',
+      details:{province:'Free State',district:'Lejweleputswa',schools:'Boitumelo Secondary',term:'Term 4 2025',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Mathematics'],grades:['10'],description:'DDD data review identified Boitumelo Secondary Grade 10 Maths as critical. 35 learners clustered just below pass mark. Decided to deploy targeted after-school support with subject advisor and profiled learner grouping.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Learner Chart Report'],decision_type:'Target specific learners',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 qualified Maths educator for 4 Grade 10 classes. 2 educators teaching Maths outside their specialisation.',learners_reached:35,follow_up:false,follow_up_desc:''}},
+    {id:'DEMO_D1',ddd_tool:'School Dashboard, Learner Chart Report',data_viewed:'Maths pass rates for Grade 9 — JTG district',insight:'12 schools below 40% in Maths, concentrated in 3 circuits',decision_made:'Deploy subject support',contextual_factors:'Vacant post(s), Teaching outside specialisation',made_by:'Mr V Teise (Circuit Manager)',date:'2026-01-28',logged_by:'V Teise',
+      details:{province:'Northern Cape',district:'John Taolo Gaetsewe',schools:'Kuruman Primary, Mothibistad High, Batlharo Primary',term:'Term 1 2026',activity_type:'School support visit',intervention_theme:'District Support',subjects:['Mathematics'],grades:['9'],description:'Targeted support visit to 3 underperforming schools in JTG. Reviewed Maths pass rates and agreed on intervention plan.',ddd_used:'yes-direct',ddd_reports:['School Dashboard','Learner Chart Report'],decision_type:'Deploy subject support',ctx_staffing:['Vacant post(s)','Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['High absenteeism'],ctx_notes:'No permanent Maths educator at Batlharo Primary since Term 3 2025',learners_reached:340,follow_up:true,follow_up_desc:'Return visit in 2 weeks to check if Subject Improvement Plan has been implemented'}},
+    {id:'DEMO_D2',ddd_tool:'FET Promotion Profiles',data_viewed:'Grade 12 promotion predictions — Lejweleputswa',insight:'15% of Grade 12 learners predicted to fail Physical Sciences',decision_made:'Schedule extra classes',contextual_factors:'Infrastructure issues, Overcrowded classrooms',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2026-02-03',logged_by:'F Moshoeshoe',
+      details:{province:'Free State',district:'Lejweleputswa',schools:'Thuto Primary, Boitumelo Secondary, Matjhabeng Primary',term:'Term 1 2026',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Physical Sciences','Mathematics'],grades:['12'],description:'District data review meeting to identify at-risk Grade 12 learners and plan Saturday classes.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Term 4 Promotion Predictions'],decision_type:'Schedule extra classes',ctx_staffing:['All posts filled'],ctx_resources:['Infrastructure issues'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 lab for 4 Grade 12 Science classes at Boitumelo',learners_reached:520,follow_up:true,follow_up_desc:'Monitor Saturday class attendance after first 3 sessions'}},
+    {id:'DEMO_D3',ddd_tool:'Senior Phase Promotion Profiles',data_viewed:'Grade 7 English FAL results — Mopani East',insight:'62% of learners below level 4 in English FAL across 5 schools',decision_made:'Redesign lesson approach',contextual_factors:'Language barriers',made_by:'Mr K Makatu (Provincial Manager)',date:'2026-02-10',logged_by:'K Makatu',
+      details:{province:'Limpopo',district:'Mopani East',schools:'Nkowankowa Primary, Giyani High, Lulekani Combined',term:'Term 1 2026',activity_type:'Workshop / training session',intervention_theme:'GET / Intermediate Phase',subjects:['English FAL','English HL'],grades:['7','8'],description:'English literacy workshop for 12 educators. Focused on reading comprehension strategies and scaffolding techniques.',ddd_used:'yes-informed',ddd_reports:['Senior Phase Promotion Profiles','Curriculum Overview'],decision_type:'Redesign lesson approach',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage','No devices/connectivity'],ctx_learners:['Language barriers','Welfare concerns'],ctx_notes:'3 schools in deep rural area with no internet connectivity',learners_reached:890,follow_up:false,follow_up_desc:''}},
+    {id:'DEMO_D4',ddd_tool:'',data_viewed:'Routine monitoring visit',insight:'HODs not conducting class visits or checking educator files',decision_made:'Escalate to management',contextual_factors:'Acting principal/HoD',made_by:'Ms P Mtyobo (Cluster Lead)',date:'2026-02-12',logged_by:'P Mtyobo',
+      details:{province:'Eastern Cape',district:'Sarah Baartman',schools:'Graaff-Reinet Primary, Karoo High',term:'Term 1 2026',activity_type:'Monitoring / follow-up visit',intervention_theme:'District Support',subjects:['Mathematics','Natural Sciences'],grades:['4','5','6'],description:'Monitoring visit found poor curriculum coverage. HODs not conducting class visits. Escalated to District Director.',ddd_used:'no',ddd_reports:[],decision_type:'Escalate to management',ctx_staffing:['Acting principal/HoD','High educator absenteeism'],ctx_resources:['LTSM not delivered'],ctx_learners:['High absenteeism'],ctx_notes:'School has had acting principal for 18 months',learners_reached:210,follow_up:true,follow_up_desc:'District Director to conduct accountability visit within 10 days'}},
+    {id:'DEMO_D5',ddd_tool:'Term to Date, School Achievement Report',data_viewed:'SBA vs Exam deviation analysis — Pinetown',insight:'4 schools show 20%+ SBA-Exam gap in Maths Literacy',decision_made:'Analyse SBA-exam deviation gap',contextual_factors:'',made_by:'Ms R Sikhwari (Provincial Manager)',date:'2026-02-14',logged_by:'R Sikhwari',
+      details:{province:'KwaZulu-Natal',district:'Pinetown',schools:'Senzangakhona High, Ntuzuma Combined, Inanda Secondary',term:'Term 1 2026',activity_type:'Lesson observation',intervention_theme:'DBE Mentorship',subjects:['Mathematical Literacy','Mathematics'],grades:['10','11'],description:'Observed 6 Maths Lit lessons to investigate SBA-Exam gap. Found assessments not aligned to exam standards.',ddd_used:'yes-direct',ddd_reports:['Term to Date','School Achievement Report'],decision_type:'Analyse SBA-exam deviation gap',ctx_staffing:['All posts filled'],ctx_resources:['Adequate'],ctx_learners:['No major concerns'],ctx_notes:'',learners_reached:380,follow_up:true,follow_up_desc:'Subject advisors to moderate SBA tasks for Term 2 before administration'}}
+  ];
+
+  const demo_acts = [
+    {id:'DEMO_A0',decision_id:'DEMO_D0',action_taken:'Learner profiling & grouping + Extra lessons / revision classes',responsible:'Ms F Moshoeshoe & Mr T Mokoena (Subject Advisor)',status:'Completed',target_date:'2025-11-30',notes:'35 at-risk learners grouped by gap analysis. 3x weekly after-school Maths sessions (Tue/Thu/Sat) for 6 weeks. Focused on algebra, functions, and exam technique. Subject advisor co-taught with educators.',logged_by:'F Moshoeshoe',supporting_doc_url:'https://docs.google.com/spreadsheets/d/demo-learner-profiles-gr10',supporting_doc_name:'Grade 10 Maths Learner Profiles & Attendance'},
+    {id:'DEMO_A1',decision_id:'DEMO_D1',action_taken:'Subject improvement plan developed',responsible:'Mr V Teise',status:'In Progress',target_date:'2026-02-14',notes:'Follow-up: Return visit in 2 weeks to check if Subject Improvement Plan has been implemented',logged_by:'V Teise',supporting_doc_url:'https://docs.google.com/document/d/demo-sip-jtg',supporting_doc_name:'Maths SIP — JTG Schools'},
+    {id:'DEMO_A2',decision_id:'DEMO_D2',action_taken:'Extra lessons / revision classes',responsible:'Ms F Moshoeshoe',status:'In Progress',target_date:'2026-03-01',notes:'Saturday classes starting 22 Feb, 08:00-12:00',logged_by:'F Moshoeshoe',supporting_doc_url:'',supporting_doc_name:''},
+    {id:'DEMO_A3',decision_id:'DEMO_D3',action_taken:'Educator coaching / mentoring',responsible:'Mr K Makatu',status:'Completed',target_date:'2026-02-10',notes:'12 educators trained in reading comprehension strategies',logged_by:'K Makatu',supporting_doc_url:'https://drive.google.com/file/d/demo-register',supporting_doc_name:'Workshop attendance register'},
+    {id:'DEMO_A4',decision_id:'DEMO_D4',action_taken:'Referral to SMT / DMT / PED',responsible:'Ms P Mtyobo',status:'Planned',target_date:'2026-02-22',notes:'Follow-up: District Director to conduct accountability visit within 10 days',logged_by:'P Mtyobo',supporting_doc_url:'',supporting_doc_name:''},
+    {id:'DEMO_A5',decision_id:'DEMO_D5',action_taken:'SBA target-setting with learners',responsible:'Ms R Sikhwari',status:'In Progress',target_date:'2026-03-15',notes:'Follow-up: Subject advisors to moderate SBA tasks for Term 2',logged_by:'R Sikhwari',supporting_doc_url:'',supporting_doc_name:''}
+  ];
+
+  const demo_outs = [
+    {id:'DEMO_O0',action_id:'DEMO_A0',intervention_id:null,description:'Grade 10 Maths pass rate at Boitumelo Secondary improved from 41% (Term 3) to 64% (Term 4). Of the 35 targeted learners, 23 moved above the pass threshold — a 66% success rate. Average mark for the cohort improved by 12 percentage points.',metric:'Pass rate improvement',value:'41% → 64% (+23 percentage points)',evidence:'SA-SAMS Term 4 2025 results, verified against DDD FET Promotion Profiles report. Attendance register confirms 89% attendance across the 18 after-school sessions.',date:'2026-01-20',logged_by:'F Moshoeshoe'},
+    {id:'DEMO_O1',action_id:'DEMO_A3',intervention_id:null,description:'8 of 12 educators now using scaffolded reading approach in lessons. Learner participation visibly improved in follow-up observation.',metric:'Educator adoption rate',value:'67% (8/12)',evidence:'Follow-up lesson observations — 24 Feb 2026',date:'2026-02-24',logged_by:'K Makatu'}
+  ];
+
+  S.decisions = demo_decs;
+  S.actions = demo_acts;
+  S.outcomes = demo_outs;
 }
 
 // ── RENDER ──
@@ -546,6 +610,7 @@ function renderDashboard() {
   const dddPct = Math.round(((dddUsageCounts.direct+dddUsageCounts.informed)/dddTotal)*100);
 
   return `<div class="dash-wrap">
+    ${S.decisions[0]?.id?.startsWith('DEMO_') ? '<div class="demo-banner">📋 <strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
     <!-- STAT CARDS -->
     <div class="stats-row">
       <div class="stat-card"><div class="stat-num">${totalActivities}</div><div class="stat-label">Activities Logged</div></div>
@@ -565,12 +630,97 @@ function renderDashboard() {
           <div style="width:${(dddUsageCounts.none/dddTotal)*100}%;background:var(--grey-lt);min-width:${dddUsageCounts.none?'4px':'0'}"></div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--grey)">
-          <span>🟢 Direct: ${dddUsageCounts.direct}</span>
-          <span>🔵 Informed: ${dddUsageCounts.informed}</span>
-          <span>🟠 Partial: ${dddUsageCounts.partial}</span>
-          <span>⚪ None: ${dddUsageCounts.none}</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal);vertical-align:middle;margin-right:3px"></span>Direct: ${dddUsageCounts.direct}</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal-md);vertical-align:middle;margin-right:3px"></span>Informed: ${dddUsageCounts.informed}</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--orange);vertical-align:middle;margin-right:3px"></span>Partial: ${dddUsageCounts.partial}</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--grey-lt);border:1px solid #ccc;vertical-align:middle;margin-right:3px"></span>None: ${dddUsageCounts.none}</span>
         </div>
         <p style="font-size:11px;color:var(--grey);margin-top:8px">${dddPct}% of activities were directly triggered or informed by DDD data</p>
+      </div>
+    </div>
+
+    <!-- D → A → O CHAIN VIEW -->
+    <div class="dash-section">
+      <div class="dash-section-hdr"><h3>🔗 Decision → Action → Outcome Chains</h3></div>
+      <div class="dash-section-body" style="padding:8px">
+        ${decs.length === 0 ? '<div class="empty">No activities logged yet. Start by logging your first activity!</div>' :
+          decs.map(d => {
+            const det = d.details || {};
+            const relActs = S.actions.filter(a=>a.decision_id===d.id);
+            const expanded = S.expandedChains && S.expandedChains[d.id];
+            const SC = {
+              'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},
+              'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},
+              'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}
+            };
+            return `<div class="chain">
+              <div class="chain-hdr" onclick="S.expandedChains=S.expandedChains||{};S.expandedChains['${d.id}']=!S.expandedChains['${d.id}'];render()">
+                <div>
+                  <div class="chain-title">${esc(det.activity_type||d.decision_made||'Activity')} — ${esc(det.schools||'')}</div>
+                  <div class="chain-meta">${esc(det.district||'')}${det.province?' · '+esc(det.province):''} · ${fmtDate(d.date)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="chain-dots">
+                    <div class="chain-dot" style="background:var(--blue)">D</div>
+                    ${relActs.length ? '<div class="chain-dot" style="background:var(--orange)">A</div>' : ''}
+                    ${S.outcomes.filter(o=>relActs.some(a=>a.id===o.action_id)).length ? '<div class="chain-dot" style="background:var(--green)">O</div>' : ''}
+                  </div>
+                  <span style="font-size:14px;color:var(--grey);transition:transform .2s;transform:rotate(${expanded?'180':'0'}deg)">▾</span>
+                </div>
+              </div>
+              <div class="chain-body${expanded?'':' collapsed'}">
+                <!-- Decision node -->
+                <div class="node">
+                  <div class="node-line"><div class="node-dot" style="background:var(--blue)">D</div>${relActs.length?'<div class="node-stem"></div>':''}</div>
+                  <div class="node-content" style="background:var(--blue-lt)">
+                    <div class="node-type" style="color:var(--blue)">Decision — ${fmtDate(d.date)}</div>
+                    <div class="node-text">${esc(d.decision_made||det.decision_type||'')}</div>
+                    <div class="node-detail">
+                      ${d.ddd_tool ? '<strong>DDD Tool:</strong> '+esc(d.ddd_tool)+'<br>' : ''}
+                      ${d.insight ? '<strong>Insight:</strong> '+esc(d.insight)+'<br>' : ''}
+                      ${det.subjects&&det.subjects.length ? '<strong>Subjects:</strong> '+det.subjects.join(', ')+'<br>' : ''}
+                      ${det.grades&&det.grades.length ? '<strong>Grades:</strong> '+det.grades.map(g=>'Gr '+g).join(', ')+'<br>' : ''}
+                      ${d.made_by ? 'By: '+esc(d.made_by) : ''}
+                    </div>
+                    ${d.contextual_factors ? '<div class="ctx-banner"><strong style="color:var(--orange)">⚠ Context:</strong> '+esc(d.contextual_factors)+'</div>' : ''}
+                  </div>
+                </div>
+                <!-- Action nodes -->
+                ${relActs.map(act => {
+                  const sc = SC[act.status] || SC.Planned;
+                  const actOuts = S.outcomes.filter(o=>o.action_id===act.id);
+                  return `
+                  <div class="node" style="padding-left:14px">
+                    <div class="node-line"><div class="node-dot" style="background:var(--orange)">A</div>${actOuts.length?'<div class="node-stem"></div>':''}</div>
+                    <div class="node-content" style="background:var(--orange-lt)">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div class="node-type" style="color:var(--orange)">Action</div>
+                        <span class="status-pill" style="background:${sc.bg};color:${sc.fg}"><span class="sdot" style="background:${sc.dot}"></span>${esc(act.status)}</span>
+                      </div>
+                      <div class="node-text">${esc(act.action_taken)}</div>
+                      <div class="node-detail">${act.responsible?'Responsible: '+esc(act.responsible):''} ${act.target_date?'· Target: '+fmtDate(act.target_date):''}</div>
+                      ${act.supporting_doc_url ? '<div class="doc-link"><a href="'+esc(act.supporting_doc_url)+'" target="_blank" rel="noopener">📎 '+esc(act.supporting_doc_name||'View document')+'</a></div>' : ''}
+                      ${act.logged_by ? '<div class="node-who">Logged by: '+esc(act.logged_by)+'</div>' : ''}
+                    </div>
+                  </div>
+                  ${actOuts.map(out => `
+                  <div class="node" style="padding-left:28px">
+                    <div class="node-line"><div class="node-dot" style="background:var(--green)">O</div></div>
+                    <div class="node-content" style="background:var(--green-lt)">
+                      <div class="node-type" style="color:var(--green-dk)">Outcome — ${fmtDate(out.date)}</div>
+                      <div class="node-text">${esc(out.description)}</div>
+                      <div class="node-detail">
+                        ${out.metric ? '<strong>'+esc(out.metric)+':</strong> '+esc(out.value)+'<br>' : ''}
+                        ${out.evidence ? 'Evidence: '+esc(out.evidence) : ''}
+                      </div>
+                      ${out.logged_by ? '<div class="node-who">Logged by: '+esc(out.logged_by)+'</div>' : ''}
+                    </div>
+                  </div>`).join('')}`;
+                }).join('')}
+              </div>
+            </div>`;
+          }).join('')
+        }
       </div>
     </div>
 
@@ -615,37 +765,6 @@ function renderDashboard() {
       </div>
     </div>` : ''}
 
-    <!-- RECENT ACTIVITY FEED -->
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>🕐 Recent Activity</h3></div>
-      <div class="dash-section-body">
-        ${decs.length === 0 ? '<div class="empty">No activities logged yet. Start by logging your first activity!</div>' :
-          decs.slice(0,15).map(d => {
-            const det = d.details || {};
-            const allCtx = [...(det.ctx_staffing||[]),...(det.ctx_resources||[]),...(det.ctx_learners||[])].filter(c=>c!=='All posts filled'&&c!=='Adequate'&&c!=='No major concerns');
-            const relActs = S.actions.filter(a=>a.decision_id===d.id);
-            return `<div class="feed-item fade-in">
-              <div class="feed-dot" style="background:${det.ddd_used&&det.ddd_used!=='no'?'var(--teal)':'var(--grey-lt)'}"></div>
-              <div class="feed-body">
-                <div class="feed-title">${esc(det.activity_type||d.decision_made||'Activity')}</div>
-                <div class="feed-meta">
-                  ${det.schools ? esc(det.schools) + ' · ' : ''}${det.district||''} · ${fmtDate(d.date)}
-                  ${det.learners_reached ? ' · ~'+det.learners_reached+' learners' : ''}
-                </div>
-                ${relActs.length ? `<div class="feed-meta" style="color:var(--navy)">Action: ${esc(relActs[0].action_taken)}</div>` : ''}
-                <div class="feed-tags">
-                  ${det.ddd_used&&det.ddd_used!=='no' ? '<span class="feed-tag" style="background:var(--teal-lt);color:var(--teal-dk)">DDD ✓</span>' : ''}
-                  ${(det.subjects||[]).slice(0,3).map(s=>'<span class="feed-tag">'+esc(s)+'</span>').join('')}
-                  ${allCtx.slice(0,2).map(c=>'<span class="feed-tag ctx">'+esc(c)+'</span>').join('')}
-                  ${det.follow_up ? '<span class="feed-tag fup">Follow-up</span>' : ''}
-                  ${relActs[0]?.supporting_doc_url ? '<span class="feed-tag">📎 Doc</span>' : ''}
-                </div>
-              </div>
-            </div>`;
-          }).join('')
-        }
-      </div>
-    </div>
   </div>`;
 }
 
