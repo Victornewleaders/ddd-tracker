@@ -15,11 +15,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f3f2f1;color:#32313
 .hdr-sub{font-size:11px;color:#B8DCDC;margin-top:2px}
 .hdr-titles{flex:1}
 .hdr-user{display:flex;align-items:center;gap:8px}
-nav.nav{display:flex;max-width:720px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1)}
-.nav-btn{flex:1;background:none;border:none;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;padding:8px;cursor:pointer;font-family:inherit;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.nav-btn.active{color:white;box-shadow:inset 0 -2px 0 var(--green)}
-.nav-btn:hover{color:white}
-.nav-icon{font-size:14px}
+nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding:10px 16px 8px}
+.nav-hint{text-align:center;font-size:10px;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:.5px}
+.nav-hint span{color:var(--green);font-weight:700}
+.nav-row{display:flex;gap:10px}
+.nav-btn{flex:1;border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:14px;font-weight:700;padding:12px 14px;cursor:pointer;font-family:inherit;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;background:rgba(255,255,255,.08)}
+.nav-btn.active{color:white;background:rgba(122,182,72,.25);border-color:var(--green);box-shadow:0 0 12px rgba(122,182,72,.3)}
+.nav-btn:not(.active):hover{color:white;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);transform:translateY(-1px)}
+.nav-icon{font-size:16px}
 
 /* ── FORM ── */
 .form-wrap{max-width:640px;margin:0 auto;padding:16px 16px 40px}
@@ -290,8 +293,11 @@ function render() {
         </div>
       </div>
       <nav class="nav">
-        <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()"><span class="nav-icon">✏️</span>Log Activity</button>
-        <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()"><span class="nav-icon">📊</span>My Dashboard</button>
+        <div class="nav-hint">👇 Tap to switch between <span>logging</span> and <span>viewing</span></div>
+        <div class="nav-row">
+          <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()"><span class="nav-icon">✏️</span>Log Activity</button>
+          <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()"><span class="nav-icon">📊</span>My Dashboard</button>
+        </div>
       </nav>
     </header>
     ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : renderDashboard()}
