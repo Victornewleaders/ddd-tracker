@@ -1,11 +1,13 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<!-- saved from url=(0086)file:///C:/Users/Victor%20Huni.VICTORHUNI-PC/Downloads/DDD_Tracker_with_Toolkit_2.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DDD Learner Improvement Interventions Tracker</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--teal:#0B8E8D;--teal-dk:#074445;--teal-lt:#E0F4F4;--teal-md:#4DB6AC;--green:#7AB648;--green-dk:#5FAD56;--green-lt:#E8F5E9;--orange:#E8952E;--orange-lt:#FFF3E0;--navy:#1A2332;--white:#FFF;--off:#F7F9FC;--grey:#607D8B;--grey-lt:#ECEFF1;--grey-dk:#37474F;--red:#E53935;--red-lt:#FFEBEE;--blue:#1565C0;--blue-lt:#E3F2FD}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#f3f2f1;color:#323130;min-height:100vh}
 
-/* ── HEADER ── */
+/* HEADER */
 .hdr{background:linear-gradient(135deg,#074445 0%,#0F7B7D 50%,#0A6B4F 100%);position:sticky;top:0;z-index:100}
 .hdr-bar{height:4px;background:linear-gradient(90deg,var(--teal),var(--green),var(--orange))}
 .hdr-content{display:flex;align-items:center;gap:12px;padding:10px 16px;max-width:720px;margin:0 auto}
@@ -24,7 +26,7 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .nav-btn:not(.active):hover{color:white;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);transform:translateY(-1px)}
 .nav-icon{font-size:16px}
 
-/* ── FORM ── */
+/* FORM */
 .form-wrap{max-width:640px;margin:0 auto;padding:16px 16px 40px}
 .section{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
 .sec-hdr{padding:14px 18px 8px;border-left:4px solid var(--teal);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
@@ -79,7 +81,7 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .success h2{font-size:22px;color:var(--teal-dk);margin-bottom:8px}
 .success p{font-size:13px;color:var(--grey)}
 
-/* ── DASHBOARD ── */
+/* DASHBOARD */
 .dash-wrap{max-width:720px;margin:0 auto;padding:16px 16px 40px}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:500px){.stats-row{grid-template-columns:1fr 1fr}}
@@ -137,7 +139,7 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .footer span{font-size:10px;color:#7B8D9E}
 .footer img{height:22px;border-radius:3px;opacity:.7}
 
-/* ── CHAIN VIEW ── */
+/* CHAIN VIEW */
 .chain{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:12px;overflow:hidden}
 .chain-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--grey-lt)}
 .chain-hdr:hover{background:var(--off)}
@@ -163,19 +165,69 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .sdot{width:6px;height:6px;border-radius:50%;display:inline-block}
 .demo-banner{background:linear-gradient(135deg,var(--blue-lt),var(--teal-lt));border:1px dashed var(--teal);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--teal-dk);text-align:center}
 .demo-banner strong{color:var(--navy)}
+
+/* TOOLKIT */
+.tk-wrap{max-width:720px;margin:0 auto;padding:16px 16px 40px}
+.tk-tabs{display:flex;gap:4px;background:#fff;border-bottom:1px solid var(--grey-lt);padding:8px 12px 0;border-radius:8px 8px 0 0;margin-bottom:0;overflow-x:auto}
+.tk-tab{padding:8px 12px;border:none;background:transparent;color:var(--grey);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.tk-tab.on{color:var(--teal);border-bottom-color:var(--teal)}
+.tk-tab:hover:not(.on){color:var(--navy)}
+.tk-card{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:10px;overflow:hidden;border:2px solid transparent;transition:all .2s;cursor:pointer}
+.tk-card.sel{border-color:var(--teal)}
+.tk-card-h{padding:12px 14px;display:flex;align-items:center;gap:10px}
+.tk-card-h:hover{background:var(--off)}
+.tk-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tk-card-b{padding:0 14px 14px;border-top:1px solid #f3f2f1}
+.tk-path{background:var(--blue-lt);border-radius:6px;padding:7px 10px;font-size:11px;color:var(--blue);display:flex;align-items:center;gap:5px;margin-top:8px;font-weight:500;font-family:'Cascadia Code','Consolas',monospace}
+.tk-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #FFE0B2;background:var(--orange-lt);color:#E07B2A}
+.tk-chips{display:flex;flex-wrap:wrap;gap:4px}
+.tk-chip{font-size:10px;padding:3px 7px;border-radius:4px;font-weight:500}
+.tk-tip{border-radius:8px;padding:10px 12px;border-left:3px solid;margin-top:10px}
+.tk-steps{counter-reset:step}
+.tk-step{display:flex;gap:8px;margin-bottom:4px;font-size:12px;color:var(--grey-dk);line-height:1.5}
+.tk-sn{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;background:var(--teal-lt);color:var(--teal)}
+.tk-prog{display:flex;gap:4px;margin-bottom:14px}
+.tk-prog-s{flex:1;padding:6px;border-radius:6px;font-size:10px;font-weight:600;text-align:center;cursor:pointer;transition:all .2s}
+.tk-ch{border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.tk-ch:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.tk-ch.sel{border-color:currentColor}
+.tk-iv{background:var(--off);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.tk-iv.sel{border-color:var(--teal);background:#fff}
+.tk-peer{padding:12px 0;border-bottom:1px solid #f3f2f1;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tk-peer:last-child{border-bottom:none}
+.tk-sort{padding:4px 8px;border-radius:4px;border:none;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.tk-filt{padding:4px 10px;border-radius:4px;border:1px solid #e1dfdd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;transition:.15s}
+.tk-filt.on{border-color:var(--teal);background:var(--teal-lt);color:var(--teal-dk)}
+.tk-ctx{background:linear-gradient(135deg,var(--teal-lt),var(--green-lt));border:1px solid #B2DFDB;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:#fff;border-radius:12px;max-width:400px;width:100%;overflow:hidden;animation:modalIn .2s}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+ <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="data:image/jpeg;base64,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" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Help us track how support is improving learner outcomes</div> </div> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn active" onclick="S.view=&#39;log&#39;;S.submitted=false;render()">Log Activity</button> <button class="nav-btn " onclick="S.view=&#39;dashboard&#39;;render()">My Dashboard</button> <button class="nav-btn " onclick="S.view=&#39;toolkit&#39;;render()">Interventions Toolkit</button> </div> </nav> </header> <div class="form-wrap"> <p style="font-size:12px;color:var(--grey);margin-bottom:12px;text-align:center">This takes 3–5 minutes. Most fields are tap-to-select.</p> <!-- SECTION 1: Where & When --> <div class="section"> <div class="sec-hdr " onclick="S.openSections[1]=!S.openSections[1];render()"> <div><h2>1. Where &amp; When</h2><p>Where and when did this activity happen?</p></div> <span class="arrow open"></span> </div>
+ <div class="sec-body" id="sec1"> <div class="field-row"> <div class="field"><label>Term<span class="req">*</span></label> <select onchange="S.f.term=this.value"><option selected="">Term 1 2026</option><option>Term 2 2026</option><option>Term 3 2026</option><option>Term 4 2026</option></select> </div> <div class="field"><label>Date<span class="req">*</span></label><input type="date" value="2026-02-21" onchange="S.f.activity_date=this.value"></div> </div> <div class="field-row"> <div class="field"><label>Province<span class="req">*</span></label> <select onchange="S.f.province=this.value;S.f.district=&#39;&#39;;render()"> <option value="">Select province</option> <option>Eastern Cape</option><option>Free State</option><option>Gauteng</option><option>KwaZulu-Natal</option><option>Limpopo</option><option>Mpumalanga</option><option>North West</option><option>Northern Cape</option><option>Western Cape</option>
+ </select> </div> <div class="field"><label>District<span class="req">*</span></label> <select onchange="S.f.district=this.value"> <option value="">Select district</option> 
+ </select> </div> </div> <div class="field"><label>School(s)<span class="req">*</span></label> <div class="hint">Names of schools involved</div> <input type="text" placeholder="e.g. Thuto Primary, Boitumelo Secondary" value="" oninput="S.f.schools=this.value"> </div> </div> </div> <!-- SECTION 2: What Happened --> <div class="section"> <div class="sec-hdr green" onclick="S.openSections[2]=!S.openSections[2];render()"> <div><h2>2. What Happened</h2><p>What type of activity and which subjects/grades?</p></div> <span class="arrow open"></span> </div>
+ <div class="sec-body" id="sec2"> <div class="field-row"> <div class="field"><label>Activity Type<span class="req">*</span></label> <select onchange="S.f.activity_type=this.value"><option value="">Select...</option><option>School support visit</option><option>Workshop / training session</option><option>Mentoring session</option><option>Monitoring / follow-up visit</option><option>Data review meeting</option><option>Lesson observation</option><option>Saturday / extra classes</option><option>Holiday revision programme</option><option>Parent engagement meeting</option><option>District / circuit review meeting</option><option>Rapid Response session</option><option>Other</option></select> </div> <div class="field"><label>Intervention Theme</label> <select onchange="S.f.intervention_theme=this.value"><option value="">Select...</option><option>District Support</option><option>DBE Mentorship</option><option>Underperforming Schools</option><option>GET / Intermediate Phase</option><option>Senior Phase</option><option>Saturday / Extra Classes</option><option>Holiday Programme</option><option>Other</option></select> </div> </div> <div class="field"><label>Subject(s)</label><div class="hint">Tap all that apply</div> <div class="tags"><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Mathematics&#39;,this.checked)"><span>Mathematics</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Mathematical Literacy&#39;,this.checked)"><span>Mathematical Literacy</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;English HL&#39;,this.checked)"><span>English HL</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;English FAL&#39;,this.checked)"><span>English FAL</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Afrikaans HL&#39;,this.checked)"><span>Afrikaans HL</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Afrikaans FAL&#39;,this.checked)"><span>Afrikaans FAL</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;IsiZulu&#39;,this.checked)"><span>IsiZulu</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;IsiXhosa&#39;,this.checked)"><span>IsiXhosa</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Sepedi&#39;,this.checked)"><span>Sepedi</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Setswana&#39;,this.checked)"><span>Setswana</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Sesotho&#39;,this.checked)"><span>Sesotho</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Life Sciences&#39;,this.checked)"><span>Life Sciences</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Physical Sciences&#39;,this.checked)"><span>Physical Sciences</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Natural Sciences&#39;,this.checked)"><span>Natural Sciences</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Social Sciences&#39;,this.checked)"><span>Social Sciences</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;EMS&#39;,this.checked)"><span>EMS</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Business Studies&#39;,this.checked)"><span>Business Studies</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Accounting&#39;,this.checked)"><span>Accounting</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Economics&#39;,this.checked)"><span>Economics</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Life Orientation&#39;,this.checked)"><span>Life Orientation</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Life Skills&#39;,this.checked)"><span>Life Skills</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Technology&#39;,this.checked)"><span>Technology</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Geography&#39;,this.checked)"><span>Geography</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;History&#39;,this.checked)"><span>History</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;CAT&#39;,this.checked)"><span>CAT</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Tourism&#39;,this.checked)"><span>Tourism</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.subjects,&#39;Agricultural Sciences&#39;,this.checked)"><span>Agricultural Sciences</span></label></div> </div> <div class="field"><label>Grade(s)</label><div class="hint">Tap all that apply</div> <div class="tags"><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;R&#39;,this.checked)"><span>Gr R</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;1&#39;,this.checked)"><span>Gr 1</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;2&#39;,this.checked)"><span>Gr 2</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;3&#39;,this.checked)"><span>Gr 3</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;4&#39;,this.checked)"><span>Gr 4</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;5&#39;,this.checked)"><span>Gr 5</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;6&#39;,this.checked)"><span>Gr 6</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;7&#39;,this.checked)"><span>Gr 7</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;8&#39;,this.checked)"><span>Gr 8</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;9&#39;,this.checked)"><span>Gr 9</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;10&#39;,this.checked)"><span>Gr 10</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;11&#39;,this.checked)"><span>Gr 11</span></label><label class="tag"><input type="checkbox" onchange="togArr(S.f.grades,&#39;12&#39;,this.checked)"><span>Gr 12</span></label></div> </div> <div class="field"><label>Brief description</label> <div class="hint">1–2 lines: what happened?</div> <textarea rows="2" placeholder="e.g. Modelled fractions teaching strategy with 3 Foundation Phase educators..." oninput="S.f.description=this.value"></textarea> </div> </div> </div> <!-- SECTION 3: DDD Connection --> <div class="section"> <div class="sec-hdr blue" onclick="S.openSections[3]=!S.openSections[3];render()"> <div><h2>3. DDD Data Connection</h2><p>How did DDD data contribute to this activity?</p></div> <span class="arrow open"></span> </div>
+ <div class="sec-body" id="sec3"> <div class="field"><label>Was DDD data used?<span class="req">*</span></label> <div class="radio-grp"> <label><input type="radio" name="dddUsed" value="yes-direct" onchange="S.f.ddd_used=this.value;render()"><span>Yes — directly triggered this</span></label><label><input type="radio" name="dddUsed" value="yes-informed" onchange="S.f.ddd_used=this.value;render()"><span>Yes — informed my approach</span></label><label><input type="radio" name="dddUsed" value="partially" onchange="S.f.ddd_used=this.value;render()"><span>Partially</span></label><label><input type="radio" name="dddUsed" value="no" onchange="S.f.ddd_used=this.value;render()"><span>No</span></label>
+ </div> </div> 
+ <div class="field-row"> <div class="field"><label>Decision made</label> <select onchange="S.f.decision_type=this.value"><option value="">Select...</option><option>Target specific learners</option><option>Profile at-risk / progressed learners</option><option>Apply cohort-bottom or threshold analysis</option><option>Analyse SBA-exam deviation gap</option><option>Deploy subject support</option><option>Redesign lesson approach</option><option>Reallocate resources</option><option>Schedule extra classes</option><option>Set learner performance targets</option><option>Activate attendance monitoring plan</option><option>Sign academic support contracts</option><option>Engage parents/guardians</option><option>Escalate to management</option><option>Correct data quality</option><option>Other</option></select> </div> <div class="field"><label>Action taken<span class="req">*</span></label> <select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option><option>Educator coaching / mentoring</option><option>Lesson modelling / demonstration</option><option>Subject improvement plan developed</option><option>Learner profiling &amp; grouping</option><option>Academic support contract signed</option><option>Progressed learner agreement signed</option><option>Remedial scheduling</option><option>Extra lessons / revision classes</option><option>Past papers &amp; worksheet packs distributed</option><option>Exam technique workshop conducted</option><option>Language / literacy support sessions</option><option>SBA target-setting with learners</option><option>Attendance monitoring plan activated</option><option>Resource / material provision</option><option>Differentiated teaching approach</option><option>Educator reassignment to subject</option><option>Parent meeting arranged</option><option>Term review meeting scheduled</option><option>Referral to SMT / DMT / PED</option><option>Data correction in SA-SAMS</option><option>School accountability discussion</option><option>Peer learning (school-to-school)</option><option>Performance monitoring report compiled</option><option>Other</option></select> </div> </div> 
+ </div> </div> <!-- SECTION 4: Context & Follow-up --> <div class="section"> <div class="sec-hdr orange" onclick="S.openSections[4]=!S.openSections[4];render()"> <div><h2>4. Context &amp; Follow-up</h2><p>Barriers, impact, and what happens next</p></div> <span class="arrow open"></span> </div>
+ <div class="sec-body" id="sec4"> <div class="field"><label>School context</label><div class="hint">Tap all that apply across schools visited</div> <div style="margin-bottom:8px"><span class="tag-grp-title">Staffing:</span> <div class="tags" style="display:inline-flex"><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_staffing,&#39;All posts filled&#39;,this.checked)"><span>All posts filled</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_staffing,&#39;Vacant post(s)&#39;,this.checked)"><span>Vacant post(s)</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_staffing,&#39;Teaching outside specialisation&#39;,this.checked)"><span>Teaching outside specialisation</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_staffing,&#39;Acting principal/HoD&#39;,this.checked)"><span>Acting principal/HoD</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_staffing,&#39;High educator absenteeism&#39;,this.checked)"><span>High educator absenteeism</span></label></div> </div> <div style="margin-bottom:8px"><span class="tag-grp-title">Resources:</span> <div class="tags" style="display:inline-flex"><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_resources,&#39;Adequate&#39;,this.checked)"><span>Adequate</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_resources,&#39;Textbook shortage&#39;,this.checked)"><span>Textbook shortage</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_resources,&#39;No devices/connectivity&#39;,this.checked)"><span>No devices/connectivity</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_resources,&#39;Infrastructure issues&#39;,this.checked)"><span>Infrastructure issues</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_resources,&#39;LTSM not delivered&#39;,this.checked)"><span>LTSM not delivered</span></label></div> </div> <div><span class="tag-grp-title">Learners:</span> <div class="tags" style="display:inline-flex"><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_learners,&#39;No major concerns&#39;,this.checked)"><span>No major concerns</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_learners,&#39;High absenteeism&#39;,this.checked)"><span>High absenteeism</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_learners,&#39;Welfare concerns&#39;,this.checked)"><span>Welfare concerns</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_learners,&#39;Overcrowded classrooms&#39;,this.checked)"><span>Overcrowded classrooms</span></label><label class="tag tag-orange"><input type="checkbox" onchange="togArr(S.f.ctx_learners,&#39;Language barriers&#39;,this.checked)"><span>Language barriers</span></label></div> </div> </div> <div class="field"><label>Context note <span style="font-weight:400;color:var(--grey)">(optional)</span></label> <textarea rows="2" placeholder="e.g. No permanent Maths educator since Term 3 2025..." oninput="S.f.ctx_notes=this.value"></textarea> </div> <div class="field-row"> <div class="field"><label>Learners reached</label><div class="hint">Approximate number impacted</div> <input type="number" placeholder="e.g. 120" min="0" value="" oninput="S.f.learners_reached=this.value"> </div> <div class="field"><label>Follow-up needed?</label> <div class="radio-grp"> <label><input type="radio" name="fup" value="yes" onchange="S.f.follow_up=true;render()"><span>Yes</span></label> <label><input type="radio" name="fup" value="no" checked="" onchange="S.f.follow_up=false;render()"><span>No</span></label> </div> </div> </div> 
+ <div class="field"><label>Supporting document <span style="font-weight:400;color:var(--grey)">(optional)</span></label> <div class="hint">Link to a relevant plan, report, or sign-in register</div> <input type="url" placeholder="Paste link (Google Drive, OneDrive, SharePoint...)" value="" oninput="S.f.doc_url=this.value" style="margin-bottom:6px"> <input type="text" placeholder="Document name (e.g. Maths Improvement Plan)" value="" oninput="S.f.doc_name=this.value"> </div> </div> </div> <div class="form-submit"> <button class="btn btn-teal" onclick="submitForm()" style="min-width:200px"> Submit
+ </button> </div> </div>
+ <div class="footer"> <img src="data:image/jpeg;base64,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" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> </div>
 <div class="toast" id="toast"></div>
-<script src="./supabase.js"></script>
+<script src="./DDD Learner Improvement Interventions Tracker 21Feb2026_files/supabase.js"></script>
 <script>
 // Logo and config will be injected
 const LOGO = "data:image/jpeg;base64,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";
 const SUPA_URL = 'https://bqznmupkqsxxlyiiqrys.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxem5tdXBrcXN4eGx5aWlxcnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk2MDgwOTUsImV4cCI6MjA1NTE4NDA5NX0.jM54Wa9CExE5sHOTMFMmGUxgRn0OGxHSN9cPmrkFwMo';
 
-// ── CONFIG ──
+// CONFIG 
 const DISTRICTS = {"Eastern Cape":["Alfred Nzo East","Alfred Nzo West","Amathole East","Amathole West","Buffalo City","Chris Hani East","Chris Hani West","Joe Gqabi","Nelson Mandela","O R Tambo Coastal","O R Tambo Inland","Sarah Baartman"],"Free State":["Fezile Dabi","Lejweleputswa","Mangaung Metro","Thabo Mofutsanyana","Xhariep"],"Gauteng":["Ekurhuleni North","Ekurhuleni South","Gauteng East","Gauteng North","Gauteng West","Johannesburg Central","Johannesburg East","Johannesburg North","Johannesburg South","Johannesburg West","Sedibeng East","Sedibeng West","Tshwane North","Tshwane South","Tshwane West"],"KwaZulu-Natal":["Amajuba","Harry Gwala","Ilembe","King Cetshwayo","Pinetown","Ugu","Umgungundlovu","Umkhanyakude","Umlazi","Umzinyathi","Uthukela","Zululand"],"Limpopo":["Capricorn North","Capricorn South","Mogalakwena","Mopani East","Mopani West","Sekhukhune East","Sekhukhune South","Vhembe East","Vhembe West","Waterberg"],"Mpumalanga":["Bohlabela","Ehlanzeni","Gert Sibande","Nkangala"],"North West":["Ditsobotla","Greater Taung","Jb Marks","Kagisano Molopo","Madibeng","Mahikeng","Maquassi Hills","Matlosana","Moretele","Moses Kotane","Naledi","Ramotshere Moiloa","Ratlou","Rustenburg","Tswaing"],"Northern Cape":["Frances Baard","John Taolo Gaetsewe","Namakwa","Pixley-Ka-Seme","Zf Mgcawu"],"Western Cape":["Cape Winelands","Eden And Central Karoo","Metro Central","Metro East","Metro North","Metro South","Overberg","Partnership Schools","West Coast"]};
 
 const ACTIVITY_TYPES = ["School support visit","Workshop / training session","Mentoring session","Monitoring / follow-up visit","Data review meeting","Lesson observation","Saturday / extra classes","Holiday revision programme","Parent engagement meeting","District / circuit review meeting","Rapid Response session","Other"];
@@ -189,596 +241,488 @@ const CTX_STAFFING = ["All posts filled","Vacant post(s)","Teaching outside spec
 const CTX_RESOURCES = ["Adequate","Textbook shortage","No devices/connectivity","Infrastructure issues","LTSM not delivered"];
 const CTX_LEARNERS = ["No major concerns","High absenteeism","Welfare concerns","Overcrowded classrooms","Language barriers"];
 
-// ── STATE ──
+// TOOLKIT DATA 
+const RD = {
+ entity:{circuit:"Ane Circuit 5",district:"Alfred Nzo East",province:"Eastern Cape",school:"Marina Secondary School",quintile:1},
+ learners:{total:2748,gr10:1073,gr11:897,gr12:778},
+ promotion:{promoted:1697,notPromoted:1051,rate:61.8},
+ attendance:{total:2748,zeroAbsent:1446,low:1055,medium:217,high:29,chronic:1,avgDays:1.7},
+ performance:{avgMark:46.2,below30:206,range30_39:498,range40_49:993,above50:1051},
+ fetCriteria:{metAll:1697,missedOne:441,missedMultiple:610,profiles:{levelUp:817,other:500,atRisk30:285,atRiskHL:95,dna30:333,dnaHL:84,dnaMultiple:561,dnaHL30:49,dna40:24}},
+ predictions:{promTrue:1051,promFalse:919,noData:778}
+};
+
+const TK_REPORTS = [
+ {id:"lcr",name:"Learner Chart Report",icon:"LCR",color:"#0B8E8D",desc:"Profile learners by performance bands, attendance, age, and promotion status",bestFor:["Identify struggling learners","Attendance monitoring","Over-age learner tracking","Subject-level performance"],path:"DDD Dashboard → Select School → Learner Chart Report",dataPoints:["Days absent per learner","Average report mark","Subject marks","Promotion status","Failures count"],realInsight:"At Marina Secondary, 704 learners (26%) score below 40%. The Learner Chart shows 30 learners with 16+ days absent AND below 40% average — prime candidates for targeted attendance intervention."},
+ {id:"fpc",name:"FET Promotion Criteria Profiles",icon:"FPC",color:"#E8952E",desc:"See exactly which promotion criteria learners are meeting or missing",bestFor:["Profile at-risk FET learners","Identify 'one criteria away' learners","Subject-specific gap analysis","NPPPPR policy alignment"],path:"DDD Dashboard → Select School → FET Promotion Criteria Profiles",dataPoints:["Achievement category","Criteria profile","2nd & 5th highest subject","Home Language level"],realInsight:"441 learners at Marina (16%) missed just ONE promotion criteria. Of these, 333 need just 30%+ in one more subject — the lowest lift interventions with highest impact.",policyLink:"NPPPPR"},
+ {id:"t4p",name:"Term 4 Promotion Predictions",icon:"T4P",color:"#1565C0",desc:"ML-powered predictions of which learners are likely to be promoted by year-end",bestFor:["Early warning identification","Predict year-end outcomes","Compare to previous year","Plan proactive interventions"],path:"DDD Dashboard → Select School → Term 4 Promotion Predictions",dataPoints:["Predicted promoted status (TRUE/FALSE)","Previous year comparison","Scatter plot by school"],realInsight:"919 learners at Marina are predicted NOT to be promoted. Cross-referencing with FET Profiles shows 441 of these are 'one criteria away' — targeted support could shift outcomes for 16% of the school."},
+ {id:"g6p",name:"Grade 6 Performance Insights",icon:"G6",color:"#7AB648",desc:"Identify primary schools at risk of underperformance per Circular D3 criteria",bestFor:["Circular D3 compliance","LOLT & Maths monitoring","Primary school early warning","Year-on-year comparison"],path:"DDD Dashboard → Select School → Grade 6 Performance Insights",dataPoints:["% achieving 50%+ in LOLT","% achieving 50%+ in Maths","True/False underperformance flag","4 terms prior comparison"],realInsight:"Circular D3 defines underperforming primary schools as those where <60% of Grade 6 learners achieve Level 4+ in both LOLT and Mathematics. This report flags schools meeting this criteria for targeted intervention.",policyLink:"Circular D3"},
+ {id:"sar",name:"School Achievement Report",icon:"SAR",color:"#0F7B7D",desc:"School-level achievement trends across subjects, grades, and terms",bestFor:["Subject trend analysis","SBA-Exam gap detection","Term-on-term comparison","Grade-level monitoring"],path:"DDD Dashboard → Select School → School Achievement Report",dataPoints:["Subject pass rates","Achievement level distribution","Term trends","SBA vs Exam alignment"],realInsight:"Use this to identify subjects with declining pass rates or large SBA-Exam gaps. A 20%+ gap often indicates assessment misalignment — a key intervention trigger."},
+ {id:"ovr",name:"General Overview",icon:"OVR",color:"#074445",desc:"Operational monitoring including attendance, submissions, and school planning data",bestFor:["Learner & educator attendance","Weekly submission monitoring","School operational health","Task marks captured"],path:"DDD Dashboard → Overview → Operational Monitoring",dataPoints:["Learner attendance %","Educator attendance %","Task marks captured %","Progressed learners %"],realInsight:"The General Overview shows attendance at a glance. Consistently below 90% learner attendance requires an attendance monitoring plan — a statutory requirement per the South African Schools Act."}
+];
+
+const TK_INTERVENTIONS = [
+ {id:1,name:"Attendance Monitoring Plan",category:"Attendance",difficulty:"Quick Win",timeToImpact:"2-4 weeks",dddReports:["lcr","ovr"],policyRef:"SA Schools Act",description:"Identify chronically absent learners via DDD Learner Chart, establish daily tracking, and trigger parent engagement at threshold days.",steps:["Download Learner Chart → sort by 'Days Absent' descending","Flag learners with 10+ days absent","Set up daily register monitoring by class teacher","Trigger parent meeting at 15+ days","Weekly report to SMT on attendance recovery"],effectiveness:78,usedBy:42,provinces:["EC","KZN","LP"],comparableResults:"In Mopani East, 3 schools reduced chronic absenteeism by 34% in one term using this approach."},
+ {id:2,name:"Learner Profiling & Grouping",category:"Academic Support",difficulty:"Core",timeToImpact:"1 term",dddReports:["fpc","lcr"],policyRef:"NPPPPR",description:"Use FET Promotion Criteria Profiles to group learners by achievement category, then design differentiated support per group.",steps:["Download FET Promotion Criteria data","Group learners: 'Level Up' | 'At Risk' | 'Missed One' | 'Missed Multiple'","Assign intervention intensity per group","Focus maximum support on 'Missed One Criteria' group (highest ROI)","Track movement between groups termly"],effectiveness:85,usedBy:67,provinces:["GP","NW","FS","EC"],comparableResults:"In Lejweleputswa, Boitumelo Secondary improved Gr10 Maths from 41% to 64% after 6 weeks of targeted profiling."},
+ {id:3,name:"Saturday / Extra Classes Programme",category:"Academic Support",difficulty:"Core",timeToImpact:"1-2 terms",dddReports:["t4p","fpc","lcr"],policyRef:"CAPS",description:"Data-driven extra classes targeting predicted non-promoted learners in specific subjects identified via DDD predictions.",steps:["Use Term 4 Predictions to identify FALSE-predicted learners","Cross-reference with FET Profiles for subject gaps","Schedule subject-specific Saturday sessions (08:00-12:00)","Track attendance at each session","Monitor prediction shifts after Term 2 data submission"],effectiveness:72,usedBy:38,provinces:["FS","GP","MP","KZN"],comparableResults:"520 learners in Lejweleputswa Saturday programme; monitoring attendance after 3 sessions showed 82% retention."},
+ {id:4,name:"SBA-Exam Alignment Audit",category:"Assessment Quality",difficulty:"Advanced",timeToImpact:"1 term",dddReports:["sar"],policyRef:"CAPS Assessment",description:"Identify schools with 20%+ SBA-Exam gap using School Achievement Report, then moderate assessment tasks.",steps:["Pull School Achievement Report → compare SBA vs Exam marks","Flag subjects with 20%+ gap","Subject advisors to moderate SBA tasks before administration","Conduct lesson observations for assessment alignment","Re-check gap after next formal assessment"],effectiveness:68,usedBy:23,provinces:["KZN","GP","EC"],comparableResults:"In Pinetown, 4 schools with 20%+ Maths Lit SBA-Exam gap reduced it to <8% after moderation intervention."},
+ {id:5,name:"Underperforming School Rapid Response",category:"School Support",difficulty:"Advanced",timeToImpact:"1-2 terms",dddReports:["g6p","sar","lcr"],policyRef:"Circular D3",description:"Comprehensive support for schools meeting Circular D3 underperformance criteria or Section 58B.",steps:["Use Grade 6 Performance Insights → identify 'True' underperforming schools","Or use School Achievement → identify secondary schools with <70% NSC pass rate","Deploy circuit manager + subject advisor team","Co-develop Subject Improvement Plan with school","Fortnightly monitoring visits for one term"],effectiveness:74,usedBy:31,provinces:["GP","NW"],comparableResults:"23 of 26 targeted districts exceeded 85% NSC pass rate. 4.9% improvement in NSC pass rate among participating schools."},
+ {id:6,name:"Parent Engagement Campaign",category:"Community",difficulty:"Quick Win",timeToImpact:"Ongoing",dddReports:["lcr","ovr"],policyRef:"SA Schools Act",description:"Engage parents of learners with poor attendance or declining marks using DDD evidence in conversations.",steps:["Pull Learner Chart for learners with declining marks or high absence","Prepare individual learner evidence sheets","Schedule parent meetings (individual or group)","Share DDD data visually — show attendance and marks side by side","Agree on home-support commitments with follow-up date"],effectiveness:65,usedBy:54,provinces:["EC","KZN","LP","MP","GP","FS","NW","NC"],comparableResults:"DDD Case Study: 52% of school-based actors reported engaging parents as a top action taken using DDD data."}
+];
+
+const TK_PEERS = [
+ {entity:"Ane Circuit 1",district:"Alfred Nzo East",learners:6442,promoRate:72,topIntervention:"Learner Profiling & Grouping",result:"+8% promotion rate",context:"Similar quintile 1, rural FET schools"},
+ {entity:"Ane Circuit 3",district:"Alfred Nzo East",learners:3959,promoRate:74,topIntervention:"Saturday Extra Classes",result:"+6% Maths pass rate",context:"Comparable class sizes and staffing"},
+ {entity:"Ane Circuit 4",district:"Alfred Nzo East",learners:2868,promoRate:77,topIntervention:"Attendance Monitoring Plan",result:"34% reduction in chronic absence",context:"Similar learner demographics"},
+ {entity:"Mopani East (LP)",district:"Mopani East",learners:4200,promoRate:69,topIntervention:"Educator Coaching & Mentoring",result:"67% educator adoption rate",context:"Rural, language barrier context"},
+ {entity:"John Taolo Gaetsewe (NC)",district:"JTG",learners:3400,promoRate:65,topIntervention:"Subject Improvement Plan",result:"Maths SIP implemented at 3 schools",context:"Vacant posts, similar challenges"}
+];
+
+const TK_POLICIES = {
+ "NPPPPR":{full:"National Policy Pertaining to Programme and Promotion Requirements",criteria:["7+ official subjects","40% (Level 3) in Home Language","40% (Level 3) in 2 additional subjects","30% (Level 2) in 3 additional subjects"]},
+ "Circular D3":{full:"DBE Circular on Underperforming Schools",criteria:["Primary: <60% of Grade 6 achieving Level 4+ in both LOLT and Mathematics","Triggers mandatory support from the district"]},
+ "SA Schools Act":{full:"South African Schools Act 84 of 1996",criteria:["Section 3: Compulsory attendance for ages 7-15","Section 5-6: Parent obligations","Schools must keep attendance registers","Report serious absence to the district"]},
+ "CAPS":{full:"Curriculum and Assessment Policy Statement",criteria:["What must be taught in each subject","How tests and exams should be weighted","Internal and external assessment alignment"]},
+ "CAPS Assessment":{full:"CAPS Assessment Guidelines",criteria:["How school-based assessment (SBA) should be done","How to moderate and quality assure assessments","SBA and exam marks should be aligned"]}
+};
+
+// STATE 
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
 const S = {
-  loading:true, error:null, authState:'checking',
-  official:{full_name:'User',role:'',province:'',district:'',email:''},
-  view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{},
-  saving:false, submitted:false,
-  openSections:{1:true,2:true,3:true,4:true},
-  f: {
-    province:'',district:'',schools:'',term:'Term 1 2026',activity_date:today(),
-    activity_type:'',intervention_theme:'',subjects:[],grades:[],description:'',
-    ddd_used:'',ddd_reports:[],data_insight:'',decision_type:'',action_type:'',action_other:'',
-    ctx_staffing:[],ctx_resources:[],ctx_learners:[],ctx_notes:'',
-    learners_reached:'',follow_up:false,follow_up_desc:'',
-    doc_url:'',doc_name:''
-  }
+ loading:true, error:null, authState:'checking',
+ official:{full_name:'User',role:'',province:'',district:'',email:''},
+ view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{},
+ saving:false, submitted:false,
+ tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
+ dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
+ openSections:{1:true,2:true,3:true,4:true},
+ f: {
+ province:'',district:'',schools:'',term:'Term 1 2026',activity_date:today(),
+ activity_type:'',intervention_theme:'',subjects:[],grades:[],description:'',
+ ddd_used:'',ddd_reports:[],data_insight:'',decision_type:'',action_type:'',action_other:'',
+ ctx_staffing:[],ctx_resources:[],ctx_learners:[],ctx_notes:'',
+ learners_reached:'',follow_up:false,follow_up_desc:'',
+ doc_url:'',doc_name:''
+ }
 };
 
-// ── SUPABASE ──
+// SUPABASE 
 const memStore = {};
 const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
-  auth: { storage: { getItem:k=>memStore[k]||null, setItem:(k,v)=>{memStore[k]=v}, removeItem:k=>{delete memStore[k]} }, flowType:'implicit', detectSessionInUrl:false }
+ auth: { storage: { getItem:k=>memStore[k]||null, setItem:(k,v)=>{memStore[k]=v}, removeItem:k=>{delete memStore[k]} }, flowType:'implicit', detectSessionInUrl:false }
 });
 
 async function checkAuth() {
-  S.authState = 'ready';
-  S.official = {full_name:'User',role:'',province:'',district:'',email:''};
-  await loadAll();
-  render();
+ S.authState = 'ready';
+ S.official = {full_name:'User',role:'',province:'',district:'',email:''};
+ await loadAll();
+ render();
 }
 
 async function loadAll() {
-  try {
-    const [d,a,o,iv] = await Promise.all([
-      sb.from('decisions').select('*').order('created_at',{ascending:false}),
-      sb.from('actions').select('*').order('created_at',{ascending:false}),
-      sb.from('outcomes').select('*').order('created_at',{ascending:false}),
-      sb.from('interventions').select('*').order('entity_name')
-    ]);
-    S.decisions = d.data||[]; S.actions = a.data||[]; S.outcomes = o.data||[]; S.interventions = iv.data||[];
-    // If empty, inject demo data so dashboard is useful immediately
-    if (S.decisions.length === 0) injectDemo();
-    S.loading = false; S.error = null;
-  } catch(e) { S.error = e.message; S.loading = false; }
-  render();
+ try {
+ const [d,a,o,iv] = await Promise.all([
+ sb.from('decisions').select('*').order('created_at',{ascending:false}),
+ sb.from('actions').select('*').order('created_at',{ascending:false}),
+ sb.from('outcomes').select('*').order('created_at',{ascending:false}),
+ sb.from('interventions').select('*').order('entity_name')
+ ]);
+ S.decisions = d.data||[]; S.actions = a.data||[]; S.outcomes = o.data||[]; S.interventions = iv.data||[];
+ // If empty, inject demo data so dashboard is useful immediately
+ if (S.decisions.length === 0) injectDemo();
+ S.loading = false; S.error = null;
+ } catch(e) { S.error = e.message; S.loading = false; }
+ render();
 }
 
 function injectDemo() {
-  const demo_decs = [
-    {id:'DEMO_D0',ddd_tool:'FET Promotion Profiles, Learner Chart Report',data_viewed:'Grade 10 Maths results — Lejweleputswa',insight:'Boitumelo Secondary Grade 10 Maths pass rate dropped from 58% to 41% between Term 1 and Term 3 2025. Learner Chart Report showed 35 learners clustered at 25-29% — just below passing threshold.',decision_made:'Target specific learners',contextual_factors:'Teaching outside specialisation | Only 1 qualified Maths educator for 4 Grade 10 classes',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2025-10-14',logged_by:'F Moshoeshoe',
-      details:{province:'Free State',district:'Lejweleputswa',schools:'Boitumelo Secondary',term:'Term 4 2025',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Mathematics'],grades:['10'],description:'DDD data review identified Boitumelo Secondary Grade 10 Maths as critical. 35 learners clustered just below pass mark. Decided to deploy targeted after-school support with subject advisor and profiled learner grouping.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Learner Chart Report'],decision_type:'Target specific learners',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 qualified Maths educator for 4 Grade 10 classes. 2 educators teaching Maths outside their specialisation.',learners_reached:35,follow_up:false,follow_up_desc:''}},
-    {id:'DEMO_D1',ddd_tool:'School Dashboard, Learner Chart Report',data_viewed:'Maths pass rates for Grade 9 — JTG district',insight:'12 schools below 40% in Maths, concentrated in 3 circuits',decision_made:'Deploy subject support',contextual_factors:'Vacant post(s), Teaching outside specialisation',made_by:'Mr V Teise (Circuit Manager)',date:'2026-01-28',logged_by:'V Teise',
-      details:{province:'Northern Cape',district:'John Taolo Gaetsewe',schools:'Kuruman Primary, Mothibistad High, Batlharo Primary',term:'Term 1 2026',activity_type:'School support visit',intervention_theme:'District Support',subjects:['Mathematics'],grades:['9'],description:'Targeted support visit to 3 underperforming schools in JTG. Reviewed Maths pass rates and agreed on intervention plan.',ddd_used:'yes-direct',ddd_reports:['School Dashboard','Learner Chart Report'],decision_type:'Deploy subject support',ctx_staffing:['Vacant post(s)','Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['High absenteeism'],ctx_notes:'No permanent Maths educator at Batlharo Primary since Term 3 2025',learners_reached:340,follow_up:true,follow_up_desc:'Return visit in 2 weeks to check if Subject Improvement Plan has been implemented'}},
-    {id:'DEMO_D2',ddd_tool:'FET Promotion Profiles',data_viewed:'Grade 12 promotion predictions — Lejweleputswa',insight:'15% of Grade 12 learners predicted to fail Physical Sciences',decision_made:'Schedule extra classes',contextual_factors:'Infrastructure issues, Overcrowded classrooms',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2026-02-03',logged_by:'F Moshoeshoe',
-      details:{province:'Free State',district:'Lejweleputswa',schools:'Thuto Primary, Boitumelo Secondary, Matjhabeng Primary',term:'Term 1 2026',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Physical Sciences','Mathematics'],grades:['12'],description:'District data review meeting to identify at-risk Grade 12 learners and plan Saturday classes.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Term 4 Promotion Predictions'],decision_type:'Schedule extra classes',ctx_staffing:['All posts filled'],ctx_resources:['Infrastructure issues'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 lab for 4 Grade 12 Science classes at Boitumelo',learners_reached:520,follow_up:true,follow_up_desc:'Monitor Saturday class attendance after first 3 sessions'}},
-    {id:'DEMO_D3',ddd_tool:'Senior Phase Promotion Profiles',data_viewed:'Grade 7 English FAL results — Mopani East',insight:'62% of learners below level 4 in English FAL across 5 schools',decision_made:'Redesign lesson approach',contextual_factors:'Language barriers',made_by:'Mr K Makatu (Provincial Manager)',date:'2026-02-10',logged_by:'K Makatu',
-      details:{province:'Limpopo',district:'Mopani East',schools:'Nkowankowa Primary, Giyani High, Lulekani Combined',term:'Term 1 2026',activity_type:'Workshop / training session',intervention_theme:'GET / Intermediate Phase',subjects:['English FAL','English HL'],grades:['7','8'],description:'English literacy workshop for 12 educators. Focused on reading comprehension strategies and scaffolding techniques.',ddd_used:'yes-informed',ddd_reports:['Senior Phase Promotion Profiles','Curriculum Overview'],decision_type:'Redesign lesson approach',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage','No devices/connectivity'],ctx_learners:['Language barriers','Welfare concerns'],ctx_notes:'3 schools in deep rural area with no internet connectivity',learners_reached:890,follow_up:false,follow_up_desc:''}},
-    {id:'DEMO_D4',ddd_tool:'',data_viewed:'Routine monitoring visit',insight:'HODs not conducting class visits or checking educator files',decision_made:'Escalate to management',contextual_factors:'Acting principal/HoD',made_by:'Ms P Mtyobo (Cluster Lead)',date:'2026-02-12',logged_by:'P Mtyobo',
-      details:{province:'Eastern Cape',district:'Sarah Baartman',schools:'Graaff-Reinet Primary, Karoo High',term:'Term 1 2026',activity_type:'Monitoring / follow-up visit',intervention_theme:'District Support',subjects:['Mathematics','Natural Sciences'],grades:['4','5','6'],description:'Monitoring visit found poor curriculum coverage. HODs not conducting class visits. Escalated to District Director.',ddd_used:'no',ddd_reports:[],decision_type:'Escalate to management',ctx_staffing:['Acting principal/HoD','High educator absenteeism'],ctx_resources:['LTSM not delivered'],ctx_learners:['High absenteeism'],ctx_notes:'School has had acting principal for 18 months',learners_reached:210,follow_up:true,follow_up_desc:'District Director to conduct accountability visit within 10 days'}},
-    {id:'DEMO_D5',ddd_tool:'Term to Date, School Achievement Report',data_viewed:'SBA vs Exam deviation analysis — Pinetown',insight:'4 schools show 20%+ SBA-Exam gap in Maths Literacy',decision_made:'Analyse SBA-exam deviation gap',contextual_factors:'',made_by:'Ms R Sikhwari (Provincial Manager)',date:'2026-02-14',logged_by:'R Sikhwari',
-      details:{province:'KwaZulu-Natal',district:'Pinetown',schools:'Senzangakhona High, Ntuzuma Combined, Inanda Secondary',term:'Term 1 2026',activity_type:'Lesson observation',intervention_theme:'DBE Mentorship',subjects:['Mathematical Literacy','Mathematics'],grades:['10','11'],description:'Observed 6 Maths Lit lessons to investigate SBA-Exam gap. Found assessments not aligned to exam standards.',ddd_used:'yes-direct',ddd_reports:['Term to Date','School Achievement Report'],decision_type:'Analyse SBA-exam deviation gap',ctx_staffing:['All posts filled'],ctx_resources:['Adequate'],ctx_learners:['No major concerns'],ctx_notes:'',learners_reached:380,follow_up:true,follow_up_desc:'Subject advisors to moderate SBA tasks for Term 2 before administration'}}
-  ];
+ const demo_decs = [
+ {id:'DEMO_D0',ddd_tool:'FET Promotion Profiles, Learner Chart Report',data_viewed:'Grade 10 Maths results — Lejweleputswa',insight:'Boitumelo Secondary Grade 10 Maths pass rate dropped from 58% to 41% between Term 1 and Term 3 2025. Learner Chart Report showed 35 learners clustered at 25-29% — just below passing threshold.',decision_made:'Target specific learners',contextual_factors:'Teaching outside specialisation | Only 1 qualified Maths educator for 4 Grade 10 classes',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2025-10-14',logged_by:'F Moshoeshoe',
+ details:{province:'Free State',district:'Lejweleputswa',schools:'Boitumelo Secondary',term:'Term 4 2025',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Mathematics'],grades:['10'],description:'DDD data review identified Boitumelo Secondary Grade 10 Maths as critical. 35 learners clustered just below pass mark. Decided to deploy targeted after-school support with subject advisor and profiled learner grouping.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Learner Chart Report'],decision_type:'Target specific learners',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 qualified Maths educator for 4 Grade 10 classes. 2 educators teaching Maths outside their specialisation.',learners_reached:35,follow_up:false,follow_up_desc:''}},
+ {id:'DEMO_D1',ddd_tool:'School Dashboard, Learner Chart Report',data_viewed:'Maths pass rates for Grade 9 — JTG district',insight:'12 schools below 40% in Maths, concentrated in 3 circuits',decision_made:'Deploy subject support',contextual_factors:'Vacant post(s), Teaching outside specialisation',made_by:'Mr V Teise (Circuit Manager)',date:'2026-01-28',logged_by:'V Teise',
+ details:{province:'Northern Cape',district:'John Taolo Gaetsewe',schools:'Kuruman Primary, Mothibistad High, Batlharo Primary',term:'Term 1 2026',activity_type:'School support visit',intervention_theme:'District Support',subjects:['Mathematics'],grades:['9'],description:'Targeted support visit to 3 underperforming schools in JTG. Reviewed Maths pass rates and agreed on intervention plan.',ddd_used:'yes-direct',ddd_reports:['School Dashboard','Learner Chart Report'],decision_type:'Deploy subject support',ctx_staffing:['Vacant post(s)','Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['High absenteeism'],ctx_notes:'No permanent Maths educator at Batlharo Primary since Term 3 2025',learners_reached:340,follow_up:true,follow_up_desc:'Return visit in 2 weeks to check if Subject Improvement Plan has been implemented'}},
+ {id:'DEMO_D2',ddd_tool:'FET Promotion Profiles',data_viewed:'Grade 12 promotion predictions — Lejweleputswa',insight:'15% of Grade 12 learners predicted to fail Physical Sciences',decision_made:'Schedule extra classes',contextual_factors:'Infrastructure issues, Overcrowded classrooms',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2026-02-03',logged_by:'F Moshoeshoe',
+ details:{province:'Free State',district:'Lejweleputswa',schools:'Thuto Primary, Boitumelo Secondary, Matjhabeng Primary',term:'Term 1 2026',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Physical Sciences','Mathematics'],grades:['12'],description:'District data review meeting to identify at-risk Grade 12 learners and plan Saturday classes.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Term 4 Promotion Predictions'],decision_type:'Schedule extra classes',ctx_staffing:['All posts filled'],ctx_resources:['Infrastructure issues'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 lab for 4 Grade 12 Science classes at Boitumelo',learners_reached:520,follow_up:true,follow_up_desc:'Monitor Saturday class attendance after first 3 sessions'}},
+ {id:'DEMO_D3',ddd_tool:'Senior Phase Promotion Profiles',data_viewed:'Grade 7 English FAL results — Mopani East',insight:'62% of learners below level 4 in English FAL across 5 schools',decision_made:'Redesign lesson approach',contextual_factors:'Language barriers',made_by:'Mr K Makatu (Provincial Manager)',date:'2026-02-10',logged_by:'K Makatu',
+ details:{province:'Limpopo',district:'Mopani East',schools:'Nkowankowa Primary, Giyani High, Lulekani Combined',term:'Term 1 2026',activity_type:'Workshop / training session',intervention_theme:'GET / Intermediate Phase',subjects:['English FAL','English HL'],grades:['7','8'],description:'English literacy workshop for 12 educators. Focused on reading comprehension strategies and scaffolding techniques.',ddd_used:'yes-informed',ddd_reports:['Senior Phase Promotion Profiles','Curriculum Overview'],decision_type:'Redesign lesson approach',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage','No devices/connectivity'],ctx_learners:['Language barriers','Welfare concerns'],ctx_notes:'3 schools in deep rural area with no internet connectivity',learners_reached:890,follow_up:false,follow_up_desc:''}},
+ {id:'DEMO_D4',ddd_tool:'',data_viewed:'Routine monitoring visit',insight:'HODs not conducting class visits or checking educator files',decision_made:'Escalate to management',contextual_factors:'Acting principal/HoD',made_by:'Ms P Mtyobo (Cluster Lead)',date:'2026-02-12',logged_by:'P Mtyobo',
+ details:{province:'Eastern Cape',district:'Sarah Baartman',schools:'Graaff-Reinet Primary, Karoo High',term:'Term 1 2026',activity_type:'Monitoring / follow-up visit',intervention_theme:'District Support',subjects:['Mathematics','Natural Sciences'],grades:['4','5','6'],description:'Monitoring visit found poor curriculum coverage. HODs not conducting class visits. Escalated to District Director.',ddd_used:'no',ddd_reports:[],decision_type:'Escalate to management',ctx_staffing:['Acting principal/HoD','High educator absenteeism'],ctx_resources:['LTSM not delivered'],ctx_learners:['High absenteeism'],ctx_notes:'School has had acting principal for 18 months',learners_reached:210,follow_up:true,follow_up_desc:'District Director to conduct accountability visit within 10 days'}},
+ {id:'DEMO_D5',ddd_tool:'Term to Date, School Achievement Report',data_viewed:'SBA vs Exam deviation analysis — Pinetown',insight:'4 schools show 20%+ SBA-Exam gap in Maths Literacy',decision_made:'Analyse SBA-exam deviation gap',contextual_factors:'',made_by:'Ms R Sikhwari (Provincial Manager)',date:'2026-02-14',logged_by:'R Sikhwari',
+ details:{province:'KwaZulu-Natal',district:'Pinetown',schools:'Senzangakhona High, Ntuzuma Combined, Inanda Secondary',term:'Term 1 2026',activity_type:'Lesson observation',intervention_theme:'DBE Mentorship',subjects:['Mathematical Literacy','Mathematics'],grades:['10','11'],description:'Observed 6 Maths Lit lessons to investigate SBA-Exam gap. Found assessments not aligned to exam standards.',ddd_used:'yes-direct',ddd_reports:['Term to Date','School Achievement Report'],decision_type:'Analyse SBA-exam deviation gap',ctx_staffing:['All posts filled'],ctx_resources:['Adequate'],ctx_learners:['No major concerns'],ctx_notes:'',learners_reached:380,follow_up:true,follow_up_desc:'Subject advisors to moderate SBA tasks for Term 2 before administration'}}
+ ];
 
-  const demo_acts = [
-    {id:'DEMO_A0',decision_id:'DEMO_D0',action_taken:'Learner profiling & grouping + Extra lessons / revision classes',responsible:'Ms F Moshoeshoe & Mr T Mokoena (Subject Advisor)',status:'Completed',target_date:'2025-11-30',notes:'35 at-risk learners grouped by gap analysis. 3x weekly after-school Maths sessions (Tue/Thu/Sat) for 6 weeks. Focused on algebra, functions, and exam technique. Subject advisor co-taught with educators.',logged_by:'F Moshoeshoe',supporting_doc_url:'https://docs.google.com/spreadsheets/d/demo-learner-profiles-gr10',supporting_doc_name:'Grade 10 Maths Learner Profiles & Attendance'},
-    {id:'DEMO_A1',decision_id:'DEMO_D1',action_taken:'Subject improvement plan developed',responsible:'Mr V Teise',status:'In Progress',target_date:'2026-02-14',notes:'Follow-up: Return visit in 2 weeks to check if Subject Improvement Plan has been implemented',logged_by:'V Teise',supporting_doc_url:'https://docs.google.com/document/d/demo-sip-jtg',supporting_doc_name:'Maths SIP — JTG Schools'},
-    {id:'DEMO_A2',decision_id:'DEMO_D2',action_taken:'Extra lessons / revision classes',responsible:'Ms F Moshoeshoe',status:'In Progress',target_date:'2026-03-01',notes:'Saturday classes starting 22 Feb, 08:00-12:00',logged_by:'F Moshoeshoe',supporting_doc_url:'',supporting_doc_name:''},
-    {id:'DEMO_A3',decision_id:'DEMO_D3',action_taken:'Educator coaching / mentoring',responsible:'Mr K Makatu',status:'Completed',target_date:'2026-02-10',notes:'12 educators trained in reading comprehension strategies',logged_by:'K Makatu',supporting_doc_url:'https://drive.google.com/file/d/demo-register',supporting_doc_name:'Workshop attendance register'},
-    {id:'DEMO_A4',decision_id:'DEMO_D4',action_taken:'Referral to SMT / DMT / PED',responsible:'Ms P Mtyobo',status:'Planned',target_date:'2026-02-22',notes:'Follow-up: District Director to conduct accountability visit within 10 days',logged_by:'P Mtyobo',supporting_doc_url:'',supporting_doc_name:''},
-    {id:'DEMO_A5',decision_id:'DEMO_D5',action_taken:'SBA target-setting with learners',responsible:'Ms R Sikhwari',status:'In Progress',target_date:'2026-03-15',notes:'Follow-up: Subject advisors to moderate SBA tasks for Term 2',logged_by:'R Sikhwari',supporting_doc_url:'',supporting_doc_name:''}
-  ];
+ const demo_acts = [
+ {id:'DEMO_A0',decision_id:'DEMO_D0',action_taken:'Learner profiling & grouping + Extra lessons / revision classes',responsible:'Ms F Moshoeshoe & Mr T Mokoena (Subject Advisor)',status:'Completed',target_date:'2025-11-30',notes:'35 at-risk learners grouped by gap analysis. 3x weekly after-school Maths sessions (Tue/Thu/Sat) for 6 weeks. Focused on algebra, functions, and exam technique. Subject advisor co-taught with educators.',logged_by:'F Moshoeshoe',supporting_doc_url:'https://docs.google.com/spreadsheets/d/demo-learner-profiles-gr10',supporting_doc_name:'Grade 10 Maths Learner Profiles & Attendance'},
+ {id:'DEMO_A1',decision_id:'DEMO_D1',action_taken:'Subject improvement plan developed',responsible:'Mr V Teise',status:'In Progress',target_date:'2026-02-14',notes:'Follow-up: Return visit in 2 weeks to check if Subject Improvement Plan has been implemented',logged_by:'V Teise',supporting_doc_url:'https://docs.google.com/document/d/demo-sip-jtg',supporting_doc_name:'Maths SIP — JTG Schools'},
+ {id:'DEMO_A2',decision_id:'DEMO_D2',action_taken:'Extra lessons / revision classes',responsible:'Ms F Moshoeshoe',status:'In Progress',target_date:'2026-03-01',notes:'Saturday classes starting 22 Feb, 08:00-12:00',logged_by:'F Moshoeshoe',supporting_doc_url:'',supporting_doc_name:''},
+ {id:'DEMO_A3',decision_id:'DEMO_D3',action_taken:'Educator coaching / mentoring',responsible:'Mr K Makatu',status:'Completed',target_date:'2026-02-10',notes:'12 educators trained in reading comprehension strategies',logged_by:'K Makatu',supporting_doc_url:'https://drive.google.com/file/d/demo-register',supporting_doc_name:'Workshop attendance register'},
+ {id:'DEMO_A4',decision_id:'DEMO_D4',action_taken:'Referral to SMT / DMT / PED',responsible:'Ms P Mtyobo',status:'Planned',target_date:'2026-02-22',notes:'Follow-up: District Director to conduct accountability visit within 10 days',logged_by:'P Mtyobo',supporting_doc_url:'',supporting_doc_name:''},
+ {id:'DEMO_A5',decision_id:'DEMO_D5',action_taken:'SBA target-setting with learners',responsible:'Ms R Sikhwari',status:'In Progress',target_date:'2026-03-15',notes:'Follow-up: Subject advisors to moderate SBA tasks for Term 2',logged_by:'R Sikhwari',supporting_doc_url:'',supporting_doc_name:''}
+ ];
 
-  const demo_outs = [
-    {id:'DEMO_O0',action_id:'DEMO_A0',intervention_id:null,description:'Grade 10 Maths pass rate at Boitumelo Secondary improved from 41% (Term 3) to 64% (Term 4). Of the 35 targeted learners, 23 moved above the pass threshold — a 66% success rate. Average mark for the cohort improved by 12 percentage points.',metric:'Pass rate improvement',value:'41% → 64% (+23 percentage points)',evidence:'SA-SAMS Term 4 2025 results, verified against DDD FET Promotion Profiles report. Attendance register confirms 89% attendance across the 18 after-school sessions.',date:'2026-01-20',logged_by:'F Moshoeshoe'},
-    {id:'DEMO_O1',action_id:'DEMO_A3',intervention_id:null,description:'8 of 12 educators now using scaffolded reading approach in lessons. Learner participation visibly improved in follow-up observation.',metric:'Educator adoption rate',value:'67% (8/12)',evidence:'Follow-up lesson observations — 24 Feb 2026',date:'2026-02-24',logged_by:'K Makatu'}
-  ];
+ const demo_outs = [
+ {id:'DEMO_O0',action_id:'DEMO_A0',intervention_id:null,description:'Grade 10 Maths pass rate at Boitumelo Secondary improved from 41% (Term 3) to 64% (Term 4). Of the 35 targeted learners, 23 moved above the pass threshold — a 66% success rate. Average mark for the cohort improved by 12 percentage points.',metric:'Pass rate improvement',value:'41% → 64% (+23 percentage points)',evidence:'SA-SAMS Term 4 2025 results, verified against DDD FET Promotion Profiles report. Attendance register confirms 89% attendance across the 18 after-school sessions.',date:'2026-01-20',logged_by:'F Moshoeshoe'},
+ {id:'DEMO_O1',action_id:'DEMO_A3',intervention_id:null,description:'8 of 12 educators now using scaffolded reading approach in lessons. Learner participation visibly improved in follow-up observation.',metric:'Educator adoption rate',value:'67% (8/12)',evidence:'Follow-up lesson observations — 24 Feb 2026',date:'2026-02-24',logged_by:'K Makatu'}
+ ];
 
-  S.decisions = demo_decs;
-  S.actions = demo_acts;
-  S.outcomes = demo_outs;
+ S.decisions = demo_decs;
+ S.actions = demo_acts;
+ S.outcomes = demo_outs;
 }
 
-// ── RENDER ──
+// RENDER 
 function render() {
-  const app = document.getElementById('app');
-  if (S.loading) { app.innerHTML = `<div class="loading"><div class="spinner"></div><div>Loading tracker...</div></div>`; return; }
-  if (S.error) { app.innerHTML = `<div class="loading"><div style="font-size:48px">⚠️</div><div style="color:var(--red)">${esc(S.error)}</div><button class="btn btn-teal btn-sm" onclick="S.loading=true;render();loadAll()">Retry</button></div>`; return; }
+ const app = document.getElementById('app');
+ if (S.loading) { app.innerHTML = `<div class="loading"><div class="spinner"></div><div>Loading tracker...</div></div>`; return; }
+ if (S.error) { app.innerHTML = `<div class="loading"><div style="font-size:48px"></div><div style="color:var(--red)">${esc(S.error)}</div><button class="btn btn-teal btn-sm" onclick="S.loading=true;render();loadAll()">Retry</button></div>`; return; }
 
-  const o = S.official;
-  app.innerHTML = `
-    <header class="hdr">
-      <div class="hdr-bar"></div>
-      <div class="hdr-content">
-        <img class="hdr-logo" src="${LOGO}" alt="DDD Logo">
-        <div class="hdr-titles">
-          <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
-          <div class="hdr-title">Learner Improvement Interventions Tracker</div>
-          <div class="hdr-sub">Help us track how support is improving learner outcomes</div>
-        </div>
-      </div>
-      <nav class="nav">
-        <div class="nav-hint">👇 Tap to switch between <span>logging</span> and <span>viewing</span></div>
-        <div class="nav-row">
-          <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()"><span class="nav-icon">✏️</span>Log Activity</button>
-          <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()"><span class="nav-icon">📊</span>My Dashboard</button>
-        </div>
-      </nav>
-    </header>
-    ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : renderDashboard()}
-    <div class="footer">
-      <img src="${LOGO}" alt="DDD">
-      <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span>
-    </div>
-  `;
+ const o = S.official;
+ app.innerHTML = `
+ <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Help us track how support is improving learner outcomes</div> </div> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()">Log Activity</button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()">My Dashboard</button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit</button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
+ <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
+ if(S.showPolicy) renderPolicyModal();
 }
 
-// ═════════════════════════════════════════════════
+// 
 // FORM
-// ═════════════════════════════════════════════════
+// 
 function renderForm() {
-  return `<div class="form-wrap">
-    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;text-align:center">This takes 3–5 minutes. Most fields are tap-to-select.</p>
-
-    <!-- SECTION 1: Where & When -->
-    <div class="section">
-      ${secHdr(1,'① Where & When','Where and when did this activity happen?')}
-      <div class="sec-body${S.openSections[1]?'':' collapsed'}" id="sec1">
-        <div class="field-row">
-          <div class="field"><label>Term<span class="req">*</span></label>
-            <select onchange="S.f.term=this.value">${['Term 1 2026','Term 2 2026','Term 3 2026','Term 4 2026'].map(t=>`<option ${S.f.term===t?'selected':''}>${t}</option>`).join('')}</select>
-          </div>
-          <div class="field"><label>Date<span class="req">*</span></label><input type="date" value="${S.f.activity_date}" onchange="S.f.activity_date=this.value"></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Province<span class="req">*</span></label>
-            <select onchange="S.f.province=this.value;S.f.district='';render()">
-              <option value="">Select province</option>
-              ${Object.keys(DISTRICTS).map(p=>`<option ${S.f.province===p?'selected':''}>${p}</option>`).join('')}
-            </select>
-          </div>
-          <div class="field"><label>District<span class="req">*</span></label>
-            <select onchange="S.f.district=this.value">
-              <option value="">Select district</option>
-              ${(DISTRICTS[S.f.province]||[]).map(d=>`<option ${S.f.district===d?'selected':''}>${d}</option>`).join('')}
-            </select>
-          </div>
-        </div>
-        <div class="field"><label>School(s)<span class="req">*</span></label>
-          <div class="hint">Names of schools involved</div>
-          <input type="text" placeholder="e.g. Thuto Primary, Boitumelo Secondary" value="${esc(S.f.schools)}" oninput="S.f.schools=this.value">
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 2: What Happened -->
-    <div class="section">
-      ${secHdr(2,'② What Happened','What type of activity and which subjects/grades?','green')}
-      <div class="sec-body${S.openSections[2]?'':' collapsed'}" id="sec2">
-        <div class="field-row">
-          <div class="field"><label>Activity Type<span class="req">*</span></label>
-            <select onchange="S.f.activity_type=this.value"><option value="">Select...</option>${ACTIVITY_TYPES.map(t=>`<option ${S.f.activity_type===t?'selected':''}>${t}</option>`).join('')}</select>
-          </div>
-          <div class="field"><label>Intervention Theme</label>
-            <select onchange="S.f.intervention_theme=this.value"><option value="">Select...</option>${THEMES.map(t=>`<option ${S.f.intervention_theme===t?'selected':''}>${t}</option>`).join('')}</select>
-          </div>
-        </div>
-        <div class="field"><label>Subject(s)</label><div class="hint">Tap all that apply</div>
-          <div class="tags">${SUBJECTS.map(s=>`<label class="tag"><input type="checkbox" ${S.f.subjects.includes(s)?'checked':''} onchange="togArr(S.f.subjects,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div>
-        </div>
-        <div class="field"><label>Grade(s)</label><div class="hint">Tap all that apply</div>
-          <div class="tags">${GRADES.map(g=>`<label class="tag"><input type="checkbox" ${S.f.grades.includes(g)?'checked':''} onchange="togArr(S.f.grades,'${g}',this.checked)"><span>Gr ${g}</span></label>`).join('')}</div>
-        </div>
-        <div class="field"><label>Brief description</label>
-          <div class="hint">1–2 lines: what happened?</div>
-          <textarea rows="2" placeholder="e.g. Modelled fractions teaching strategy with 3 Foundation Phase educators..." oninput="S.f.description=this.value">${esc(S.f.description)}</textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 3: DDD Connection -->
-    <div class="section">
-      ${secHdr(3,'③ DDD Data Connection','How did DDD data contribute to this activity?','blue')}
-      <div class="sec-body${S.openSections[3]?'':' collapsed'}" id="sec3">
-        <div class="field"><label>Was DDD data used?<span class="req">*</span></label>
-          <div class="radio-grp">
-            ${['Yes — directly triggered this','Yes — informed my approach','Partially','No'].map((v,i)=>{
-              const val = ['yes-direct','yes-informed','partially','no'][i];
-              return `<label><input type="radio" name="dddUsed" value="${val}" ${S.f.ddd_used===val?'checked':''} onchange="S.f.ddd_used=this.value;render()"><span>${v}</span></label>`;
-            }).join('')}
-          </div>
-        </div>
-        ${S.f.ddd_used && S.f.ddd_used !== 'no' ? `
-          <div class="field"><label>Which DDD report(s)?</label>
-            <div class="tags">${DDD_TOOLS.map(t=>`<label class="tag"><input type="checkbox" ${S.f.ddd_reports.includes(t)?'checked':''} onchange="togArr(S.f.ddd_reports,'${esc(t)}',this.checked)"><span>${t}</span></label>`).join('')}</div>
-          </div>
-          <div class="field"><label>What did the data show?</label>
-            <textarea rows="2" placeholder="e.g. 42% of Grade 9 learners at Level 1–2 in Maths, concentrated in 3 schools..." oninput="S.f.data_insight=this.value">${esc(S.f.data_insight)}</textarea>
-          </div>
-        ` : ''}
-        <div class="field-row">
-          <div class="field"><label>Decision made</label>
-            <select onchange="S.f.decision_type=this.value"><option value="">Select...</option>${DECISIONS.map(d=>`<option ${S.f.decision_type===d?'selected':''}>${d}</option>`).join('')}</select>
-          </div>
-          <div class="field"><label>Action taken<span class="req">*</span></label>
-            <select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>`<option ${S.f.action_type===a?'selected':''}>${a}</option>`).join('')}</select>
-          </div>
-        </div>
-        ${S.f.action_type==='Other'?`<div class="field"><label>Describe action</label><textarea rows="2" placeholder="Describe..." oninput="S.f.action_other=this.value">${esc(S.f.action_other)}</textarea></div>`:''}
-      </div>
-    </div>
-
-    <!-- SECTION 4: Context & Follow-up -->
-    <div class="section">
-      ${secHdr(4,'④ Context & Follow-up','Barriers, impact, and what happens next','orange')}
-      <div class="sec-body${S.openSections[4]?'':' collapsed'}" id="sec4">
-        <div class="field"><label>School context</label><div class="hint">Tap all that apply across schools visited</div>
-          <div style="margin-bottom:8px"><span class="tag-grp-title">Staffing:</span>
-            <div class="tags" style="display:inline-flex">${CTX_STAFFING.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_staffing.includes(s)?'checked':''} onchange="togArr(S.f.ctx_staffing,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div>
-          </div>
-          <div style="margin-bottom:8px"><span class="tag-grp-title">Resources:</span>
-            <div class="tags" style="display:inline-flex">${CTX_RESOURCES.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_resources.includes(s)?'checked':''} onchange="togArr(S.f.ctx_resources,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div>
-          </div>
-          <div><span class="tag-grp-title">Learners:</span>
-            <div class="tags" style="display:inline-flex">${CTX_LEARNERS.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_learners.includes(s)?'checked':''} onchange="togArr(S.f.ctx_learners,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div>
-          </div>
-        </div>
-        <div class="field"><label>Context note <span style="font-weight:400;color:var(--grey)">(optional)</span></label>
-          <textarea rows="2" placeholder="e.g. No permanent Maths educator since Term 3 2025..." oninput="S.f.ctx_notes=this.value">${esc(S.f.ctx_notes)}</textarea>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Learners reached</label><div class="hint">Approximate number impacted</div>
-            <input type="number" placeholder="e.g. 120" min="0" value="${S.f.learners_reached}" oninput="S.f.learners_reached=this.value">
-          </div>
-          <div class="field"><label>Follow-up needed?</label>
-            <div class="radio-grp">
-              <label><input type="radio" name="fup" value="yes" ${S.f.follow_up?'checked':''} onchange="S.f.follow_up=true;render()"><span>Yes</span></label>
-              <label><input type="radio" name="fup" value="no" ${!S.f.follow_up?'checked':''} onchange="S.f.follow_up=false;render()"><span>No</span></label>
-            </div>
-          </div>
-        </div>
-        ${S.f.follow_up ? `<div class="field"><label>Follow-up description</label>
-          <textarea rows="2" placeholder="e.g. Return visit in 2 weeks to check implementation..." oninput="S.f.follow_up_desc=this.value">${esc(S.f.follow_up_desc)}</textarea>
-        </div>` : ''}
-        <div class="field"><label>📎 Supporting document <span style="font-weight:400;color:var(--grey)">(optional)</span></label>
-          <div class="hint">Link to a relevant plan, report, or sign-in register</div>
-          <input type="url" placeholder="Paste link (Google Drive, OneDrive, SharePoint...)" value="${esc(S.f.doc_url)}" oninput="S.f.doc_url=this.value" style="margin-bottom:6px">
-          <input type="text" placeholder="Document name (e.g. Maths Improvement Plan)" value="${esc(S.f.doc_name)}" oninput="S.f.doc_name=this.value">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-submit">
-      <button class="btn btn-teal" onclick="submitForm()" ${S.saving?'disabled':''} style="min-width:200px">
-        ${S.saving ? '<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></span> Submitting...' : 'Submit ✓'}
-      </button>
-    </div>
-  </div>`;
+ return `<div class="form-wrap"> <p style="font-size:12px;color:var(--grey);margin-bottom:12px;text-align:center">This takes 3–5 minutes. Most fields are tap-to-select.</p> <!-- SECTION 1: Where & When --> <div class="section"> ${secHdr(1,'1. Where & When','Where and when did this activity happen?')}
+ <div class="sec-body${S.openSections[1]?'':' collapsed'}" id="sec1"> <div class="field-row"> <div class="field"><label>Term<span class="req">*</span></label> <select onchange="S.f.term=this.value">${['Term 1 2026','Term 2 2026','Term 3 2026','Term 4 2026'].map(t=>`<option ${S.f.term===t?'selected':''}>${t}</option>`).join('')}</select> </div> <div class="field"><label>Date<span class="req">*</span></label><input type="date" value="${S.f.activity_date}" onchange="S.f.activity_date=this.value"></div> </div> <div class="field-row"> <div class="field"><label>Province<span class="req">*</span></label> <select onchange="S.f.province=this.value;S.f.district='';render()"> <option value="">Select province</option> ${Object.keys(DISTRICTS).map(p=>`<option ${S.f.province===p?'selected':''}>${p}</option>`).join('')}
+ </select> </div> <div class="field"><label>District<span class="req">*</span></label> <select onchange="S.f.district=this.value"> <option value="">Select district</option> ${(DISTRICTS[S.f.province]||[]).map(d=>`<option ${S.f.district===d?'selected':''}>${d}</option>`).join('')}
+ </select> </div> </div> <div class="field"><label>School(s)<span class="req">*</span></label> <div class="hint">Names of schools involved</div> <input type="text" placeholder="e.g. Thuto Primary, Boitumelo Secondary" value="${esc(S.f.schools)}" oninput="S.f.schools=this.value"> </div> </div> </div> <!-- SECTION 2: What Happened --> <div class="section"> ${secHdr(2,'2. What Happened','What type of activity and which subjects/grades?','green')}
+ <div class="sec-body${S.openSections[2]?'':' collapsed'}" id="sec2"> <div class="field-row"> <div class="field"><label>Activity Type<span class="req">*</span></label> <select onchange="S.f.activity_type=this.value"><option value="">Select...</option>${ACTIVITY_TYPES.map(t=>`<option ${S.f.activity_type===t?'selected':''}>${t}</option>`).join('')}</select> </div> <div class="field"><label>Intervention Theme</label> <select onchange="S.f.intervention_theme=this.value"><option value="">Select...</option>${THEMES.map(t=>`<option ${S.f.intervention_theme===t?'selected':''}>${t}</option>`).join('')}</select> </div> </div> <div class="field"><label>Subject(s)</label><div class="hint">Tap all that apply</div> <div class="tags">${SUBJECTS.map(s=>`<label class="tag"><input type="checkbox" ${S.f.subjects.includes(s)?'checked':''} onchange="togArr(S.f.subjects,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div> </div> <div class="field"><label>Grade(s)</label><div class="hint">Tap all that apply</div> <div class="tags">${GRADES.map(g=>`<label class="tag"><input type="checkbox" ${S.f.grades.includes(g)?'checked':''} onchange="togArr(S.f.grades,'${g}',this.checked)"><span>Gr ${g}</span></label>`).join('')}</div> </div> <div class="field"><label>Brief description</label> <div class="hint">1–2 lines: what happened?</div> <textarea rows="2" placeholder="e.g. Modelled fractions teaching strategy with 3 Foundation Phase educators..." oninput="S.f.description=this.value">${esc(S.f.description)}</textarea> </div> </div> </div> <!-- SECTION 3: DDD Connection --> <div class="section"> ${secHdr(3,'3. DDD Data Connection','How did DDD data contribute to this activity?','blue')}
+ <div class="sec-body${S.openSections[3]?'':' collapsed'}" id="sec3"> <div class="field"><label>Was DDD data used?<span class="req">*</span></label> <div class="radio-grp"> ${['Yes — directly triggered this','Yes — informed my approach','Partially','No'].map((v,i)=>{
+ const val = ['yes-direct','yes-informed','partially','no'][i];
+ return `<label><input type="radio" name="dddUsed" value="${val}" ${S.f.ddd_used===val?'checked':''} onchange="S.f.ddd_used=this.value;render()"><span>${v}</span></label>`;
+ }).join('')}
+ </div> </div> ${S.f.ddd_used && S.f.ddd_used !== 'no' ? `
+ <div class="field"><label>Which DDD report(s)?</label> <div class="tags">${DDD_TOOLS.map(t=>`<label class="tag"><input type="checkbox" ${S.f.ddd_reports.includes(t)?'checked':''} onchange="togArr(S.f.ddd_reports,'${esc(t)}',this.checked)"><span>${t}</span></label>`).join('')}</div> </div> <div class="field"><label>What did the data show?</label> <textarea rows="2" placeholder="e.g. 42% of Grade 9 learners at Level 1–2 in Maths, concentrated in 3 schools..." oninput="S.f.data_insight=this.value">${esc(S.f.data_insight)}</textarea> </div> ` : ''}
+ <div class="field-row"> <div class="field"><label>Decision made</label> <select onchange="S.f.decision_type=this.value"><option value="">Select...</option>${DECISIONS.map(d=>`<option ${S.f.decision_type===d?'selected':''}>${d}</option>`).join('')}</select> </div> <div class="field"><label>Action taken<span class="req">*</span></label> <select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>`<option ${S.f.action_type===a?'selected':''}>${a}</option>`).join('')}</select> </div> </div> ${S.f.action_type==='Other'?`<div class="field"><label>Describe action</label><textarea rows="2" placeholder="Describe..." oninput="S.f.action_other=this.value">${esc(S.f.action_other)}</textarea></div>`:''}
+ </div> </div> <!-- SECTION 4: Context & Follow-up --> <div class="section"> ${secHdr(4,'4. Context & Follow-up','Barriers, impact, and what happens next','orange')}
+ <div class="sec-body${S.openSections[4]?'':' collapsed'}" id="sec4"> <div class="field"><label>School context</label><div class="hint">Tap all that apply across schools visited</div> <div style="margin-bottom:8px"><span class="tag-grp-title">Staffing:</span> <div class="tags" style="display:inline-flex">${CTX_STAFFING.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_staffing.includes(s)?'checked':''} onchange="togArr(S.f.ctx_staffing,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div> </div> <div style="margin-bottom:8px"><span class="tag-grp-title">Resources:</span> <div class="tags" style="display:inline-flex">${CTX_RESOURCES.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_resources.includes(s)?'checked':''} onchange="togArr(S.f.ctx_resources,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div> </div> <div><span class="tag-grp-title">Learners:</span> <div class="tags" style="display:inline-flex">${CTX_LEARNERS.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_learners.includes(s)?'checked':''} onchange="togArr(S.f.ctx_learners,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div> </div> </div> <div class="field"><label>Context note <span style="font-weight:400;color:var(--grey)">(optional)</span></label> <textarea rows="2" placeholder="e.g. No permanent Maths educator since Term 3 2025..." oninput="S.f.ctx_notes=this.value">${esc(S.f.ctx_notes)}</textarea> </div> <div class="field-row"> <div class="field"><label>Learners reached</label><div class="hint">Approximate number impacted</div> <input type="number" placeholder="e.g. 120" min="0" value="${S.f.learners_reached}" oninput="S.f.learners_reached=this.value"> </div> <div class="field"><label>Follow-up needed?</label> <div class="radio-grp"> <label><input type="radio" name="fup" value="yes" ${S.f.follow_up?'checked':''} onchange="S.f.follow_up=true;render()"><span>Yes</span></label> <label><input type="radio" name="fup" value="no" ${!S.f.follow_up?'checked':''} onchange="S.f.follow_up=false;render()"><span>No</span></label> </div> </div> </div> ${S.f.follow_up ? `<div class="field"><label>Follow-up description</label> <textarea rows="2" placeholder="e.g. Return visit in 2 weeks to check implementation..." oninput="S.f.follow_up_desc=this.value">${esc(S.f.follow_up_desc)}</textarea> </div>` : ''}
+ <div class="field"><label>Supporting document <span style="font-weight:400;color:var(--grey)">(optional)</span></label> <div class="hint">Link to a relevant plan, report, or sign-in register</div> <input type="url" placeholder="Paste link (Google Drive, OneDrive, SharePoint...)" value="${esc(S.f.doc_url)}" oninput="S.f.doc_url=this.value" style="margin-bottom:6px"> <input type="text" placeholder="Document name (e.g. Maths Improvement Plan)" value="${esc(S.f.doc_name)}" oninput="S.f.doc_name=this.value"> </div> </div> </div> <div class="form-submit"> <button class="btn btn-teal" onclick="submitForm()" ${S.saving?'disabled':''} style="min-width:200px"> ${S.saving ? '<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></span> Submitting...' : 'Submit'}
+ </button> </div> </div>`;
 }
 
 function secHdr(n, title, sub, color) {
-  const open = S.openSections[n];
-  return `<div class="sec-hdr ${color||''}" onclick="S.openSections[${n}]=!S.openSections[${n}];render()">
-    <div><h2>${title}</h2><p>${sub}</p></div>
-    <span class="arrow ${open?'open':''}">▾</span>
-  </div>`;
+ const open = S.openSections[n];
+ return `<div class="sec-hdr ${color||''}" onclick="S.openSections[${n}]=!S.openSections[${n}];render()"> <div><h2>${title}</h2><p>${sub}</p></div> <span class="arrow ${open?'open':''}"></span> </div>`;
 }
 
 function togArr(arr, val, add) {
-  const i = arr.indexOf(val);
-  if (add && i===-1) arr.push(val);
-  if (!add && i!==-1) arr.splice(i,1);
+ const i = arr.indexOf(val);
+ if (add && i===-1) arr.push(val);
+ if (!add && i!==-1) arr.splice(i,1);
 }
 
 function renderSuccess() {
-  return `<div class="form-wrap"><div class="section"><div class="success fade-in">
-    <div class="success-icon">✅</div>
-    <h2>Thank you!</h2>
-    <p>Your activity has been recorded. This helps us track how interventions improve learner outcomes — and helps your district get the support it needs.</p>
-    <div style="margin-top:16px;padding:14px;background:var(--teal-lt);border-radius:8px;text-align:left">
-      <div style="font-size:11px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div>
-      <div style="font-size:12px;color:var(--navy);line-height:1.6">
-        <strong>${esc(S.f.activity_type)}</strong> at <strong>${esc(S.f.schools)}</strong><br>
-        ${S.f.district}, ${S.f.province} · ${S.f.activity_date}<br>
-        ${S.f.subjects.length ? 'Subjects: ' + S.f.subjects.join(', ') + '<br>' : ''}
-        ${S.f.action_type ? 'Action: ' + esc(S.f.action_type) : ''}
-        ${S.f.learners_reached ? ' · ~' + S.f.learners_reached + ' learners' : ''}
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
-      <button class="btn btn-teal" onclick="resetForm()">Log Another</button>
-      <button class="btn btn-outline" onclick="S.view='dashboard';render()">View Dashboard</button>
-    </div>
-  </div></div></div>`;
+ return `<div class="form-wrap"><div class="section"><div class="success fade-in"> <h2>Thank you!</h2> <p>Your activity has been recorded. This helps us track how interventions improve learner outcomes — and helps your district get the support it needs.</p> <div style="margin-top:16px;padding:14px;background:var(--teal-lt);border-radius:8px;text-align:left"> <div style="font-size:11px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div> <div style="font-size:12px;color:var(--navy);line-height:1.6"> <strong>${esc(S.f.activity_type)}</strong> at <strong>${esc(S.f.schools)}</strong><br> ${S.f.district}, ${S.f.province} · ${S.f.activity_date}<br> ${S.f.subjects.length ? 'Subjects: ' + S.f.subjects.join(', ') + '<br>' : ''}
+ ${S.f.action_type ? 'Action: ' + esc(S.f.action_type) : ''}
+ ${S.f.learners_reached ? ' · ~' + S.f.learners_reached + ' learners' : ''}
+ </div> </div> <div style="display:flex;gap:10px;justify-content:center;margin-top:20px"> <button class="btn btn-teal" onclick="resetForm()">Log Another</button> <button class="btn btn-outline" onclick="S.view='dashboard';render()">View Dashboard</button> </div> </div></div></div>`;
 }
 
-// ═════════════════════════════════════════════════
+// 
 // FORM SUBMISSION
-// ═════════════════════════════════════════════════
+// 
 async function submitForm() {
-  if (!S.f.province || !S.f.district || !S.f.schools) { showToast('Please complete Where & When'); return; }
-  if (!S.f.activity_type) { showToast('Please select an activity type'); return; }
-  if (!S.f.ddd_used) { showToast('Please indicate if DDD data was used'); return; }
-  if (!S.f.action_type) { showToast('Please select an action taken'); return; }
+ if (!S.f.province || !S.f.district || !S.f.schools) { showToast('Please complete Where & When'); return; }
+ if (!S.f.activity_type) { showToast('Please select an activity type'); return; }
+ if (!S.f.ddd_used) { showToast('Please indicate if DDD data was used'); return; }
+ if (!S.f.action_type) { showToast('Please select an action taken'); return; }
 
-  S.saving = true; render();
+ S.saving = true; render();
 
-  const details = {
-    province:S.f.province, district:S.f.district, schools:S.f.schools, term:S.f.term,
-    activity_type:S.f.activity_type, intervention_theme:S.f.intervention_theme,
-    subjects:S.f.subjects, grades:S.f.grades, description:S.f.description,
-    ddd_used:S.f.ddd_used, ddd_reports:S.f.ddd_reports,
-    decision_type:S.f.decision_type,
-    ctx_staffing:S.f.ctx_staffing, ctx_resources:S.f.ctx_resources, ctx_learners:S.f.ctx_learners, ctx_notes:S.f.ctx_notes,
-    learners_reached:S.f.learners_reached ? parseInt(S.f.learners_reached) : null,
-    follow_up:S.f.follow_up, follow_up_desc:S.f.follow_up_desc
-  };
+ const details = {
+ province:S.f.province, district:S.f.district, schools:S.f.schools, term:S.f.term,
+ activity_type:S.f.activity_type, intervention_theme:S.f.intervention_theme,
+ subjects:S.f.subjects, grades:S.f.grades, description:S.f.description,
+ ddd_used:S.f.ddd_used, ddd_reports:S.f.ddd_reports,
+ decision_type:S.f.decision_type,
+ ctx_staffing:S.f.ctx_staffing, ctx_resources:S.f.ctx_resources, ctx_learners:S.f.ctx_learners, ctx_notes:S.f.ctx_notes,
+ learners_reached:S.f.learners_reached ? parseInt(S.f.learners_reached) : null,
+ follow_up:S.f.follow_up, follow_up_desc:S.f.follow_up_desc
+ };
 
-  const decId = genId('DEC');
-  const actId = genId('ACT');
-  const meta = { logged_by:S.official.full_name||'User', logged_by_email:S.official.email||'' };
+ const decId = genId('DEC');
+ const actId = genId('ACT');
+ const meta = { logged_by:S.official.full_name||'User', logged_by_email:S.official.email||'' };
 
-  try {
-    // Insert decision
-    const dec = {
-      id: decId,
-      intervention_id: S.interventions[0]?.id || null,
-      ddd_tool: S.f.ddd_reports.join(', '),
-      data_viewed: S.f.activity_type + ' — ' + S.f.schools,
-      insight: S.f.data_insight || S.f.description,
-      decision_made: S.f.decision_type || S.f.activity_type,
-      contextual_factors: [...S.f.ctx_staffing,...S.f.ctx_resources,...S.f.ctx_learners].join(', ') + (S.f.ctx_notes ? ' | ' + S.f.ctx_notes : ''),
-      made_by: S.official.full_name || 'User',
-      date: S.f.activity_date,
-      details: details,
-      ...meta
-    };
-    const r1 = await sb.from('decisions').insert(dec);
-    if (r1.error) throw r1.error;
+ try {
+ // Insert decision
+ const dec = {
+ id: decId,
+ intervention_id: S.interventions[0]?.id || null,
+ ddd_tool: S.f.ddd_reports.join(', '),
+ data_viewed: S.f.activity_type + ' — ' + S.f.schools,
+ insight: S.f.data_insight || S.f.description,
+ decision_made: S.f.decision_type || S.f.activity_type,
+ contextual_factors: [...S.f.ctx_staffing,...S.f.ctx_resources,...S.f.ctx_learners].join(', ') + (S.f.ctx_notes ? ' | ' + S.f.ctx_notes : ''),
+ made_by: S.official.full_name || 'User',
+ date: S.f.activity_date,
+ details: details,
+ ...meta
+ };
+ const r1 = await sb.from('decisions').insert(dec);
+ if (r1.error) throw r1.error;
 
-    // Insert action
-    const act = {
-      id: actId,
-      decision_id: decId,
-      intervention_id: dec.intervention_id,
-      action_taken: S.f.action_type === 'Other' ? S.f.action_other : S.f.action_type,
-      responsible: S.official.full_name || 'User',
-      status: 'In Progress',
-      target_date: null,
-      notes: S.f.follow_up ? 'Follow-up: ' + S.f.follow_up_desc : '',
-      supporting_doc_url: S.f.doc_url,
-      supporting_doc_name: S.f.doc_name,
-      ...meta
-    };
-    const r2 = await sb.from('actions').insert(act);
-    if (r2.error) throw r2.error;
+ // Insert action
+ const act = {
+ id: actId,
+ decision_id: decId,
+ intervention_id: dec.intervention_id,
+ action_taken: S.f.action_type === 'Other' ? S.f.action_other : S.f.action_type,
+ responsible: S.official.full_name || 'User',
+ status: 'In Progress',
+ target_date: null,
+ notes: S.f.follow_up ? 'Follow-up: ' + S.f.follow_up_desc : '',
+ supporting_doc_url: S.f.doc_url,
+ supporting_doc_name: S.f.doc_name,
+ ...meta
+ };
+ const r2 = await sb.from('actions').insert(act);
+ if (r2.error) throw r2.error;
 
-    S.submitted = true;
-    await loadAll();
-  } catch(e) {
-    showToast('Error: ' + e.message);
-  }
-  S.saving = false; render();
-  window.scrollTo({top:0,behavior:'smooth'});
+ S.submitted = true;
+ await loadAll();
+ } catch(e) {
+ showToast('Error: ' + e.message);
+ }
+ S.saving = false; render();
+ window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function resetForm() {
-  S.submitted = false;
-  S.f = {
-    province:S.f.province, district:S.f.district, schools:'', term:S.f.term, activity_date:today(),
-    activity_type:'', intervention_theme:'', subjects:[], grades:[], description:'',
-    ddd_used:'', ddd_reports:[], data_insight:'', decision_type:'', action_type:'', action_other:'',
-    ctx_staffing:[], ctx_resources:[], ctx_learners:[], ctx_notes:'',
-    learners_reached:'', follow_up:false, follow_up_desc:'',
-    doc_url:'', doc_name:''
-  };
-  S.openSections = {1:true,2:true,3:true,4:true};
-  render(); window.scrollTo({top:0,behavior:'smooth'});
+ S.submitted = false;
+ S.f = {
+ province:S.f.province, district:S.f.district, schools:'', term:S.f.term, activity_date:today(),
+ activity_type:'', intervention_theme:'', subjects:[], grades:[], description:'',
+ ddd_used:'', ddd_reports:[], data_insight:'', decision_type:'', action_type:'', action_other:'',
+ ctx_staffing:[], ctx_resources:[], ctx_learners:[], ctx_notes:'',
+ learners_reached:'', follow_up:false, follow_up_desc:'',
+ doc_url:'', doc_name:''
+ };
+ S.openSections = {1:true,2:true,3:true,4:true};
+ render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ═════════════════════════════════════════════════
+// 
 // DASHBOARD
-// ═════════════════════════════════════════════════
+// 
 function renderDashboard() {
-  const decs = S.decisions;
-  const acts = S.actions;
+ const decs = S.decisions;
+ const acts = S.actions;
 
-  // Compute stats
-  const totalActivities = decs.length;
-  const schoolSet = new Set();
-  let totalLearners = 0;
-  let followUps = [];
-  const barrierCounts = {};
-  const activityByType = {};
-  const dddUsageCounts = {direct:0,informed:0,partial:0,none:0};
+ // Compute stats
+ const totalActivities = decs.length;
+ const schoolSet = new Set();
+ let totalLearners = 0;
+ let followUps = [];
+ const barrierCounts = {};
+ const activityByType = {};
+ const dddUsageCounts = {direct:0,informed:0,partial:0,none:0};
 
-  decs.forEach(d => {
-    const det = d.details || {};
-    if (det.schools) det.schools.split(',').forEach(s => schoolSet.add(s.trim()));
-    if (det.learners_reached) totalLearners += det.learners_reached;
-    if (det.follow_up && det.follow_up_desc) followUps.push({desc:det.follow_up_desc, date:d.date, schools:det.schools, district:det.district});
-    
-    // Count barriers
-    (det.ctx_staffing||[]).forEach(b => { if(b!=='All posts filled') barrierCounts[b] = (barrierCounts[b]||0)+1; });
-    (det.ctx_resources||[]).forEach(b => { if(b!=='Adequate') barrierCounts[b] = (barrierCounts[b]||0)+1; });
-    (det.ctx_learners||[]).forEach(b => { if(b!=='No major concerns') barrierCounts[b] = (barrierCounts[b]||0)+1; });
+ decs.forEach(d => {
+ const det = d.details || {};
+ if (det.schools) det.schools.split(',').forEach(s => schoolSet.add(s.trim()));
+ if (det.learners_reached) totalLearners += det.learners_reached;
+ if (det.follow_up && det.follow_up_desc) followUps.push({desc:det.follow_up_desc, date:d.date, schools:det.schools, district:det.district});
+ 
+ // Count barriers
+ (det.ctx_staffing||[]).forEach(b => { if(b!=='All posts filled') barrierCounts[b] = (barrierCounts[b]||0)+1; });
+ (det.ctx_resources||[]).forEach(b => { if(b!=='Adequate') barrierCounts[b] = (barrierCounts[b]||0)+1; });
+ (det.ctx_learners||[]).forEach(b => { if(b!=='No major concerns') barrierCounts[b] = (barrierCounts[b]||0)+1; });
 
-    // Activity types
-    if (det.activity_type) activityByType[det.activity_type] = (activityByType[det.activity_type]||0)+1;
+ // Activity types
+ if (det.activity_type) activityByType[det.activity_type] = (activityByType[det.activity_type]||0)+1;
 
-    // DDD usage
-    if (det.ddd_used==='yes-direct') dddUsageCounts.direct++;
-    else if (det.ddd_used==='yes-informed') dddUsageCounts.informed++;
-    else if (det.ddd_used==='partially') dddUsageCounts.partial++;
-    else dddUsageCounts.none++;
-  });
+ // DDD usage
+ if (det.ddd_used==='yes-direct') dddUsageCounts.direct++;
+ else if (det.ddd_used==='yes-informed') dddUsageCounts.informed++;
+ else if (det.ddd_used==='partially') dddUsageCounts.partial++;
+ else dddUsageCounts.none++;
+ });
 
-  const barriers = Object.entries(barrierCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const maxBarrier = barriers.length ? barriers[0][1] : 1;
-  const actTypes = Object.entries(activityByType).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const maxAct = actTypes.length ? actTypes[0][1] : 1;
-  const dddTotal = totalActivities || 1;
-  const dddPct = Math.round(((dddUsageCounts.direct+dddUsageCounts.informed)/dddTotal)*100);
+ const barriers = Object.entries(barrierCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ const maxBarrier = barriers.length ? barriers[0][1] : 1;
+ const actTypes = Object.entries(activityByType).sort((a,b)=>b[1]-a[1]).slice(0,6);
+ const maxAct = actTypes.length ? actTypes[0][1] : 1;
+ const dddTotal = totalActivities || 1;
+ const dddPct = Math.round(((dddUsageCounts.direct+dddUsageCounts.informed)/dddTotal)*100);
 
-  return `<div class="dash-wrap">
-    ${S.decisions[0]?.id?.startsWith('DEMO_') ? '<div class="demo-banner">📋 <strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
-    <!-- STAT CARDS -->
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num">${totalActivities}</div><div class="stat-label">Activities Logged</div></div>
-      <div class="stat-card green"><div class="stat-num">${schoolSet.size}</div><div class="stat-label">Schools Visited</div></div>
-      <div class="stat-card orange"><div class="stat-num">${totalLearners > 999 ? (totalLearners/1000).toFixed(1)+'k' : totalLearners}</div><div class="stat-label">Learners Reached</div></div>
-      <div class="stat-card red"><div class="stat-num">${followUps.length}</div><div class="stat-label">Follow-ups Due</div></div>
-    </div>
+ return `<div class="dash-wrap"> ${S.decisions[0]?.id?.startsWith('DEMO_') ? '<div class="demo-banner"> <strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
+ <!-- STAT CARDS --> <div class="stats-row"> <div class="stat-card"><div class="stat-num">${totalActivities}</div><div class="stat-label">Activities Logged</div></div> <div class="stat-card green"><div class="stat-num">${schoolSet.size}</div><div class="stat-label">Schools Visited</div></div> <div class="stat-card orange"><div class="stat-num">${totalLearners > 999 ? (totalLearners/1000).toFixed(1)+'k' : totalLearners}</div><div class="stat-label">Learners Reached</div></div> <div class="stat-card red"><div class="stat-num">${followUps.length}</div><div class="stat-label">Follow-ups Due</div></div> </div> <!-- DDD DATA USAGE --> <div class="dash-section"> <div class="dash-section-hdr"><h3>DDD Data Usage</h3><span style="font-size:24px;font-weight:800;color:var(--teal)">${dddPct}%</span></div> <div class="dash-section-body"> <div style="display:flex;gap:4px;height:24px;border-radius:4px;overflow:hidden;margin-bottom:8px"> <div style="width:${(dddUsageCounts.direct/dddTotal)*100}%;background:var(--teal);min-width:${dddUsageCounts.direct?'4px':'0'}"></div> <div style="width:${(dddUsageCounts.informed/dddTotal)*100}%;background:var(--teal-md);min-width:${dddUsageCounts.informed?'4px':'0'}"></div> <div style="width:${(dddUsageCounts.partial/dddTotal)*100}%;background:var(--orange);min-width:${dddUsageCounts.partial?'4px':'0'}"></div> <div style="width:${(dddUsageCounts.none/dddTotal)*100}%;background:var(--grey-lt);min-width:${dddUsageCounts.none?'4px':'0'}"></div> </div> <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--grey)"> <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal);vertical-align:middle;margin-right:3px"></span>Direct: ${dddUsageCounts.direct}</span> <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal-md);vertical-align:middle;margin-right:3px"></span>Informed: ${dddUsageCounts.informed}</span> <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--orange);vertical-align:middle;margin-right:3px"></span>Partial: ${dddUsageCounts.partial}</span> <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--grey-lt);border:1px solid #ccc;vertical-align:middle;margin-right:3px"></span>None: ${dddUsageCounts.none}</span> </div> <p style="font-size:11px;color:var(--grey);margin-top:8px">${dddPct}% of activities were directly triggered or informed by DDD data</p> </div> </div> <!-- D → A → O CHAIN VIEW --> <div class="dash-section"> <div class="dash-section-hdr"><h3>Decision → Action → Outcome Chains</h3></div> <div class="dash-section-body" style="padding:8px"> ${decs.length === 0 ? '<div class="empty">No activities logged yet. Start by logging your first activity!</div>' :
+ decs.map(d => {
+ const det = d.details || {};
+ const relActs = S.actions.filter(a=>a.decision_id===d.id);
+ const expanded = S.expandedChains && S.expandedChains[d.id];
+ const SC = {
+ 'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},
+ 'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},
+ 'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}
+ };
+ return `<div class="chain"> <div class="chain-hdr" onclick="S.expandedChains=S.expandedChains||{};S.expandedChains['${d.id}']=!S.expandedChains['${d.id}'];render()"> <div> <div class="chain-title">${esc(det.activity_type||d.decision_made||'Activity')} — ${esc(det.schools||'')}</div> <div class="chain-meta">${esc(det.district||'')}${det.province?' · '+esc(det.province):''} · ${fmtDate(d.date)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div> </div> <div style="display:flex;align-items:center;gap:8px"> <div class="chain-dots"> <div class="chain-dot" style="background:var(--blue)">D</div> ${relActs.length ? '<div class="chain-dot" style="background:var(--orange)">A</div>' : ''}
+ ${S.outcomes.filter(o=>relActs.some(a=>a.id===o.action_id)).length ? '<div class="chain-dot" style="background:var(--green)">O</div>' : ''}
+ </div> <span style="font-size:14px;color:var(--grey);transition:transform .2s;transform:rotate(${expanded?'180':'0'}deg)"></span> </div> </div> <div class="chain-body${expanded?'':' collapsed'}"> <!-- Decision node --> <div class="node"> <div class="node-line"><div class="node-dot" style="background:var(--blue)">D</div>${relActs.length?'<div class="node-stem"></div>':''}</div> <div class="node-content" style="background:var(--blue-lt)"> <div class="node-type" style="color:var(--blue)">Decision — ${fmtDate(d.date)}</div> <div class="node-text">${esc(d.decision_made||det.decision_type||'')}</div> <div class="node-detail"> ${d.ddd_tool ? '<strong>DDD Tool:</strong> '+esc(d.ddd_tool)+'<br>' : ''}
+ ${d.insight ? '<strong>Insight:</strong> '+esc(d.insight)+'<br>' : ''}
+ ${det.subjects&&det.subjects.length ? '<strong>Subjects:</strong> '+det.subjects.join(', ')+'<br>' : ''}
+ ${det.grades&&det.grades.length ? '<strong>Grades:</strong> '+det.grades.map(g=>'Gr '+g).join(', ')+'<br>' : ''}
+ ${d.made_by ? 'By: '+esc(d.made_by) : ''}
+ </div> ${d.contextual_factors ? '<div class="ctx-banner"><strong style="color:var(--orange)"> Context:</strong> '+esc(d.contextual_factors)+'</div>' : ''}
+ </div> </div> <!-- Action nodes --> ${relActs.map(act => {
+ const sc = SC[act.status] || SC.Planned;
+ const actOuts = S.outcomes.filter(o=>o.action_id===act.id);
+ return `
+ <div class="node" style="padding-left:14px"> <div class="node-line"><div class="node-dot" style="background:var(--orange)">A</div>${actOuts.length?'<div class="node-stem"></div>':''}</div> <div class="node-content" style="background:var(--orange-lt)"> <div style="display:flex;justify-content:space-between;align-items:center"> <div class="node-type" style="color:var(--orange)">Action</div> <span class="status-pill" style="background:${sc.bg};color:${sc.fg}"><span class="sdot" style="background:${sc.dot}"></span>${esc(act.status)}</span> </div> <div class="node-text">${esc(act.action_taken)}</div> <div class="node-detail">${act.responsible?'Responsible: '+esc(act.responsible):''} ${act.target_date?'· Target: '+fmtDate(act.target_date):''}</div> ${act.supporting_doc_url ? '<div class="doc-link"><a href="'+esc(act.supporting_doc_url)+'" target="_blank" rel="noopener"> '+esc(act.supporting_doc_name||'View document')+'</a></div>' : ''}
+ ${act.logged_by ? '<div class="node-who">Logged by: '+esc(act.logged_by)+'</div>' : ''}
+ </div> </div> ${actOuts.map(out => `
+ <div class="node" style="padding-left:28px"> <div class="node-line"><div class="node-dot" style="background:var(--green)">O</div></div> <div class="node-content" style="background:var(--green-lt)"> <div class="node-type" style="color:var(--green-dk)">Outcome — ${fmtDate(out.date)}</div> <div class="node-text">${esc(out.description)}</div> <div class="node-detail"> ${out.metric ? '<strong>'+esc(out.metric)+':</strong> '+esc(out.value)+'<br>' : ''}
+ ${out.evidence ? 'Evidence: '+esc(out.evidence) : ''}
+ </div> ${out.logged_by ? '<div class="node-who">Logged by: '+esc(out.logged_by)+'</div>' : ''}
+ </div> </div>`).join('')}`;
+ }).join('')}
+ </div> </div>`;
+ }).join('')
+ }
+ </div> </div> <!-- CONTEXTUAL BARRIERS --> ${barriers.length ? `
+ <div class="dash-section"> <div class="dash-section-hdr"><h3>Contextual Barriers Reported</h3></div> <div class="dash-section-body"> <p style="font-size:11px;color:var(--grey);margin-bottom:10px">Most commonly reported challenges across school visits. These patterns help inform resource allocation decisions.</p> <div class="bar-chart"> ${barriers.map(([label,count]) => `<div class="bar-row"> <div class="bar-label">${esc(label)}</div> <div class="bar-track"><div class="bar-fill" style="width:${(count/maxBarrier)*100}%;background:var(--orange)">${count}</div></div> </div>`).join('')}
+ </div> </div> </div>` : ''}
 
-    <!-- DDD DATA USAGE -->
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>📊 DDD Data Usage</h3><span style="font-size:24px;font-weight:800;color:var(--teal)">${dddPct}%</span></div>
-      <div class="dash-section-body">
-        <div style="display:flex;gap:4px;height:24px;border-radius:4px;overflow:hidden;margin-bottom:8px">
-          <div style="width:${(dddUsageCounts.direct/dddTotal)*100}%;background:var(--teal);min-width:${dddUsageCounts.direct?'4px':'0'}"></div>
-          <div style="width:${(dddUsageCounts.informed/dddTotal)*100}%;background:var(--teal-md);min-width:${dddUsageCounts.informed?'4px':'0'}"></div>
-          <div style="width:${(dddUsageCounts.partial/dddTotal)*100}%;background:var(--orange);min-width:${dddUsageCounts.partial?'4px':'0'}"></div>
-          <div style="width:${(dddUsageCounts.none/dddTotal)*100}%;background:var(--grey-lt);min-width:${dddUsageCounts.none?'4px':'0'}"></div>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--grey)">
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal);vertical-align:middle;margin-right:3px"></span>Direct: ${dddUsageCounts.direct}</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal-md);vertical-align:middle;margin-right:3px"></span>Informed: ${dddUsageCounts.informed}</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--orange);vertical-align:middle;margin-right:3px"></span>Partial: ${dddUsageCounts.partial}</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--grey-lt);border:1px solid #ccc;vertical-align:middle;margin-right:3px"></span>None: ${dddUsageCounts.none}</span>
-        </div>
-        <p style="font-size:11px;color:var(--grey);margin-top:8px">${dddPct}% of activities were directly triggered or informed by DDD data</p>
-      </div>
-    </div>
+ <!-- ACTIVITY BREAKDOWN --> ${actTypes.length ? `
+ <div class="dash-section"> <div class="dash-section-hdr"><h3>Activity Breakdown</h3></div> <div class="dash-section-body"> <div class="bar-chart"> ${actTypes.map(([label,count]) => `<div class="bar-row"> <div class="bar-label">${esc(label)}</div> <div class="bar-track"><div class="bar-fill" style="width:${(count/maxAct)*100}%;background:var(--teal)">${count}</div></div> </div>`).join('')}
+ </div> </div> </div>` : ''}
 
-    <!-- D → A → O CHAIN VIEW -->
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>🔗 Decision → Action → Outcome Chains</h3></div>
-      <div class="dash-section-body" style="padding:8px">
-        ${decs.length === 0 ? '<div class="empty">No activities logged yet. Start by logging your first activity!</div>' :
-          decs.map(d => {
-            const det = d.details || {};
-            const relActs = S.actions.filter(a=>a.decision_id===d.id);
-            const expanded = S.expandedChains && S.expandedChains[d.id];
-            const SC = {
-              'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},
-              'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},
-              'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}
-            };
-            return `<div class="chain">
-              <div class="chain-hdr" onclick="S.expandedChains=S.expandedChains||{};S.expandedChains['${d.id}']=!S.expandedChains['${d.id}'];render()">
-                <div>
-                  <div class="chain-title">${esc(det.activity_type||d.decision_made||'Activity')} — ${esc(det.schools||'')}</div>
-                  <div class="chain-meta">${esc(det.district||'')}${det.province?' · '+esc(det.province):''} · ${fmtDate(d.date)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div class="chain-dots">
-                    <div class="chain-dot" style="background:var(--blue)">D</div>
-                    ${relActs.length ? '<div class="chain-dot" style="background:var(--orange)">A</div>' : ''}
-                    ${S.outcomes.filter(o=>relActs.some(a=>a.id===o.action_id)).length ? '<div class="chain-dot" style="background:var(--green)">O</div>' : ''}
-                  </div>
-                  <span style="font-size:14px;color:var(--grey);transition:transform .2s;transform:rotate(${expanded?'180':'0'}deg)">▾</span>
-                </div>
-              </div>
-              <div class="chain-body${expanded?'':' collapsed'}">
-                <!-- Decision node -->
-                <div class="node">
-                  <div class="node-line"><div class="node-dot" style="background:var(--blue)">D</div>${relActs.length?'<div class="node-stem"></div>':''}</div>
-                  <div class="node-content" style="background:var(--blue-lt)">
-                    <div class="node-type" style="color:var(--blue)">Decision — ${fmtDate(d.date)}</div>
-                    <div class="node-text">${esc(d.decision_made||det.decision_type||'')}</div>
-                    <div class="node-detail">
-                      ${d.ddd_tool ? '<strong>DDD Tool:</strong> '+esc(d.ddd_tool)+'<br>' : ''}
-                      ${d.insight ? '<strong>Insight:</strong> '+esc(d.insight)+'<br>' : ''}
-                      ${det.subjects&&det.subjects.length ? '<strong>Subjects:</strong> '+det.subjects.join(', ')+'<br>' : ''}
-                      ${det.grades&&det.grades.length ? '<strong>Grades:</strong> '+det.grades.map(g=>'Gr '+g).join(', ')+'<br>' : ''}
-                      ${d.made_by ? 'By: '+esc(d.made_by) : ''}
-                    </div>
-                    ${d.contextual_factors ? '<div class="ctx-banner"><strong style="color:var(--orange)">⚠ Context:</strong> '+esc(d.contextual_factors)+'</div>' : ''}
-                  </div>
-                </div>
-                <!-- Action nodes -->
-                ${relActs.map(act => {
-                  const sc = SC[act.status] || SC.Planned;
-                  const actOuts = S.outcomes.filter(o=>o.action_id===act.id);
-                  return `
-                  <div class="node" style="padding-left:14px">
-                    <div class="node-line"><div class="node-dot" style="background:var(--orange)">A</div>${actOuts.length?'<div class="node-stem"></div>':''}</div>
-                    <div class="node-content" style="background:var(--orange-lt)">
-                      <div style="display:flex;justify-content:space-between;align-items:center">
-                        <div class="node-type" style="color:var(--orange)">Action</div>
-                        <span class="status-pill" style="background:${sc.bg};color:${sc.fg}"><span class="sdot" style="background:${sc.dot}"></span>${esc(act.status)}</span>
-                      </div>
-                      <div class="node-text">${esc(act.action_taken)}</div>
-                      <div class="node-detail">${act.responsible?'Responsible: '+esc(act.responsible):''} ${act.target_date?'· Target: '+fmtDate(act.target_date):''}</div>
-                      ${act.supporting_doc_url ? '<div class="doc-link"><a href="'+esc(act.supporting_doc_url)+'" target="_blank" rel="noopener">📎 '+esc(act.supporting_doc_name||'View document')+'</a></div>' : ''}
-                      ${act.logged_by ? '<div class="node-who">Logged by: '+esc(act.logged_by)+'</div>' : ''}
-                    </div>
-                  </div>
-                  ${actOuts.map(out => `
-                  <div class="node" style="padding-left:28px">
-                    <div class="node-line"><div class="node-dot" style="background:var(--green)">O</div></div>
-                    <div class="node-content" style="background:var(--green-lt)">
-                      <div class="node-type" style="color:var(--green-dk)">Outcome — ${fmtDate(out.date)}</div>
-                      <div class="node-text">${esc(out.description)}</div>
-                      <div class="node-detail">
-                        ${out.metric ? '<strong>'+esc(out.metric)+':</strong> '+esc(out.value)+'<br>' : ''}
-                        ${out.evidence ? 'Evidence: '+esc(out.evidence) : ''}
-                      </div>
-                      ${out.logged_by ? '<div class="node-who">Logged by: '+esc(out.logged_by)+'</div>' : ''}
-                    </div>
-                  </div>`).join('')}`;
-                }).join('')}
-              </div>
-            </div>`;
-          }).join('')
-        }
-      </div>
-    </div>
+ <!-- FOLLOW-UPS DUE --> ${followUps.length ? `
+ <div class="dash-section"> <div class="dash-section-hdr"><h3>Follow-ups Due</h3><span class="fup-badge">${followUps.length} pending</span></div> <div class="dash-section-body"> ${followUps.slice(0,10).map(f => `<div class="fup-item"> <div class="fup-text"><strong>${esc(f.schools||'')}</strong><br>${esc(f.desc)}</div> <div><div class="fup-date">${fmtDate(f.date)}</div>${f.district?`<div style="font-size:10px;color:var(--grey)">${esc(f.district)}</div>`:''}</div> </div>`).join('')}
+ </div> </div>` : ''}
 
-    <!-- CONTEXTUAL BARRIERS -->
-    ${barriers.length ? `
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>⚠️ Contextual Barriers Reported</h3></div>
-      <div class="dash-section-body">
-        <p style="font-size:11px;color:var(--grey);margin-bottom:10px">Most commonly reported challenges across school visits. These patterns help inform resource allocation decisions.</p>
-        <div class="bar-chart">
-          ${barriers.map(([label,count]) => `<div class="bar-row">
-            <div class="bar-label">${esc(label)}</div>
-            <div class="bar-track"><div class="bar-fill" style="width:${(count/maxBarrier)*100}%;background:var(--orange)">${count}</div></div>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>` : ''}
-
-    <!-- ACTIVITY BREAKDOWN -->
-    ${actTypes.length ? `
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>📋 Activity Breakdown</h3></div>
-      <div class="dash-section-body">
-        <div class="bar-chart">
-          ${actTypes.map(([label,count]) => `<div class="bar-row">
-            <div class="bar-label">${esc(label)}</div>
-            <div class="bar-track"><div class="bar-fill" style="width:${(count/maxAct)*100}%;background:var(--teal)">${count}</div></div>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>` : ''}
-
-    <!-- FOLLOW-UPS DUE -->
-    ${followUps.length ? `
-    <div class="dash-section">
-      <div class="dash-section-hdr"><h3>🔔 Follow-ups Due</h3><span class="fup-badge">${followUps.length} pending</span></div>
-      <div class="dash-section-body">
-        ${followUps.slice(0,10).map(f => `<div class="fup-item">
-          <div class="fup-text"><strong>${esc(f.schools||'')}</strong><br>${esc(f.desc)}</div>
-          <div><div class="fup-date">${fmtDate(f.date)}</div>${f.district?`<div style="font-size:10px;color:var(--grey)">${esc(f.district)}</div>`:''}</div>
-        </div>`).join('')}
-      </div>
-    </div>` : ''}
-
-  </div>`;
+ </div>`;
 }
 
-// ── UTILITIES ──
+// 
+// TOOLKIT
+// 
+function renderToolkit() {
+ const d = RD;
+ return `<div> <div class="tk-tabs"> ${[['navigator','','Dashboard Navigator'],['designer','','Intervention Designer'],['library','','What Works'],['peers','','Peer Insights']].map(([id,ic,l])=>`<button class="tk-tab ${S.tkTab===id?'on':''}" onclick="S.tkTab='${id}';render()">${l}</button>`).join('')}
+ </div> <div class="tk-wrap" style="padding-top:12px"> <div class="tk-ctx"> <div style="flex:1"><div style="font-weight:700;color:#074445">${d.entity.school} — ${d.entity.circuit}</div><div style="color:#607D8B;font-size:11px">${d.entity.district} · ${d.entity.province} · Quintile ${d.entity.quintile} · ${d.learners.total} FET learners</div></div> <div style="text-align:right"><div style="font-size:22px;font-weight:800;color:${d.promotion.rate<70?'#E53935':'#7AB648'}">${d.promotion.rate}%</div><div style="font-size:9px;color:#607D8B">Promotion Rate</div></div> </div> ${S.tkTab==='navigator'?tkNavigator():S.tkTab==='designer'?tkDesigner():S.tkTab==='library'?tkLibrary():tkPeers()}
+ </div></div>`;
+}
+
+// NAVIGATOR 
+function tkNavigator() {
+ const d = RD;
+ return `<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">Each DDD report answers different questions. Select a report below to see <strong>exactly where to find insights</strong> in the dashboard, what data points it exposes, and how it connects to real intervention decisions across your entity — whether at school, circuit, district, or provincial level.</p> ${TK_REPORTS.map(r=>{const sel=S.selReport===r.id;return`
+ <div class="tk-card${sel?' sel':''}" style="${sel?'border-color:'+r.color:''}"> <div class="tk-card-h" onclick="S.selReport=S.selReport==='${r.id}'?null:'${r.id}';render()"> <div class="tk-ic" style="background:${r.color}15;color:${r.color};font-size:11px;font-weight:800">${r.icon}</div> <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#1A2332">${r.name}</div><div style="font-size:11px;color:#607D8B;margin-top:2px">${r.desc}</div></div> <span style="font-size:16px;color:#607D8B;transition:transform .2s;transform:rotate(${sel?'180':'0'}deg)"></span> </div> ${sel?`<div class="tk-card-b"> <div class="tk-path"> <span style="font-family:monospace">${r.path}</span></div> <div style="margin-top:12px"><div style="font-size:11px;font-weight:700;color:${r.color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Best For</div><div class="tk-chips">${r.bestFor.map(b=>`<span class="tk-chip" style="background:#f3f2f1;color:#37474F;font-weight:500">${b}</span>`).join('')}</div></div> <div style="margin-top:12px"><div style="font-size:11px;font-weight:700;color:${r.color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Data Points Available</div><div class="tk-chips">${r.dataPoints.map(dp=>`<span class="tk-chip" style="background:${r.color}10;color:${r.color};font-weight:500;border:1px solid ${r.color}30">${dp}</span>`).join('')}</div></div> <div class="tk-tip" style="background:#FFF8E1;border-color:${r.color}"><div style="font-size:10px;font-weight:700;color:${r.color};margin-bottom:4px"> REAL INSIGHT — ${d.entity.school}</div><div style="font-size:12px;color:#37474F;line-height:1.5">${r.realInsight}</div></div> ${r.policyLink?`<div style="margin-top:8px"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${r.policyLink}';render()">${r.policyLink} — View Policy</button></div>`:''}
+ <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-sm btn-outline" onclick="event.stopPropagation();S.tkTab='designer';S.dChallenge=null;S.dStep=0;render()"> Design an intervention using this report</button></div> </div>`:''}
+ </div>`}).join('')}`;
+}
+
+// DESIGNER 
+function tkDesigner() {
+ const d = RD;
+ const chs=[{id:'attendance',icon:'',label:'Learner Attendance',stat:(d.attendance.high+d.attendance.chronic)+' learners with 16+ days absent',color:'#E53935'},{id:'performance',icon:'',label:'Low Performance',stat:(d.performance.below30+d.performance.range30_39)+' learners below 40%',color:'#E8952E'},{id:'promotion',icon:'',label:'At-Risk Promotion',stat:d.fetCriteria.missedOne+' missed just ONE criteria',color:'#1565C0'},{id:'prediction',icon:'',label:'Predicted Non-Promotion',stat:d.predictions.promFalse+' predicted NOT promoted',color:'#7B1FA2'}];
+ const steps=['Identify Challenge','Analyse Data','Select Response','Plan Action'];
+ return`<div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:15px;font-weight:700;color:#1A2332;margin:0">Intervention Designer</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">Walk through the data to design a targeted intervention</p></div> <div style="padding:16px"> <div class="tk-prog">${steps.map((s,i)=>`<div class="tk-prog-s" style="background:${S.dStep===i?'#0B8E8D':S.dStep>i?'#E8F5E9':'#f3f2f1'};color:${S.dStep===i?'#fff':S.dStep>i?'#7AB648':'#607D8B'}" onclick="S.dStep=${i};render()">${i+1}. ${s}</div>`).join('')}</div> ${S.dStep===0?`<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#1A2332">What challenge are you addressing?</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${chs.map(c=>`<div class="tk-ch${S.dChallenge===c.id?' sel':''}" onclick="S.dChallenge='${c.id}';S.dStep=1;render()" style="background:${S.dChallenge===c.id?c.color+'10':'#f7f9fc'};${S.dChallenge===c.id?'border-color:'+c.color+'':''};color:${c.color}"><div style="font-size:22px;margin-bottom:6px">${c.icon}</div><div style="font-size:13px;font-weight:700;color:#1A2332">${c.label}</div><div style="font-size:11px;color:${c.color};font-weight:600;margin-top:4px">${c.stat}</div></div>`).join('')}</div>`:''}
+ ${S.dStep===1?tkDesignerData():''}
+ ${S.dStep===2?tkDesignerResponse():''}
+ ${S.dStep===3?tkDesignerPlan():''}
+ </div></div>`;
+}
+
+function tkStatCard(v,l,c,sub){return`<div style="background:#fff;border-radius:10px;padding:16px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:3px solid ${c};flex:1;min-width:120px"><div style="font-size:28px;font-weight:800;color:#1A2332;line-height:1">${v}</div><div style="font-size:10px;font-weight:600;color:#607D8B;text-transform:uppercase;letter-spacing:.5px;margin-top:4px">${l}</div>${sub?`<div style="font-size:10px;color:${c};margin-top:2px;font-weight:600">${sub}</div>`:''}</div>`}
+function tkBar(v,max,c,label,ct){return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="font-size:11px;color:#37474F;min-width:110px;text-align:right;font-weight:500">${label}</div><div style="flex:1;height:22px;background:#ECEFF1;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(v/max)*100}%;background:${c};border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:${v>0?'20px':'0'};transition:width .4s">${ct||v}</div></div></div>`}
+
+function tkDesignerData(){
+ const d=RD;if(!S.dChallenge)return`<div class="empty">← Please select a challenge in Step 1 first</div>`;
+ let h='';
+ if(S.dChallenge==='attendance'){
+ h=`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px"> Attendance Analysis — ${d.entity.school}</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">Data from DDD Learner Chart Report & General Overview (Term 3, 2025)</div> <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">${tkStatCard(d.attendance.avgDays,'Avg Days Absent','#0B8E8D','Per learner')}${tkStatCard(d.attendance.high+d.attendance.chronic,'High Absence','#E53935','16+ days')}${tkStatCard(27,'High Abs + Low Marks','#E8952E','Dual risk')}</div> <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:#1A2332">Absence Distribution (2,748 learners)</div> ${tkBar(d.attendance.zeroAbsent,d.learners.total,'#7AB648','Zero absence',d.attendance.zeroAbsent+' ('+(d.attendance.zeroAbsent/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.attendance.low,d.learners.total,'#0B8E8D','1-5 days',d.attendance.low+' ('+(d.attendance.low/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.attendance.medium,d.learners.total,'#E8952E','6-15 days',d.attendance.medium+' ('+(d.attendance.medium/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.attendance.high,d.learners.total,'#E53935','16-30 days',d.attendance.high)}
+ ${tkBar(d.attendance.chronic,d.learners.total,'#7B1FA2','30+ days',d.attendance.chronic)}
+ <div style="margin-top:12px;background:#FFEBEE;border-radius:8px;padding:12px;border-left:3px solid #E53935"><div style="font-size:10px;font-weight:700;color:#E53935;margin-bottom:4px"> KEY FINDING</div><div style="font-size:12px;color:#37474F;line-height:1.5">27 learners have BOTH high absence (16+ days) AND below-40% average marks. These are the highest priority for intervention. The SA Schools Act (Section 3) requires compulsory attendance — schools must actively track and respond to chronic absence.</div></div> <div class="tk-path"> <span style="font-family:monospace">DDD Dashboard → Marina Secondary → Learner Chart Report → Sort by 'Days Absent' → Download</span></div>`;
+ } else if(S.dChallenge==='performance'){
+ h=`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px"> Performance Analysis — ${d.entity.school}</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">Data from DDD Learner Chart Report (Term 3, 2025)</div> <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">${tkStatCard(d.performance.avgMark+'%','Average Mark','#E8952E','')}${tkStatCard(d.performance.below30+d.performance.range30_39,'Below 40%','#E53935',((d.performance.below30+d.performance.range30_39)/d.learners.total*100).toFixed(0)+'% of learners')}${tkStatCard(d.performance.above50,'Above 50%','#7AB648',(d.performance.above50/d.learners.total*100).toFixed(0)+'% of learners')}</div> <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:#1A2332">Performance Band Distribution</div> ${tkBar(d.performance.below30,d.learners.total,'#E53935','Below 30%',d.performance.below30+' ('+(d.performance.below30/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.performance.range30_39,d.learners.total,'#E8952E','30-39%',d.performance.range30_39+' ('+(d.performance.range30_39/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.performance.range40_49,d.learners.total,'#FFC107','40-49%',d.performance.range40_49+' ('+(d.performance.range40_49/d.learners.total*100).toFixed(0)+'%)')}
+ ${tkBar(d.performance.above50,d.learners.total,'#7AB648','50%+',d.performance.above50+' ('+(d.performance.above50/d.learners.total*100).toFixed(0)+'%)')}
+ <div class="tk-path"> <span style="font-family:monospace">DDD Dashboard → Marina Secondary → Learner Chart Report → Review 'Avg Report Mark'</span></div>`;
+ } else if(S.dChallenge==='promotion'){
+ h=`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px"> FET Promotion Criteria Analysis — ${d.entity.school}</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">Data from DDD FET Promotion Criteria Profiles (Term 3, 2025)</div> <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">${tkStatCard(d.fetCriteria.metAll,'Met All Criteria','#7AB648',(d.fetCriteria.metAll/d.learners.total*100).toFixed(0)+'%')}${tkStatCard(d.fetCriteria.missedOne,'Missed ONE','#E8952E','Highest ROI group')}${tkStatCard(d.fetCriteria.missedMultiple,'Missed Multiple','#E53935','Intensive support')}</div> <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:#1A2332">Promotion Criteria Profiles (NPPPPR)</div> ${tkBar(d.fetCriteria.profiles.levelUp,d.learners.total,'#4CAF50','Level Up',d.fetCriteria.profiles.levelUp)}
+ ${tkBar(d.fetCriteria.profiles.other,d.learners.total,'#7AB648','Met All (Other)',d.fetCriteria.profiles.other)}
+ ${tkBar(d.fetCriteria.profiles.atRisk30,d.learners.total,'#FFC107','At Risk 30%+',d.fetCriteria.profiles.atRisk30)}
+ ${tkBar(d.fetCriteria.profiles.atRiskHL,d.learners.total,'#FF9800','At Risk HL',d.fetCriteria.profiles.atRiskHL)}
+ ${tkBar(d.fetCriteria.profiles.dna30,d.learners.total,'#E8952E','DNA 30%+',d.fetCriteria.profiles.dna30+' Quick win')}
+ ${tkBar(d.fetCriteria.profiles.dnaHL,d.learners.total,'#E53935','DNA HL',d.fetCriteria.profiles.dnaHL)}
+ ${tkBar(d.fetCriteria.profiles.dna40,d.learners.total,'#C62828','DNA 40%+',d.fetCriteria.profiles.dna40)}
+ ${tkBar(d.fetCriteria.profiles.dnaMultiple,d.learners.total,'#7B1FA2','DNA Multiple',d.fetCriteria.profiles.dnaMultiple)}
+ <div style="margin-top:12px;background:#E8F5E9;border-radius:8px;padding:12px;border-left:3px solid #7AB648"><div style="font-size:10px;font-weight:700;color:#7AB648;margin-bottom:4px"> HIGHEST-IMPACT INSIGHT</div><div style="font-size:12px;color:#37474F;line-height:1.5"><strong>333 learners need just 30%+ in ONE more subject</strong> to meet all NPPPPR promotion criteria. This is the lowest-effort, highest-impact group to target. A focused revision programme in their weakest subject could shift outcomes for 12% of the school.</div></div> <div style="margin-top:8px"><button class="tk-badge" onclick="S.showPolicy='NPPPPR';render()"> NPPPPR</button></div> <div class="tk-path"> <span style="font-family:monospace">DDD Dashboard → Marina Secondary → FET Promotion Criteria Profiles → Download data</span></div>`;
+ } else {
+ h=`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px"> Promotion Predictions — ${d.entity.school}</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">ML-generated predictions from DDD Term 4 Promotion Predictions (Term 3, 2025)</div> <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">${tkStatCard(d.predictions.promTrue,'Predicted Promoted','#7AB648','')}${tkStatCard(d.predictions.promFalse,'Predicted NOT','#E53935','')}${tkStatCard(d.predictions.noData,'No Prediction','#607D8B','Gr12 / missing data')}</div> <div style="margin-top:8px;background:#E3F2FD;border-radius:8px;padding:12px;border-left:3px solid #1565C0"><div style="font-size:10px;font-weight:700;color:#1565C0;margin-bottom:4px"> ABOUT PREDICTIONS</div><div style="font-size:12px;color:#37474F;line-height:1.5">Predictions are based on historical patterns using gender, grade, age vs grade, task completion %, task marks, exam marks and report marks. They improve as more term data is submitted. Grade 12 is excluded (NSC determines outcomes). These are decision-support tools, not guarantees.</div></div> <div class="tk-path"> <span style="font-family:monospace">DDD Dashboard → Marina Secondary → Term 4 Promotion Predictions → PI Data Download</span></div>`;
+ }
+ h+=`<div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm btn-outline" onclick="S.dStep=0;render()">← Back</button><button class="btn btn-sm btn-teal" style="flex:1" onclick="S.dStep=2;render()">Select Response Strategy →</button></div>`;
+ return h;
+}
+
+function tkDesignerResponse(){
+ const ch=S.dChallenge;
+ const matched=TK_INTERVENTIONS.filter(i=>{if(ch==='attendance')return i.category==='Attendance'||i.category==='Community';if(ch==='performance'||ch==='promotion')return i.category==='Academic Support'||i.category==='Assessment Quality';return i.category==='Academic Support'||i.category==='School Support'});
+ return`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px">Recommended Interventions</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">Based on your challenge, here are proven interventions used by comparable entities</div> ${matched.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);return`
+ <div class="tk-iv${sel?' sel':''}" onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()"> <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700;font-size:13px;color:#1A2332">${iv.name}</div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:600">${iv.difficulty}</span><span style="font-size:10px;font-weight:700;color:#7AB648">${iv.effectiveness}% effective</span></div></div> <div style="font-size:11px;color:#607D8B;margin-top:4px">${iv.description}</div> <div style="font-size:10px;color:#0B8E8D;margin-top:4px">Used by ${iv.usedBy} officials · ${iv.provinces.join(', ')} · Impact in ${iv.timeToImpact}</div> ${sel?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e1dfdd"> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div> <div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">IMPLEMENTATION STEPS</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
+ <div style="margin-top:10px;background:#FFF8E1;border-radius:8px;padding:10px;font-size:11px;color:#37474F"><strong style="color:#E8952E"> Comparable Result:</strong> ${iv.comparableResults}</div> <div style="margin-top:6px"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} — View Policy</button></div> </div>`:''}
+ </div>`}).join('')}
+ <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm btn-outline" onclick="S.dStep=1;render()">← Back</button><button class="btn btn-sm btn-teal" style="flex:1" onclick="S.dStep=3;render()">Plan Action →</button></div>`;
+}
+
+function tkDesignerPlan(){
+ return`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:8px">Ready to log this intervention</div> <div style="background:#E8F5E9;border-radius:10px;padding:16px;margin-bottom:12px"> <div style="font-size:11px;font-weight:700;color:#7AB648;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Your DDD Data → Action Chain</div> <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"> ${[{l:'DDD Data',i:'',bg:'#E3F2FD',fg:'#1565C0'},{a:true},{l:'Insight',i:'',bg:'#FFF8E1',fg:'#E8952E'},{a:true},{l:'Decision',i:'',bg:'#E3F2FD',fg:'#1565C0'},{a:true},{l:'Action',i:'',bg:'#FFF3E0',fg:'#E8952E'},{a:true},{l:'Outcome',i:'',bg:'#E8F5E9',fg:'#7AB648'}].map(s=>s.a?'<span style="color:#607D8B;font-size:14px">→</span>':`<div style="background:${s.bg};color:${s.fg};padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px">${s.i} ${s.l}</div>`).join('')}
+ </div> </div> <div style="font-size:12px;color:#37474F;line-height:1.7;margin-bottom:12px">This chain is what we need to capture. When you implement your intervention — whether at one school or across many — log it in the <strong>DDD Interventions Tracker</strong> to build evidence of DDD's contribution to improved learner outcomes. Each logged chain strengthens our programme's evidence base.</div> <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm btn-outline" onclick="S.dStep=2;render()">← Back</button><button class="btn btn-sm" style="flex:1;background:#7AB648;color:#fff" onclick="S.dStep=0;S.dChallenge=null;S.view='log';S.submitted=false;render();window.scrollTo({top:0,behavior:'smooth'})">Log in Interventions Tracker</button></div>`;
+}
+
+// WHAT WORKS 
+function tkLibrary(){
+ const cats=['All',...new Set(TK_INTERVENTIONS.map(i=>i.category))];
+ const filtered=TK_INTERVENTIONS.filter(i=>S.filterCat==='All'||i.category===S.filterCat).sort((a,b)=>S.sortBy==='effectiveness'?b.effectiveness-a.effectiveness:b.usedBy-a.usedBy);
+ return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"> <div style="display:flex;gap:4px;flex-wrap:wrap">${cats.map(c=>`<button class="tk-filt${S.filterCat===c?' on':''}" onclick="S.filterCat='${c}';render()">${c}</button>`).join('')}</div> <div style="display:flex;gap:4px">${[['effectiveness','By Effectiveness'],['popularity','Most Used']].map(([k,l])=>`<button class="tk-sort" style="background:${S.sortBy===k?'#0B8E8D':'#e1dfdd'};color:${S.sortBy===k?'#fff':'#607D8B'}" onclick="S.sortBy='${k}';render()">${l}</button>`).join('')}</div> </div> ${filtered.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);return`
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:10px;overflow:hidden"> <div onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()" style="padding:14px 16px;cursor:pointer"> <div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-weight:700;font-size:14px;color:#1A2332">${iv.name}</span><span style="font-size:9px;padding:2px 5px;border-radius:3px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:700">${iv.difficulty}</span></div> <div style="font-size:11px;color:#607D8B">${iv.description}</div></div> <div style="text-align:right;min-width:60px;flex-shrink:0"><div style="font-size:22px;font-weight:800;color:${iv.effectiveness>=75?'#7AB648':iv.effectiveness>=65?'#E8952E':'#607D8B'}">${iv.effectiveness}%</div><div style="font-size:9px;color:#607D8B">effective</div></div></div> <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><span style="font-size:10px;color:#607D8B">Used by <strong>${iv.usedBy}</strong> officials</span><span style="font-size:10px;color:#607D8B">${iv.timeToImpact}</span><span style="font-size:10px;color:#607D8B">${iv.provinces.join(', ')}</span></div> </div> ${sel?`<div style="padding:0 16px 16px;border-top:1px solid #f3f2f1"> <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div><div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div></div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">IMPLEMENTATION STEPS</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
+ <div style="margin-top:10px;background:#FFF8E1;border-radius:8px;padding:10px;font-size:11px;color:#37474F"><strong style="color:#E8952E"> Evidence from comparable entities:</strong> ${iv.comparableResults}</div> <div style="margin-top:8px"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} — View Policy</button></div> </div>`:''}
+ </div>`}).join('')}`;
+}
+
+// PEER INSIGHTS 
+function tkPeers(){
+ const d=RD;
+ return`<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">See what <strong>comparable entities</strong> in similar contexts are doing and what results they're getting. Entities are matched by quintile, phase, district, and learner demographics. Results are relevant whether you work at school, circuit, district, or provincial level.</p> <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0"> Peer Comparison — Your Circuit vs Similar Circuits</h3></div> <div style="padding:16px"> <div style="background:#FFF3E0;border-radius:8px;padding:12px;margin-bottom:14px;border-left:3px solid #E8952E"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:13px;color:#1A2332">Your circuit: ${d.entity.circuit}</div><div style="font-size:11px;color:#607D8B">Promotion rate: ${d.promotion.rate}% · ${d.learners.total} learners</div></div><div style="font-size:24px;font-weight:800;color:#E8952E">${d.promotion.rate}%</div></div></div> ${TK_PEERS.map((p,i)=>`<div class="tk-peer"><div style="flex:1"><div style="font-weight:700;font-size:13px;color:#1A2332">${p.entity}</div><div style="font-size:11px;color:#607D8B">${p.district} · ${p.learners.toLocaleString()} learners · ${p.context}</div><div style="margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="tk-chip" style="background:#E0F4F4;color:#0B8E8D;font-weight:600">${p.topIntervention}</span><span style="font-size:11px;color:#7AB648;font-weight:700">${p.result}</span></div></div><div style="text-align:right"><div style="font-size:22px;font-weight:800;color:${p.promoRate>d.promotion.rate?'#7AB648':'#607D8B'}">${p.promoRate}%</div><div style="font-size:9px;color:#607D8B">promo rate</div>${p.promoRate>d.promotion.rate?`<div style="font-size:10px;color:#7AB648;font-weight:600">+${(p.promoRate-d.promotion.rate).toFixed(0)}% vs yours</div>`:''}</div></div>`).join('')}
+ </div> </div> <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0"> Most Common Interventions Getting Results</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">Based on 131,770+ learners reached across all provinces</p></div> <div style="padding:16px"> ${tkBar(67,70,'#0B8E8D','Learner Profiling','67 officials')}
+ ${tkBar(54,70,'#7AB648','Parent Engagement','54 officials')}
+ ${tkBar(42,70,'#1565C0','Attendance Plan','42 officials')}
+ ${tkBar(38,70,'#E8952E','Saturday Classes','38 officials')}
+ ${tkBar(31,70,'#074445','Rapid Response','31 officials')}
+ ${tkBar(23,70,'#7B1FA2','SBA-Exam Audit','23 officials')}
+ <div style="margin-top:12px;font-size:11px;color:#607D8B;line-height:1.6">Most useful DDD tools as rated by intervention owners: <strong>FET Promotion Criteria Profiles</strong> and <strong>Learner Chart Report</strong>. DDD is primarily used for identifying learners at risk, targeting underperforming schools, and planning interventions.</div> </div> </div>`;
+}
+
+// POLICY MODAL 
+function renderPolicyModal(){
+ const p=TK_POLICIES[S.showPolicy];if(!p)return;
+ const el=document.createElement('div');
+ el.innerHTML=`<div class="modal-bg" onclick="S.showPolicy=null;render()"><div class="modal-box" onclick="event.stopPropagation()"> <div style="padding:16px 20px;background:#074445;color:#fff"><div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">POLICY REFERENCE</div><div style="font-size:16px;font-weight:700">${S.showPolicy}</div></div> <div style="padding:20px"><div style="font-size:13px;font-weight:600;color:#1A2332;margin-bottom:8px">${p.full}</div><div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">KEY CRITERIA</div>${p.criteria.map(c=>`<div style="display:flex;gap:6px;margin-bottom:4px;font-size:12px;color:#37474F"><span style="color:#0B8E8D;font-weight:700">•</span> ${c}</div>`).join('')}
+ <button class="btn btn-teal btn-sm" style="width:100%;margin-top:14px" onclick="S.showPolicy=null;render()">Close</button></div> </div></div>`;
+ document.body.appendChild(el.firstElementChild);
+}
+
+// UTILITIES 
 function fmtDate(d) { if(!d)return'—'; try{return new Date(d).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d} }
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
-// ── INIT ──
+// INIT 
 checkAuth();
 </script>
+
 </body></html>
