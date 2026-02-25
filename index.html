@@ -18,8 +18,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f3f2f1;color:#32313
 nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding:10px 16px 8px}
 .nav-hint{text-align:center;font-size:10px;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:.5px}
 .nav-hint span{color:var(--green);font-weight:700}
-.nav-row{display:flex;gap:10px}
-.nav-btn{flex:1;border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:14px;font-weight:700;padding:12px 14px;cursor:pointer;font-family:inherit;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;background:rgba(255,255,255,.08);position:relative}
+.nav-row{display:flex;gap:6px;flex-wrap:wrap}
+.nav-btn{flex:1;min-width:0;border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:13px;font-weight:700;padding:10px 8px;cursor:pointer;font-family:inherit;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;background:rgba(255,255,255,.08);position:relative;white-space:nowrap}
+@media(max-width:500px){.nav-row{gap:5px}.nav-btn{font-size:11px;padding:9px 6px;border-radius:8px}}
 .nav-btn .nav-tip{visibility:hidden;opacity:0;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:11px;font-weight:400;padding:8px 12px;border-radius:8px;white-space:normal;width:200px;text-align:center;line-height:1.5;z-index:101;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:opacity .2s,visibility .2s;pointer-events:none}
 .nav-btn .nav-tip::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:var(--navy)}
 .nav-btn:hover .nav-tip,.nav-btn:focus .nav-tip{visibility:visible;opacity:1}
@@ -126,7 +127,8 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 /* Barrier bars */
 .bar-chart{display:flex;flex-direction:column;gap:8px}
 .bar-row{display:flex;align-items:center;gap:8px}
-.bar-label{font-size:11px;color:var(--grey-dk);min-width:120px;text-align:right}
+.bar-label{font-size:11px;color:var(--grey-dk);min-width:100px;max-width:120px;text-align:right;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:500px){.bar-label{min-width:70px;max-width:90px;font-size:10px}}
 .bar-track{flex:1;height:20px;background:var(--grey-lt);border-radius:4px;overflow:hidden;position:relative}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:20px;transition:width .4s}
 .bar-count{font-size:11px;color:var(--grey);min-width:24px;text-align:right}
@@ -455,7 +457,7 @@ function render() {
 
  const o = S.official;
  app.innerHTML = `
- <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Start with your DDD data. Log what you did. See the difference you make.</div> </div> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn" style="flex:0 0 auto;padding:12px 14px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and the impact of your work</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
+ <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Start with your DDD data. Log what you did. See the difference you make.</div> </div> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'?'active':''}" onclick="S.view='log';S.submitted=false;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and the impact of your work</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
  <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
  if(S.showPolicy) renderPolicyModal();
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
@@ -1024,9 +1026,9 @@ function renderDashboard() {
  </div>
 
  <!-- DASHBOARD SCOPE TOGGLE -->
- <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06);flex-wrap:wrap;gap:6px">
    <div style="font-size:12px;color:var(--grey-dk);font-weight:600">Showing:</div>
-   <div style="display:flex;gap:4px">
+   <div style="display:flex;gap:4px;flex-wrap:wrap">
      ${['My Activities','District','Province'].map(scope=>`<button class="tk-filt${(S.dashScope||'My Activities')===scope?' on':''}" onclick="S.dashScope='${scope}';render()" style="font-size:11px;padding:5px 12px">${scope}</button>`).join('')}
    </div>
  </div>
