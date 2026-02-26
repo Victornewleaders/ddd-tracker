@@ -116,14 +116,14 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .stat-card.orange{border-color:var(--orange)}
 .stat-card.green{border-color:var(--green)}
 .stat-card.red{border-color:var(--red)}
-.stat-num{font-size:30px;font-weight:800;color:var(--navy);line-height:1}
-.stat-label{font-size:11px;font-weight:600;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.stat-num{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
+.stat-label{font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
 
-.dash-section{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:18px;overflow:hidden}
-.dash-section-hdr{padding:16px 18px;border-bottom:1px solid var(--grey-lt);display:flex;justify-content:space-between;align-items:center}
-.dash-section-hdr h3{font-size:17px;font-weight:800;color:var(--navy)}
-.dash-section-body{padding:16px 18px}
-.dash-section-desc{font-size:13px;color:var(--grey-dk);line-height:1.6;margin-bottom:14px}
+.dash-section{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden}
+.dash-section-hdr{padding:14px 16px;border-bottom:1px solid var(--grey-lt);display:flex;justify-content:space-between;align-items:center}
+.dash-section-hdr h3{font-size:14px;font-weight:700;color:var(--navy)}
+.dash-section-body{padding:14px 16px}
+.dash-section-desc{font-size:12px;color:var(--grey-dk);line-height:1.6;margin-bottom:12px}
 
 /* Barrier bars */
 .bar-chart{display:flex;flex-direction:column;gap:8px}
@@ -223,8 +223,8 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .chain-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--grey-lt)}
 .chain-hdr:hover{background:var(--off)}
 .chain-hdr:active{background:#EDF0F2;transform:scale(.995)}
-.chain-title{font-size:14px;font-weight:700;color:var(--navy);flex:1}
-.chain-meta{font-size:11px;color:var(--grey);margin-top:3px}
+.chain-title{font-size:13px;font-weight:700;color:var(--navy);flex:1}
+.chain-meta{font-size:10px;color:var(--grey);margin-top:2px}
 .tap-hint{font-size:11px;color:var(--teal-md);font-weight:600;letter-spacing:.3px;margin-top:3px}
 .tap-chevron{font-size:18px;color:var(--teal);transition:transform .2s;font-weight:700}
 .chain-dots{display:flex;gap:3px}
@@ -236,10 +236,10 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .node-dot{width:26px;height:26px;border-radius:50%;color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .node-stem{flex:1;width:2px;background:var(--grey-lt);margin:4px 0}
 .node-content{flex:1;padding:10px 12px;border-radius:8px;font-size:12px}
-.node-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.node-text{color:var(--navy);font-weight:600;margin-bottom:4px;font-size:14px}
-.node-detail{font-size:12px;color:var(--grey);line-height:1.5}
-.node-who{font-size:11px;color:var(--grey);margin-top:4px;font-style:italic}
+.node-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.node-text{color:var(--navy);font-weight:600;margin-bottom:4px;font-size:13px}
+.node-detail{font-size:11px;color:var(--grey);line-height:1.5}
+.node-who{font-size:10px;color:var(--grey);margin-top:4px;font-style:italic}
 .ctx-banner{margin-top:6px;padding:6px 10px;background:var(--orange-lt);border-radius:6px;border-left:3px solid var(--orange);font-size:11px}
 .doc-link{margin-top:4px;font-size:11px}
 .doc-link a{color:var(--blue);text-decoration:none}
@@ -1367,22 +1367,22 @@ function renderDashboard() {
    const withOutcome = acts.filter(a=>outs.some(o=>o.action_id===a.id)).length;
    const completionPct = Math.round((completed/totalActs)*100);
    const outcomePct = Math.round((withOutcome/totalActs)*100);
-   return `<div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:16px 18px;margin-bottom:18px">
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-       <div style="font-size:15px;font-weight:800;color:var(--navy)">Activity Completion</div>
-       <div style="font-size:22px;font-weight:800;color:${completionPct>=75?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div>
+   return `<div style="background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:14px 16px;margin-bottom:16px">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+       <div style="font-size:14px;font-weight:700;color:var(--navy)">Activity Completion</div>
+       <div style="font-size:20px;font-weight:800;color:${completionPct>=75?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div>
      </div>
-     <div style="height:14px;background:#ECEFF1;border-radius:7px;overflow:hidden;display:flex;gap:1px;margin-bottom:10px">
-       ${withOutcome?'<div style="height:100%;flex:'+withOutcome+';background:var(--green);border-radius:7px 0 0 7px;transition:flex .4s"></div>':''}
+     <div style="height:12px;background:#ECEFF1;border-radius:6px;overflow:hidden;display:flex;gap:1px;margin-bottom:8px">
+       ${withOutcome?'<div style="height:100%;flex:'+withOutcome+';background:var(--green);border-radius:6px 0 0 6px;transition:flex .4s"></div>':''}
        ${(completed-withOutcome)>0?'<div style="height:100%;flex:'+(completed-withOutcome)+';background:#7AB648;opacity:.5;transition:flex .4s"></div>':''}
        ${inProgress?'<div style="height:100%;flex:'+inProgress+';background:var(--blue);transition:flex .4s"></div>':''}
-       ${planned?'<div style="height:100%;flex:'+planned+';background:#E0E0E0;border-radius:0 7px 7px 0;transition:flex .4s"></div>':''}
+       ${planned?'<div style="height:100%;flex:'+planned+';background:#E0E0E0;border-radius:0 6px 6px 0;transition:flex .4s"></div>':''}
      </div>
-     <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--grey)">
-       <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--green);vertical-align:middle;margin-right:4px"></span>Complete + Outcome: ${withOutcome}</span>
-       <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#7AB648;opacity:.5;vertical-align:middle;margin-right:4px"></span>Complete: ${completed-withOutcome}</span>
-       <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--blue);vertical-align:middle;margin-right:4px"></span>In Progress: ${inProgress}</span>
-       <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#E0E0E0;vertical-align:middle;margin-right:4px"></span>Planned: ${planned}</span>
+     <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--grey)">
+       <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green);vertical-align:middle;margin-right:3px"></span>Complete + Outcome: ${withOutcome}</span>
+       <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#7AB648;opacity:.5;vertical-align:middle;margin-right:3px"></span>Complete: ${completed-withOutcome}</span>
+       <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--blue);vertical-align:middle;margin-right:3px"></span>In Progress: ${inProgress}</span>
+       <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#E0E0E0;vertical-align:middle;margin-right:3px"></span>Planned: ${planned}</span>
      </div>
    </div>`;
  })()}
@@ -1465,8 +1465,8 @@ function renderDashboard() {
    const completedNoOutcome = acts.filter(a => a.status === 'Completed' && !outs.some(o => o.action_id === a.id));
    const allItems = [...needsUpdate, ...completedNoOutcome];
    if (!allItems.length) return '';
-   return `<div class="dash-section" style="border-left:4px solid var(--blue)">
-     <div class="dash-section-hdr"><h3>Update Your Activities</h3><span style="font-size:13px;font-weight:700;color:var(--blue);background:var(--blue-lt);padding:3px 10px;border-radius:12px">${allItems.length}</span></div>
+   return `<div class="dash-section" style="border-left:3px solid var(--blue)">
+     <div class="dash-section-hdr"><h3>Update Your Activities</h3><span style="font-size:11px;color:var(--grey)">${allItems.length} item${allItems.length!==1?'s':''}</span></div>
      <div class="dash-section-body" style="padding:12px 18px">
        <div class="dash-section-desc">Review your ongoing activities below. Change their status or record what happened.</div>
        ${allItems.map(a => {
@@ -1475,20 +1475,20 @@ function renderDashboard() {
          const hasOutcome = outs.some(o => o.action_id === a.id);
          const SC = {'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}};
          const sc = SC[a.status] || SC.Planned;
-         return `<div style="background:#FAFBFC;border:1px solid #e0e0e0;border-radius:10px;padding:14px 16px;margin-bottom:10px">
+         return `<div style="background:#FAFBFC;border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;margin-bottom:6px">
            <div style="margin-bottom:10px">
-             <div style="font-size:14px;font-weight:700;color:var(--navy);line-height:1.4">${esc(a.action_taken)}</div>
+             <div style="font-size:12px;font-weight:600;color:var(--navy);line-height:1.4">${esc(a.action_taken)}</div>
              <div style="font-size:12px;color:var(--grey);margin-top:4px">${esc(det.schools||'')}${det.district?' · '+esc(det.district):''}${a.target_date?' · Target: '+fmtDate(a.target_date):''}</div>
            </div>
            <div style="margin-bottom:10px">
              <div style="font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Status</div>
              <div style="display:flex;gap:6px;flex-wrap:wrap">
-               <button onclick="updateActionStatus('`+a.id+`','Planned')" style="font-size:12px;padding:7px 14px;border:2px solid ${a.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${a.status==='Planned'?'#fff':'var(--grey-dk)'};background:${a.status==='Planned'?'var(--grey)':'#fff'};border-radius:8px;cursor:pointer;font-weight:700;transition:all .15s">📋 Planned</button>
-               <button onclick="updateActionStatus('`+a.id+`','In Progress')" style="font-size:12px;padding:7px 14px;border:2px solid ${a.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${a.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${a.status==='In Progress'?'var(--blue)':'#fff'};border-radius:8px;cursor:pointer;font-weight:700;transition:all .15s">▶ In Progress</button>
-               <button onclick="updateActionStatus('`+a.id+`','Completed')" style="font-size:12px;padding:7px 14px;border:2px solid ${a.status==='Completed'?'var(--green)':'#d0d0d0'};color:${a.status==='Completed'?'#fff':'var(--grey-dk)'};background:${a.status==='Completed'?'var(--green)':'#fff'};border-radius:8px;cursor:pointer;font-weight:700;transition:all .15s">✓ Completed</button>
+               <button onclick="updateActionStatus('`+a.id+`','Planned')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${a.status==='Planned'?'#fff':'var(--grey-dk)'};background:${a.status==='Planned'?'var(--grey)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">Planned</button>
+               <button onclick="updateActionStatus('`+a.id+`','In Progress')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${a.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${a.status==='In Progress'?'var(--blue)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">In Progress</button>
+               <button onclick="updateActionStatus('`+a.id+`','Completed')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='Completed'?'var(--green)':'#d0d0d0'};color:${a.status==='Completed'?'#fff':'var(--grey-dk)'};background:${a.status==='Completed'?'var(--green)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">Completed</button>
              </div>
            </div>
-           ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="font-size:13px;padding:9px 18px;border:none;background:var(--teal);color:#fff;border-radius:8px;cursor:pointer;font-weight:700;width:100%;text-align:center">📊 Record Outcome</button>`:'<div style="font-size:12px;color:var(--green-dk);font-weight:600">✓ Outcome recorded</div>'}
+           ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="font-size:11px;padding:5px 10px;border:none;background:var(--teal);color:#fff;border-radius:6px;cursor:pointer;font-weight:600;width:100%;text-align:center">Record Outcome</button>`:'<div style="font-size:12px;color:var(--green-dk);font-weight:600">Outcome recorded</div>'}
          </div>`;
        }).join('')}
      </div>
@@ -1496,7 +1496,7 @@ function renderDashboard() {
  })()}
 
 
- <!-- INTERVENTIONS IMPLEMENTATION TRACKER --> <div class="dash-section"> <div class="dash-section-hdr"><h3>Interventions Implementation Tracker</h3><span style="font-size:13px;font-weight:700;color:var(--grey);background:var(--grey-lt);padding:3px 10px;border-radius:12px">${chainsWithOutcome} of ${chainsTotal}</span></div>
+ <!-- INTERVENTIONS IMPLEMENTATION TRACKER --> <div class="dash-section"> <div class="dash-section-hdr"><h3>Interventions Implementation Tracker</h3><span style="font-size:11px;color:var(--grey)">${chainsWithOutcome} of ${chainsTotal} complete</span></div>
  <div class="dash-section-body" style="padding:0">
  <div style="padding:12px 18px 4px"><div class="dash-section-desc" style="margin-bottom:10px">Track the full journey of each activity — from decision, to action, to outcome.</div></div>
  <div style="padding:10px 16px 4px;display:flex;gap:4px;align-items:center"> <div style="flex:${chainsWithOutcome||0.01};height:8px;background:var(--green);border-radius:4px 0 0 4px;min-width:${chainsWithOutcome?'4px':'0'}"></div> <div style="flex:${(chainsWithAction-chainsWithOutcome)||0.01};height:8px;background:var(--orange);min-width:${(chainsWithAction-chainsWithOutcome)?'4px':'0'}"></div> <div style="flex:${(chainsTotal-chainsWithAction)||0.01};height:8px;background:var(--grey-lt);border-radius:0 4px 4px 0;min-width:${(chainsTotal-chainsWithAction)?'4px':'0'}"></div> </div>
@@ -1529,10 +1529,10 @@ function renderDashboard() {
  <div style="margin-top:8px">
    <div style="font-size:10px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Update status</div>
    <div style="display:flex;gap:5px;flex-wrap:wrap">
-     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','Planned')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${act.status==='Planned'?'#fff':'var(--grey-dk)'};background:${act.status==='Planned'?'var(--grey)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">📋 Planned</button>
-     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','In Progress')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${act.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${act.status==='In Progress'?'var(--blue)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">▶ In Progress</button>
-     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','Completed')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='Completed'?'var(--green)':'#d0d0d0'};color:${act.status==='Completed'?'#fff':'var(--grey-dk)'};background:${act.status==='Completed'?'var(--green)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">✓ Completed</button>
-     ${actOuts.length?'':`<button onclick="event.stopPropagation();openOutcomeModal('${act.id}')" style="font-size:11px;padding:5px 10px;border:2px solid var(--teal);color:var(--teal);background:#fff;border-radius:6px;cursor:pointer;font-weight:600">📊 Record Outcome</button>`}
+     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','Planned')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${act.status==='Planned'?'#fff':'var(--grey-dk)'};background:${act.status==='Planned'?'var(--grey)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">Planned</button>
+     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','In Progress')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${act.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${act.status==='In Progress'?'var(--blue)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">In Progress</button>
+     <button onclick="event.stopPropagation();updateActionStatus('${act.id}','Completed')" style="font-size:11px;padding:5px 10px;border:2px solid ${act.status==='Completed'?'var(--green)':'#d0d0d0'};color:${act.status==='Completed'?'#fff':'var(--grey-dk)'};background:${act.status==='Completed'?'var(--green)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600">Completed</button>
+     ${actOuts.length?'':`<button onclick="event.stopPropagation();openOutcomeModal('${act.id}')" style="font-size:11px;padding:5px 10px;border:2px solid var(--teal);color:var(--teal);background:#fff;border-radius:6px;cursor:pointer;font-weight:600">Record Outcome</button>`}
    </div>
  </div>
  </div> </div> ${actOuts.map(out => `
@@ -1547,31 +1547,31 @@ function renderDashboard() {
  </div> </div>
 
  <!-- NEEDS YOUR ATTENTION --> ${attentionCount > 0 ? `
- <div class="dash-section" style="border-left:4px solid var(--red)"> <div class="dash-section-hdr"><h3>Needs Your Attention</h3><span style="font-size:13px;font-weight:700;color:var(--red);background:#FFEBEE;padding:3px 10px;border-radius:12px">${attentionCount}</span></div> <div class="dash-section-body" style="padding:10px 18px">
- <div class="dash-section-desc">These items need action from you — follow-ups that are overdue, activities without outcomes, or schools that haven't been visited recently.</div>
+ <div class="dash-section" style="border-left:3px solid var(--red)"> <div class="dash-section-hdr"><h3>Needs Your Attention</h3><span style="font-size:11px;color:var(--grey)">${attentionCount} item${attentionCount!==1?'s':''}</span></div> <div class="dash-section-body" style="padding:8px 16px">
+ <div class="dash-section-desc">These items need action from you — follow-ups overdue, activities without outcomes, or schools not visited recently.</div>
 
- ${openLoops.length ? `<div style="margin-bottom:14px"> <div style="font-size:13px;font-weight:800;color:var(--orange);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">${openLoops.length} action${openLoops.length!==1?'s':''} without an outcome recorded</div>
- ${openLoops.slice(0,5).map(ol => `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 12px;background:var(--orange-lt);border-radius:8px;margin-bottom:6px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:13px;font-weight:700;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:12px;color:var(--grey);margin-top:3px">${esc(ol.schools)}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap"><button onclick="openOutcomeModal('${ol.id}')" style="font-size:11px;padding:5px 10px;border-radius:8px;background:var(--teal);color:#fff;border:none;cursor:pointer;font-weight:700;white-space:nowrap">Record Outcome</button><div style="font-size:11px;padding:4px 10px;border-radius:8px;background:var(--orange);color:#fff;white-space:nowrap;font-weight:600">${esc(ol.status)}</div></div> </div>`).join('')}
+ ${openLoops.length ? `<div style="margin-bottom:14px"> <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${openLoops.length} action${openLoops.length!==1?'s':''} without an outcome recorded</div>
+ ${openLoops.slice(0,5).map(ol => `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:var(--orange-lt);border-radius:6px;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(ol.schools)}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap"><button onclick="openOutcomeModal('${ol.id}')" style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--teal);color:#fff;border:none;cursor:pointer;font-weight:600;white-space:nowrap">Record Outcome</button><div style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;white-space:nowrap">${esc(ol.status)}</div></div> </div>`).join('')}
  ${openLoops.length > 5 ? `<div style="font-size:11px;color:var(--grey);margin-top:4px">+ ${openLoops.length-5} more</div>` : ''}
  </div>` : ''}
 
- ${followUps.length ? `<div style="margin-bottom:14px"> <div style="font-size:13px;font-weight:800;color:var(--red);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">${followUps.length} follow-up${followUps.length!==1?'s':''} due</div>
+ ${followUps.length ? `<div style="margin-bottom:14px"> <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${followUps.length} follow-up${followUps.length!==1?'s':''} due</div>
  ${followUps.slice(0,5).map(f => {
    const urgency = f.daysSince > 21 ? {bg:'#FFEBEE',border:'var(--red)',label:'Overdue '+f.daysSince+'d',color:'var(--red)'} : f.daysSince > 10 ? {bg:'#FFF3E0',border:'var(--orange)',label:f.daysSince+'d ago',color:'var(--orange)'} : {bg:'var(--blue-lt)',border:'var(--blue)',label:f.daysSince+'d ago',color:'var(--blue)'};
-   return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 12px;background:${urgency.bg};border-left:3px solid ${urgency.border};border-radius:0 8px 8px 0;margin-bottom:6px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:13px;font-weight:700;color:var(--navy)">${esc(f.schools||'')}</div> <div style="font-size:12px;color:var(--grey);margin-top:3px">${esc(f.desc)}</div> </div> <div style="text-align:right;white-space:nowrap"> <div style="font-size:11px;font-weight:700;color:${urgency.color}">${urgency.label}</div> <div style="font-size:11px;color:var(--grey)">${esc(f.district||'')}</div> </div> </div>`;
+   return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:${urgency.bg};border-left:3px solid ${urgency.border};border-radius:0 6px 6px 0;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(f.schools||'')}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(f.desc)}</div> </div> <div style="text-align:right;white-space:nowrap"> <div style="font-size:10px;font-weight:700;color:${urgency.color}">${urgency.label}</div> <div style="font-size:10px;color:var(--grey)">${esc(f.district||'')}</div> </div> </div>`;
  }).join('')}
  </div>` : ''}
 
- ${schoolsNeedingVisit.length ? `<div> <div style="font-size:13px;font-weight:800;color:var(--grey-dk);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">${schoolsNeedingVisit.length} school${schoolsNeedingVisit.length!==1?'s':''} may need a return visit</div>
+ ${schoolsNeedingVisit.length ? `<div> <div style="font-size:11px;font-weight:700;color:var(--grey-dk);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${schoolsNeedingVisit.length} school${schoolsNeedingVisit.length!==1?'s':''} may need a return visit</div>
  ${schoolsNeedingVisit.slice(0,5).map(sv => {
    const urgency = sv.daysSince > 45 ? {color:'var(--red)',label:sv.daysSince+'d since last visit'} : sv.daysSince > 30 ? {color:'var(--orange)',label:sv.daysSince+'d since last visit'} : {color:'var(--blue)',label:'Follow-up pending'};
-   return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#F5F6F7;border-radius:8px;margin-bottom:6px"> <div> <span style="font-size:13px;font-weight:700;color:var(--navy)">${esc(sv.name)}</span> <span style="font-size:12px;color:var(--grey);margin-left:6px">${esc(sv.district)}</span> </div> <div style="font-size:11px;font-weight:700;color:${urgency.color}">${urgency.label}</div> </div>`;
+   return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#F5F6F7;border-radius:6px;margin-bottom:4px"> <div> <span style="font-size:12px;font-weight:600;color:var(--navy)">${esc(sv.name)}</span> <span style="font-size:10px;color:var(--grey);margin-left:6px">${esc(sv.district)}</span> </div> <div style="font-size:10px;font-weight:700;color:${urgency.color}">${urgency.label}</div> </div>`;
  }).join('')}
  ${schoolsNeedingVisit.length > 5 ? `<div style="font-size:11px;color:var(--grey);margin-top:4px">+ ${schoolsNeedingVisit.length-5} more</div>` : ''}
  </div>` : ''}
 
  </div> </div>` : `
- <div class="dash-section" style="border-left:4px solid var(--green)"> <div class="dash-section-hdr"><h3>All Clear</h3></div> <div class="dash-section-body"> <p style="font-size:13px;color:var(--grey)">No outstanding follow-ups, open actions, or schools needing a return visit. Well done.</p> </div> </div>`}
+ <div class="dash-section" style="border-left:3px solid var(--green)"> <div class="dash-section-hdr"><h3>All Clear</h3></div> <div class="dash-section-body"> <p style="font-size:12px;color:var(--grey)">No outstanding follow-ups, open actions, or schools needing a return visit. Well done.</p> </div> </div>`}
 
 
  <!-- MY IMPACT --> ${impactItems.length ? `
