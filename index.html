@@ -196,10 +196,12 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .gate-top img{height:56px;border-radius:8px;margin-bottom:10px}
 .gate-top h1{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
 .gate-top p{font-size:12px;color:#B8DCDC;line-height:1.5}
-.gate-body{padding:28px 24px}
+.gate-body{padding:28px 24px;box-sizing:border-box}
 .gate-body label{display:block;font-size:13px;font-weight:600;color:#323130;margin-bottom:6px}
-.gate-body input[type=email]{width:100%;padding:11px 14px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px;font-family:inherit;transition:border-color .2s}
+.gate-body input[type=email]{width:100%;padding:11px 14px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px;font-family:inherit;transition:border-color .2s;box-sizing:border-box}
 .gate-body input[type=email]:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(11,142,141,.15)}
+.gate-body input[type=password],.gate-body input[type=text]{width:100%;padding:11px 14px;border:1.5px solid #c8c6c4;border-radius:6px;font-family:inherit;transition:border-color .2s;box-sizing:border-box}
+.gate-body input[type=password]:focus,.gate-body input[type=text]:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(11,142,141,.15)}
 .gate-err{color:var(--red);font-size:12px;margin-top:6px;display:none}
 .gate-err.show{display:block}
 .gate-btn{width:100%;padding:12px;border:none;border-radius:6px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:14px;transition:background .15s}
@@ -781,7 +783,7 @@ function renderOtpGate() {
      </div>
      <div class="gate-body">
        <label for="gate-otp">Your 4-digit PIN</label>
-       <input type="password" id="gate-otp" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="text-align:center;font-size:28px;letter-spacing:12px;font-weight:700"
+       <input type="password" id="gate-otp" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="text-align:center;font-size:24px;letter-spacing:8px;font-weight:700;padding:14px"
          value="${esc(S._otpValue||'')}"
          oninput="S._otpValue=this.value.replace(/[^0-9]/g,'')"
          onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit()}"
@@ -1418,6 +1420,42 @@ function renderDashboard() {
    ${['All Time','This Term','Last 30 Days','Last 7 Days'].map(p=>`<button class="tk-filt${(S.dashPeriod||'All Time')===p?' on':''}" onclick="S.dashPeriod='${p}';render()" style="font-size:10px;padding:4px 10px">${p}</button>`).join('')}
  </div>
  ${(S.dashPeriod||'All Time')!=='All Time'?`<div style="background:#FFF8E1;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#E07B2A;border-left:3px solid var(--orange)"><strong>Filter preview:</strong> Time-period filtering will be active in the connected version. Currently showing all data.</div>`:''}
+
+ <!-- UPDATE YOUR ACTIVITIES -->
+ ${(()=>{
+   const incomplete = acts.filter(a => a.status !== 'Completed' || !outs.some(o => o.action_id === a.id));
+   const needsUpdate = incomplete.filter(a => a.status === 'In Progress' || a.status === 'Planned');
+   const completedNoOutcome = acts.filter(a => a.status === 'Completed' && !outs.some(o => o.action_id === a.id));
+   const allItems = [...needsUpdate, ...completedNoOutcome];
+   if (!allItems.length) return '';
+   return `<div class="dash-section" style="border-left:3px solid var(--blue)">
+     <div class="dash-section-hdr"><h3>Update Your Activities</h3><span style="font-size:11px;color:var(--grey)">${allItems.length} item${allItems.length!==1?'s':''} to review</span></div>
+     <div class="dash-section-body" style="padding:10px 16px">
+       <div style="font-size:12px;color:var(--grey-dk);margin-bottom:12px;line-height:1.5">These activities are incomplete or still ongoing. Update their status or record what happened.</div>
+       ${allItems.map(a => {
+         const parentDec = decs.find(d => d.id === a.decision_id);
+         const det = parentDec ? parentDec.details || {} : {};
+         const hasOutcome = outs.some(o => o.action_id === a.id);
+         const SC = {'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}};
+         const sc = SC[a.status] || SC.Planned;
+         return `<div style="background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:12px 14px;margin-bottom:8px">
+           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">
+             <div style="flex:1;min-width:0">
+               <div style="font-size:13px;font-weight:600;color:var(--navy)">${esc(a.action_taken)}</div>
+               <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(det.schools||'')}${det.district?' · '+esc(det.district):''}${a.target_date?' · Target: '+fmtDate(a.target_date):''}</div>
+             </div>
+             <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:${sc.bg};color:${sc.fg};white-space:nowrap;font-weight:600"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${sc.dot};margin-right:4px;vertical-align:middle"></span>${esc(a.status)}</span>
+           </div>
+           <div style="display:flex;gap:6px;flex-wrap:wrap">
+             ${a.status==='Planned'?`<button onclick="updateActionStatus('`+a.id+`','In Progress')" style="font-size:11px;padding:6px 14px;border:none;background:var(--blue);color:#fff;border-radius:6px;cursor:pointer;font-weight:600">▶ Mark In Progress</button>`:''}
+             ${a.status==='In Progress'?`<button onclick="updateActionStatus('`+a.id+`','Completed')" style="font-size:11px;padding:6px 14px;border:none;background:var(--green);color:#fff;border-radius:6px;cursor:pointer;font-weight:600">✓ Mark Complete</button>`:''}
+             ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="font-size:11px;padding:6px 14px;border:none;background:var(--teal);color:#fff;border-radius:6px;cursor:pointer;font-weight:600">📊 Record Outcome</button>`:''}
+           </div>
+         </div>`;
+       }).join('')}
+     </div>
+   </div>`;
+ })()}
 
 
  <!-- INTERVENTIONS IMPLEMENTATION TRACKER --> <div class="dash-section"> <div class="dash-section-hdr"><h3>Interventions Implementation Tracker</h3><span style="font-size:11px;color:var(--grey)">${chainsWithOutcome} of ${chainsTotal} complete</span></div>
