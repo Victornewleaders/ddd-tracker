@@ -512,7 +512,7 @@ async function handleOtpSubmit() {
  }
  S.gateLoading = true; S.gateError = ''; render();
  try {
-   const { data, error } = await sb.auth.verifyOtp({ email: S._otpEmail, token: code, type: 'email' });
+   const { data, error } = await sb.auth.verifyOtp({ email: S._otpEmail, token: code, type: 'magiclink' });
    if (error) throw new Error(error.message || JSON.stringify(error));
    
    const official = S._pendingOfficial;
