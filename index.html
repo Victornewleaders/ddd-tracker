@@ -389,7 +389,7 @@ const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36
 const S = {
  loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'', _otpValue:'', _otpEmail:'',
  official:{full_name:'User',role:'',province:'',district:'',email:''},
- view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{},
+ view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{}, outcomeModal:null,
  saving:false, submitted:false, expandedSchool:null,
  tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
  dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
@@ -400,7 +400,7 @@ const S = {
  f: {
  province:'',district:'',circuit:'',schools:'',_schoolQ:'',_schoolDDOpen:false,term:'Term 1 2026',activity_date:today(),
  activity_type:'',intervention_theme:'',subjects:[],grades:[],description:'',
- ddd_used:'',ddd_reports:[],data_insight:'',decision_type:'',action_type:'',action_other:'',
+ ddd_used:'',ddd_reports:[],ddd_access_date:'',ddd_dashboard_confirmed:'',data_insight:'',decision_type:'',action_type:'',action_other:'',
  ctx_staffing:[],ctx_resources:[],ctx_learners:[],ctx_notes:'',
  learners_reached:'',follow_up:false,follow_up_desc:'',
  doc_url:'',doc_name:'',
@@ -571,6 +571,80 @@ function logout() {
  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// STATUS UPDATE & OUTCOME RECORDING
+async function updateActionStatus(actionId, newStatus) {
+ try {
+   const { error } = await sb.from('actions').update({ status: newStatus }).eq('id', actionId);
+   if (error) throw error;
+   const act = S.actions.find(a => a.id === actionId);
+   if (act) act.status = newStatus;
+   showToast('Status updated to ' + newStatus);
+   render();
+ } catch(e) {
+   showToast('Error updating status: ' + (e.message || e));
+ }
+}
+
+function openOutcomeModal(actionId) {
+ const act = S.actions.find(a => a.id === actionId);
+ const dec = act ? S.decisions.find(d => d.id === act.decision_id) : null;
+ S.outcomeModal = {
+   actionId: actionId,
+   actionText: act ? act.action_taken : '',
+   schools: dec && dec.details ? dec.details.schools || '' : '',
+   description: '',
+   metric: '',
+   value: '',
+   evidence: '',
+   date: today(),
+   saving: false,
+   error: ''
+ };
+ render();
+}
+
+function closeOutcomeModal() {
+ S.outcomeModal = null;
+ render();
+}
+
+async function saveOutcome() {
+ const m = S.outcomeModal;
+ if (!m) return;
+ if (!m.description.trim()) {
+   m.error = 'Please describe what happened.';
+   render(); return;
+ }
+ m.saving = true; m.error = ''; render();
+ try {
+   const outcome = {
+     id: 'OUT_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+     action_id: m.actionId,
+     description: m.description.trim(),
+     metric: m.metric.trim() || null,
+     value: m.value.trim() || null,
+     evidence: m.evidence.trim() || null,
+     date: m.date || today(),
+     logged_by: S.official.full_name || 'User'
+   };
+   const { error } = await sb.from('outcomes').insert(outcome);
+   if (error) throw error;
+   
+   // Also mark action as Completed
+   await sb.from('actions').update({ status: 'Completed' }).eq('id', m.actionId);
+   const act = S.actions.find(a => a.id === m.actionId);
+   if (act) act.status = 'Completed';
+   
+   S.outcomeModal = null;
+   showToast('Outcome recorded successfully');
+   await loadAll();
+ } catch(e) {
+   m.saving = false;
+   m.error = 'Error saving: ' + (e.message || e);
+   render();
+ }
+}
+
 async function loadAll() {
  try {
  const [d,a,o,iv] = await Promise.all([
@@ -636,6 +710,8 @@ function render() {
  <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
  if(S.showPolicy) renderPolicyModal();
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
+ if(S.outcomeModal) renderOutcomeModal();
+ else { const stale=document.getElementById('outcome-modal-overlay'); if(stale)stale.remove(); }
 }
 
 function renderEmailGate() {
@@ -954,19 +1030,16 @@ function renderFormStep3(){
         <div style="font-size:11px;color:var(--grey-dk);line-height:1.6;margin-bottom:8px">The fields below ask for numbers you saw on DDD. If you haven't opened the dashboard yet, do it now \u2014 it takes 2 minutes and makes your entry much stronger.</div>
         <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">Open Dashboard</a>
       </div>`:''}
-      <div class="field"><label>Which DDD report(s)?</label><div class="tags">${DDD_TOOLS.map(t=>{const te=t.replace(/'/g,"\\\\'");return`<label class="tag"><input type="checkbox" ${S.f.ddd_reports.includes(t)?'checked':''} onchange="togArr(S.f.ddd_reports,'${te}',this.checked);render()"><span>${t}</span></label>`}).join('')}</div></div>
+      <div class="field"><label>Which reports from DDD did you use to inform your decisions and actions?</label><div class="tags">${DDD_TOOLS.map(t=>{const te=t.replace(/'/g,"\\\\'");return`<label class="tag"><input type="checkbox" ${S.f.ddd_reports.includes(t)?'checked':''} onchange="togArr(S.f.ddd_reports,'${te}',this.checked);render()"><span>${t}</span></label>`}).join('')}</div></div>
+      <div class="field"><label>When did you access this report?</label><input type="date" value="${S.f.ddd_access_date||''}" onchange="S.f.ddd_access_date=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
+      <div class="field"><label>Did you log in to the DDD Dashboard?<span class="req">*</span></label><div class="radio-grp">${['Yes','No'].map(v=>{const val=v.toLowerCase();return`<label><input type="radio" name="dddConfirmed" value="${val}" ${S.f.ddd_dashboard_confirmed===val?'checked':''} onchange="S.f.ddd_dashboard_confirmed=this.value;render()"><span>${v}</span></label>`}).join('')}</div></div>
+      ${S.f.ddd_dashboard_confirmed==='no'?`<div style="background:#FFF3E0;border-radius:8px;padding:12px 14px;margin:4px 0 8px;border-left:3px solid #E8952E"><div style="font-size:12px;color:#E65100;line-height:1.6">We recommend logging into the DDD Dashboard before completing this form. The data will help you give stronger, evidence-based entries.</div><a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;margin-top:6px">Open DDD Dashboard</a></div>`:''}
       ${selRpt?`<div style="background:#f8f9fa;border-radius:6px;padding:8px 12px;margin:4px 0 8px;border-left:2px solid var(--teal-md)"><div style="font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">How to find this report</div><div style="font-size:11px;color:var(--grey-dk);font-family:monospace;line-height:1.6">${selRpt.path}</div></div>`:''}
       <div style="background:var(--off);border-radius:8px;padding:14px;margin:8px 0">
         <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px">What did you see in the data?</div>
         <div style="font-size:11px;color:var(--grey);margin-bottom:10px;line-height:1.5">Select the type of issue you observed, then fill in the numbers</div>
         <div style="margin-bottom:10px"><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Type of data issue</label><select onchange="S.f.insight_type=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><option value="">Select what you observed...</option><option ${S.f.insight_type==='subject-performance'?'selected':''} value="subject-performance">Subject / pass rate issue</option><option ${S.f.insight_type==='learner-attendance'?'selected':''} value="learner-attendance">Learner attendance issue</option><option ${S.f.insight_type==='educator-attendance'?'selected':''} value="educator-attendance">Educator attendance issue</option><option ${S.f.insight_type==='sba-exam-gap'?'selected':''} value="sba-exam-gap">SBA-Exam mark gap</option><option ${S.f.insight_type==='curriculum-coverage'?'selected':''} value="curriculum-coverage">Curriculum coverage issue</option><option ${S.f.insight_type==='promotion-criteria'?'selected':''} value="promotion-criteria">Promotion criteria / at-risk learners</option><option ${S.f.insight_type==='other-issue'?'selected':''} value="other-issue">Other data issue</option></select></div>
-        ${S.f.insight_type==='subject-performance'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Pass / promotion rate seen</label><div style="display:flex;align-items:center;gap:4px"><input type="number" min="0" max="100" placeholder="e.g. 41" value="${S.f.insight_pass_rate}" oninput="S.f.insight_pass_rate=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;text-align:center"><span style="font-size:13px;color:var(--grey);font-weight:600">%</span></div></div>
-          <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners affected</label><input type="number" min="0" placeholder="e.g. 35" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
-        </div>
-        <div style="margin-bottom:10px"><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Where were these learners sitting?</label><select onchange="S.f.insight_threshold=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><option value="">Select if it applies...</option><option ${S.f.insight_threshold==='below-30'?'selected':''} value="below-30">Below 30% (not passing)</option><option ${S.f.insight_threshold==='at-30-39'?'selected':''} value="at-30-39">At 30-39% (close to passing)</option><option ${S.f.insight_threshold==='at-40-49'?'selected':''} value="at-40-49">At 40-49% (just above pass, could slip)</option><option ${S.f.insight_threshold==='missed-one-criteria'?'selected':''} value="missed-one-criteria">Missing one thing for promotion</option><option ${S.f.insight_threshold==='missed-multiple'?'selected':''} value="missed-multiple">Missing several things for promotion</option><option ${S.f.insight_threshold==='progressed'?'selected':''} value="progressed">Progressed learners</option></select></div>`:''}
-        ${S.f.insight_type==='learner-attendance'?`
+        ${S.f.insight_type==='subject-performance'?``:''}        ${S.f.insight_type==='learner-attendance'?`
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners with attendance issues</label><input type="number" min="0" placeholder="e.g. 45" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Absent how many days?</label><input type="number" min="0" placeholder="e.g. 10" value="${S.f.insight_attendance_days}" oninput="S.f.insight_attendance_days=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><div style="font-size:10px;color:var(--grey);margin-top:2px">Days absent or more</div></div>
@@ -1033,7 +1106,7 @@ function renderFormReview(){
   return`<div class="section fade-in"><div class="sec-hdr" style="border-color:var(--navy)"><div><h2>5. Review & Submit</h2><p>Check your entry before submitting</p></div></div><div class="sec-body">
     <div class="review-card"><div class="review-card-hdr" style="color:var(--teal)">Location & Date</div>${rvRow('Term',f.term)}${rvRow('Province',f.province)}${rvRow('District',f.district)}${rvRow('Circuit',f.circuit)}${rvRow('Date',f.activity_date)}${rvRow('School(s)',f.schools)}${rvRow('Official',f.official_name)}${rvRow('Email',f.official_email)}${rvRow('Designation',f.official_role)}${rvRow('Specialisation',f.official_specialisation)}</div>
     <div class="review-card"><div class="review-card-hdr" style="color:var(--green)">Activity Details</div>${rvRow('Theme',f.intervention_theme)}${rvRow('Activity',f.activity_type)}${rvRow('Grades',f.grades.length?f.grades.map(g=>'Gr '+g).join(', '):'')}${rvRow('Subjects',f.subjects.join(', '))}${rvRow('SIP Focus',f.sip_focus_areas.length?f.sip_focus_areas.join('; '):'')}${rvRow('Description',f.description)}</div>
-    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_pass_rate?rvRow('Pass Rate',f.insight_pass_rate+'%'):''}${f.insight_learners_affected?rvRow('Learners Affected',f.insight_learners_affected):''}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${f.insight_threshold?rvRow('Criteria',thresholdLabel(f.insight_threshold)):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Decision',f.decision_type)}${rvRow('Action',f.action_type)}</div>
+    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Report Accessed',f.ddd_access_date||'')}${rvRow('Logged into Dashboard',f.ddd_dashboard_confirmed==='yes'?'Yes':f.ddd_dashboard_confirmed==='no'?'No':'')}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Decision',f.decision_type)}${rvRow('Action',f.action_type)}</div>
     <div class="review-card"><div class="review-card-hdr" style="color:var(--orange)">Context & Follow-up</div>${rvRow('Support Needed',f.support_needed.length?f.support_needed.join('; '):'')}${rvRow('Support Level',supLbl(f.support_level))}${rvRow('Context',[...f.ctx_staffing,...f.ctx_resources,...f.ctx_learners].filter(c=>c!=='All posts filled'&&c!=='Adequate'&&c!=='No major concerns').join(', '))}${f.ctx_notes?rvRow('Notes',f.ctx_notes):''}${rvRow('Learners Reached',f.learners_reached)}${rvRow('Follow-up',f.follow_up?'Yes':'No')}${f.follow_up?rvRow('Follow-up Detail',f.follow_up_desc):''}${f.doc_file_name?rvRow('Attached',''+f.doc_file_name):''}${f.doc_url?rvRow('Link',f.doc_name||f.doc_url):''}</div>
     <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-outline" onclick="S.f.formStep=3;render()">&larr; Back</button><button class="btn btn-teal" onclick="submitForm()" ${S.saving?'disabled':''} style="min-width:160px">${S.saving?'<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></span> Submitting...':'Submit'}</button></div>
   </div></div>`;
@@ -1086,11 +1159,8 @@ async function submitForm() {
  province:S.f.province, district:S.f.district, circuit:S.f.circuit, schools:S.f.schools, term:S.f.term,
  activity_type:S.f.activity_type, intervention_theme:S.f.intervention_theme,
  subjects:S.f.subjects, grades:S.f.grades, description:S.f.description,
- ddd_used:S.f.ddd_used, ddd_reports:S.f.ddd_reports,
+ ddd_used:S.f.ddd_used, ddd_reports:S.f.ddd_reports, ddd_access_date:S.f.ddd_access_date||null, ddd_dashboard_confirmed:S.f.ddd_dashboard_confirmed||null,
  insight_type:S.f.insight_type,
- insight_pass_rate:S.f.insight_pass_rate?parseFloat(S.f.insight_pass_rate):null,
- insight_learners_affected:S.f.insight_learners_affected?parseInt(S.f.insight_learners_affected):null,
- insight_threshold:S.f.insight_threshold,
  insight_detail:S.f.insight_detail,
  intervention_trigger_other:S.f.intervention_trigger_other,
  insight_educator_absent:S.f.insight_educator_absent?parseInt(S.f.insight_educator_absent):null,
@@ -1159,7 +1229,7 @@ function resetForm() {
  S.f = {
  province:S.f.province, district:S.f.district, circuit:S.f.circuit, schools:'', _schoolQ:'', _schoolDDOpen:false, term:S.f.term, activity_date:today(),
  activity_type:'', intervention_theme:'', subjects:[], grades:[], description:'',
- ddd_used:'', ddd_reports:[], decision_type:'', action_type:'', action_other:'',
+ ddd_used:'', ddd_reports:[], ddd_access_date:'', ddd_dashboard_confirmed:'', decision_type:'', action_type:'', action_other:'',
  ctx_staffing:[], ctx_resources:[], ctx_learners:[], ctx_notes:'',
  learners_reached:'', follow_up:false, follow_up_desc:'',
  doc_url:'', doc_name:'',
@@ -1378,6 +1448,11 @@ function renderDashboard() {
  return `
  <div class="node" style="padding-left:14px"> <div class="node-line"><div class="node-dot" style="background:var(--orange)">A</div>${actOuts.length?'<div class="node-stem"></div>':''}</div> <div class="node-content" style="background:var(--orange-lt)"> <div style="display:flex;justify-content:space-between;align-items:center"> <div class="node-type" style="color:var(--orange)">Action</div> <span class="status-pill" style="background:${sc.bg};color:${sc.fg}"><span class="sdot" style="background:${sc.dot}"></span>${esc(act.status)}</span> </div> <div class="node-text">${esc(act.action_taken)}</div> <div class="node-detail">${act.responsible?'Responsible: '+esc(act.responsible):''} ${act.target_date?'· Target: '+fmtDate(act.target_date):''}</div> ${act.supporting_doc_url ? '<div class="doc-link"><a href="'+esc(act.supporting_doc_url)+'" target="_blank" rel="noopener"> '+esc(act.supporting_doc_name||'View document')+'</a></div>' : ''}
  ${act.logged_by ? '<div class="node-who">Logged by: '+esc(act.logged_by)+'</div>' : ''}
+ <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+   ${act.status!=='Planned'&&act.status!=='In Progress'?'':`<button onclick="event.stopPropagation();updateActionStatus('${act.id}','In Progress')" style="font-size:10px;padding:4px 10px;border:1px solid var(--blue);color:var(--blue);background:${act.status==='In Progress'?'var(--blue-lt)':'#fff'};border-radius:14px;cursor:pointer;font-weight:600" ${act.status==='In Progress'?'disabled':''}>▶ In Progress</button>`}
+   ${act.status==='Completed'?'':`<button onclick="event.stopPropagation();updateActionStatus('${act.id}','Completed')" style="font-size:10px;padding:4px 10px;border:1px solid var(--green);color:var(--green-dk);background:#fff;border-radius:14px;cursor:pointer;font-weight:600">✓ Complete</button>`}
+   ${actOuts.length?'':`<button onclick="event.stopPropagation();openOutcomeModal('${act.id}')" style="font-size:10px;padding:4px 10px;border:1px solid var(--teal);color:var(--teal);background:#fff;border-radius:14px;cursor:pointer;font-weight:600">📊 Record Outcome</button>`}
+ </div>
  </div> </div> ${actOuts.map(out => `
  <div class="node" style="padding-left:28px"> <div class="node-line"><div class="node-dot" style="background:var(--green)">O</div></div> <div class="node-content" style="background:var(--green-lt)"> <div class="node-type" style="color:var(--green-dk)">Outcome — ${fmtDate(out.date)}</div> <div class="node-text">${esc(out.description)}</div> <div class="node-detail"> ${out.metric ? '<strong>'+esc(out.metric)+':</strong> '+esc(out.value)+'<br>' : ''}
  ${out.evidence ? 'Evidence: '+esc(out.evidence) : ''}
@@ -1393,7 +1468,7 @@ function renderDashboard() {
  <div class="dash-section" style="border-left:3px solid var(--red)"> <div class="dash-section-hdr"><h3>Needs Your Attention</h3><span style="font-size:11px;color:var(--grey)">${attentionCount} item${attentionCount!==1?'s':''}</span></div> <div class="dash-section-body" style="padding:8px 16px">
 
  ${openLoops.length ? `<div style="margin-bottom:14px"> <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${openLoops.length} action${openLoops.length!==1?'s':''} without an outcome recorded</div>
- ${openLoops.slice(0,5).map(ol => `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:var(--orange-lt);border-radius:6px;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(ol.schools)}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;white-space:nowrap">${esc(ol.status)}</div> </div>`).join('')}
+ ${openLoops.slice(0,5).map(ol => `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:var(--orange-lt);border-radius:6px;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(ol.schools)}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><button onclick="openOutcomeModal('${ol.id}')" style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--teal);color:#fff;border:none;cursor:pointer;font-weight:600;white-space:nowrap">Record Outcome</button><div style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;white-space:nowrap">${esc(ol.status)}</div></div> </div>`).join('')}
  ${openLoops.length > 5 ? `<div style="font-size:11px;color:var(--grey);margin-top:4px">+ ${openLoops.length-5} more</div>` : ''}
  </div>` : ''}
 
@@ -1652,6 +1727,52 @@ function renderPolicyModal(){
 }
 
 // UTILITIES 
+function renderOutcomeModal(){
+ const m=S.outcomeModal;if(!m)return;
+ const existing=document.getElementById('outcome-modal-overlay');
+ if(existing)existing.remove();
+ const el=document.createElement('div');
+ el.id='outcome-modal-overlay';
+ el.innerHTML=`<div class="modal-bg" onclick="closeOutcomeModal()"><div class="modal-box" onclick="event.stopPropagation()" style="max-width:500px">
+   <div style="padding:16px 20px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff">
+     <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">RECORD OUTCOME</div>
+     <div style="font-size:14px;font-weight:700">${esc(m.actionText)}</div>
+     ${m.schools?'<div style="font-size:11px;color:#B8DCDC;margin-top:2px">'+esc(m.schools)+'</div>':''}
+   </div>
+   <div style="padding:20px">
+     <div style="margin-bottom:14px">
+       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">What happened? What was the result?<span style="color:var(--red)">*</span></label>
+       <textarea id="om-desc" rows="4" placeholder="e.g. Grade 10 Maths pass rate improved from 41% to 64%. Of the 35 targeted learners, 23 moved above the pass threshold." style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px" oninput="S.outcomeModal.description=this.value">${esc(m.description)}</textarea>
+     </div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+       <div>
+         <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Metric / indicator</label>
+         <input type="text" id="om-metric" placeholder="e.g. Pass rate improvement" value="${esc(m.metric)}" oninput="S.outcomeModal.metric=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+       </div>
+       <div>
+         <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Value / result</label>
+         <input type="text" id="om-value" placeholder="e.g. 41% → 64% (+23pp)" value="${esc(m.value)}" oninput="S.outcomeModal.value=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+       </div>
+     </div>
+     <div style="margin-bottom:14px">
+       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Evidence / source</label>
+       <input type="text" id="om-evidence" placeholder="e.g. DDD Term 4 results" value="${esc(m.evidence)}" oninput="S.outcomeModal.evidence=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+     </div>
+     <div style="margin-bottom:14px">
+       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Date of outcome</label>
+       <input type="date" id="om-date" value="${m.date||''}" onchange="S.outcomeModal.date=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+     </div>
+     ${m.error?'<div style="color:var(--red);font-size:12px;margin-bottom:10px">'+esc(m.error)+'</div>':''}
+     <div style="display:flex;gap:8px">
+       <button onclick="saveOutcome()" style="flex:1;padding:10px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer" ${m.saving?'disabled':''}>${m.saving?'Saving...':'Save Outcome'}</button>
+       <button onclick="closeOutcomeModal()" style="padding:10px 16px;background:#f3f2f1;color:var(--grey-dk);border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+     </div>
+   </div>
+ </div></div>`;
+ document.body.appendChild(el);
+ document.addEventListener('keydown',function outcomeEsc(e){if(e.key==='Escape'){closeOutcomeModal();document.removeEventListener('keydown',outcomeEsc)}});
+}
+
 function fmtDate(d) { if(!d)return'—'; try{return new Date(d).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d} }
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 function markDDDChecked(){S.ddd_last_checked=today();try{localStorage.setItem('ddd_last_checked',S.ddd_last_checked)}catch(e){}render();}
