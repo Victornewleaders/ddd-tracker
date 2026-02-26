@@ -440,7 +440,7 @@ async function checkAuth() {
 async function verifyEmail(email, silent) {
  const cleanEmail = email.trim().toLowerCase();
  if (!cleanEmail) {
-   if (!silent) { S.gateError = 'Please enter your email address.'; render(); }
+   if (!silent) { S.gateError = 'Please enter your email address.'; S.gateLoading = false; render(); }
    return false;
  }
  try {
@@ -448,31 +448,32 @@ async function verifyEmail(email, silent) {
      .from('officials')
      .select('*')
      .eq('email', cleanEmail)
-     .maybeSingle();
+     .eq('is_active', true)
+     .limit(1);
    
-   if (error) throw error;
+   if (error) throw new Error(error.message || JSON.stringify(error));
    
-   if (!data) {
-     if (!silent) { S.gateError = 'This email is not registered. Contact the DDD Interventions Manager on victor@newleaders.co.za for access.'; render(); }
+   const official = (data && data.length > 0) ? data[0] : null;
+   
+   if (!official) {
+     if (!silent) { S.gateError = 'This email is not registered. Contact the DDD Interventions Manager on victor@newleaders.co.za for access.'; S.gateLoading = false; render(); }
      return false;
    }
    
    // Success — populate official info and unlock app
    S.official = {
-     full_name: data.full_name || 'Official',
-     role: data.role || '',
-     province: data.province || '',
-     district: data.district || '',
+     full_name: official.full_name || 'Official',
+     role: official.role || '',
+     province: official.province || '',
+     district: official.district || '',
      email: cleanEmail
    };
-   // Pre-fill form fields from profile
-   S.f.official_name = data.full_name || '';
-   S.f.official_role = data.role || '';
+   S.f.official_name = official.full_name || '';
+   S.f.official_role = official.role || '';
    S.f.official_email = cleanEmail;
-   if (data.province) S.f.province = data.province;
-   if (data.district) S.f.district = data.district;
+   if (official.province) S.f.province = official.province;
+   if (official.district) S.f.district = official.district;
    
-   // Save to localStorage
    try { localStorage.setItem('ddd_official_email', cleanEmail); } catch(e) {}
    
    S.authState = 'ready';
@@ -483,18 +484,17 @@ async function verifyEmail(email, silent) {
    await loadAll();
    return true;
  } catch(e) {
-   if (!silent) { S.gateError = 'Could not verify your email. Please check your connection and try again.'; S.gateLoading = false; render(); }
+   console.error('Gate error:', e);
+   if (!silent) { S.gateError = 'Could not verify: ' + (e.message||e); S.gateLoading = false; render(); }
    return false;
  }
 }
 
 async function handleGateSubmit() {
- const input = document.getElementById('gate-email');
- if (!input) return;
  S.gateLoading = true;
  S.gateError = '';
  render();
- await verifyEmail(input.value, false);
+ await verifyEmail(S._gateEmailValue || '', false);
 }
 
 function logout() {
