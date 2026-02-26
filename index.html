@@ -296,6 +296,10 @@ const LOGO = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0Z
 const SUPA_URL = 'https://bqznmupkqsxxlyiiqrys.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxem5tdXBrcXN4eGx5aWlxcnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMjUwNDEsImV4cCI6MjA4NjcwMTA0MX0.gtltfQ6YjsyqzHZLhtZbAF2XR6D-_plUr7HRJUXg0DY';
 
+// RESEND (login notifications)
+const RESEND_KEY = 're_JQijPN9R_Fd2fdjtTXvAvAacHLBPmKtUC';
+const ADMIN_EMAIL = 'victor@newleaders.co.za';
+
 // CONFIG 
 const DISTRICTS = {"Eastern Cape":["Alfred Nzo East","Alfred Nzo West","Amathole East","Amathole West","Buffalo City","Chris Hani East","Chris Hani West","Joe Gqabi","Nelson Mandela","O R Tambo Coastal","O R Tambo Inland","Sarah Baartman"],"Free State":["Fezile Dabi","Lejweleputswa","Mangaung Metro","Thabo Mofutsanyana","Xhariep"],"Gauteng":["Ekurhuleni North","Ekurhuleni South","Gauteng East","Gauteng North","Gauteng West","Johannesburg Central","Johannesburg East","Johannesburg North","Johannesburg South","Johannesburg West","Sedibeng East","Sedibeng West","Tshwane North","Tshwane South","Tshwane West"],"KwaZulu-Natal":["Amajuba","Harry Gwala","Ilembe","King Cetshwayo","Pinetown","Ugu","Umgungundlovu","Umkhanyakude","Umlazi","Umzinyathi","Uthukela","Zululand"],"Limpopo":["Capricorn North","Capricorn South","Mogalakwena","Mopani East","Mopani West","Sekhukhune East","Sekhukhune South","Vhembe East","Vhembe West","Waterberg"],"Mpumalanga":["Bohlabela","Ehlanzeni","Gert Sibande","Nkangala"],"North West":["Ditsobotla","Greater Taung","Jb Marks","Kagisano Molopo","Madibeng","Mahikeng","Maquassi Hills","Matlosana","Moretele","Moses Kotane","Naledi","Ramotshere Moiloa","Ratlou","Rustenburg","Tswaing"],"Northern Cape":["Frances Baard","John Taolo Gaetsewe","Namakwa","Pixley-Ka-Seme","Zf Mgcawu"],"Western Cape":["Cape Winelands","Eden And Central Karoo","Metro Central","Metro East","Metro North","Metro South","Overberg","Partnership Schools","West Coast"]};
 
@@ -412,6 +416,29 @@ const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
  auth: { storage: { getItem:k=>memStore[k]||null, setItem:(k,v)=>{memStore[k]=v}, removeItem:k=>{delete memStore[k]} }, flowType:'implicit', detectSessionInUrl:false }
 });
 
+async function notifyLogin(official) {
+ try {
+   const loginTime = new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' });
+   await fetch('https://api.resend.com/emails', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_KEY },
+     body: JSON.stringify({
+       from: 'DDD Tracker <onboarding@resend.dev>',
+       to: [ADMIN_EMAIL],
+       subject: 'DDD Tracker Login: ' + (official.full_name || 'Unknown'),
+       html: '<h3>Login Notification</h3><p><strong>' + (official.full_name || 'Unknown') + '</strong> logged into the DDD Learner Improvement Interventions Tracker.</p>' +
+         '<table style="border-collapse:collapse;">' +
+         '<tr><td style="padding:4px 12px 4px 0;color:#666;">Email</td><td>' + (official.email || '') + '</td></tr>' +
+         '<tr><td style="padding:4px 12px 4px 0;color:#666;">Role</td><td>' + (official.role || '—') + '</td></tr>' +
+         '<tr><td style="padding:4px 12px 4px 0;color:#666;">Province</td><td>' + (official.province || '—') + '</td></tr>' +
+         '<tr><td style="padding:4px 12px 4px 0;color:#666;">District</td><td>' + (official.district || '—') + '</td></tr>' +
+         '<tr><td style="padding:4px 12px 4px 0;color:#666;">Time (SAST)</td><td>' + loginTime + '</td></tr>' +
+         '</table>'
+     })
+   });
+ } catch(e) { console.warn('Login notification failed:', e); }
+}
+
 async function checkAuth() {
  // Check if we have a saved email in localStorage
  let savedEmail = '';
@@ -475,6 +502,9 @@ async function verifyEmail(email, silent) {
    if (official.district) S.f.district = official.district;
    
    try { localStorage.setItem('ddd_official_email', cleanEmail); } catch(e) {}
+   
+   // Notify admin on fresh login (non-blocking)
+   if (!silent) notifyLogin(S.official);
    
    S.authState = 'ready';
    S.gateError = '';
