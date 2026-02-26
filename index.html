@@ -440,18 +440,21 @@ async function notifyLogin(official) {
 }
 
 async function checkAuth() {
- // Check for existing Supabase session
- try {
-   const { data: { session } } = await sb.auth.getSession();
-   if (session && session.user) {
-     const email = session.user.email;
-     const { data, error } = await sb.from('officials').select('*').eq('email', email).eq('is_active', true).limit(1);
+ let savedEmail = '';
+ try { savedEmail = localStorage.getItem('ddd_official_email') || ''; } catch(e) {}
+ 
+ if (savedEmail) {
+   S.authState = 'checking';
+   S.loading = true;
+   render();
+   try {
+     const { data, error } = await sb.from('officials').select('id,full_name,role,province,district,email,is_active').eq('email', savedEmail).eq('is_active', true).limit(1);
      if (!error && data && data.length > 0) {
        const official = data[0];
-       S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: email };
+       S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: savedEmail };
        S.f.official_name = official.full_name || '';
        S.f.official_role = official.role || '';
-       S.f.official_email = email;
+       S.f.official_email = savedEmail;
        if (official.province) S.f.province = official.province;
        if (official.district) S.f.district = official.district;
        S.authState = 'ready';
@@ -460,8 +463,9 @@ async function checkAuth() {
        await loadAll();
        return;
      }
-   }
- } catch(e) { console.warn('Session check failed:', e); }
+   } catch(e) { console.warn('Session check failed:', e); }
+   try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
+ }
  
  S.authState = 'gate';
  S.loading = false;
@@ -475,8 +479,7 @@ async function verifyEmail(email) {
    return;
  }
  try {
-   // Step 1: Check officials table
-   const { data, error } = await sb.from('officials').select('*').eq('email', cleanEmail).eq('is_active', true).limit(1);
+   const { data, error } = await sb.from('officials').select('id,full_name,role,province,district,email,is_active').eq('email', cleanEmail).eq('is_active', true).limit(1);
    if (error) throw new Error(error.message || JSON.stringify(error));
    const official = (data && data.length > 0) ? data[0] : null;
    if (!official) {
@@ -485,11 +488,7 @@ async function verifyEmail(email) {
      return;
    }
    
-   // Step 2: Send OTP via Supabase Auth
-   const { error: otpError } = await sb.auth.signInWithOtp({ email: cleanEmail });
-   if (otpError) throw new Error(otpError.message || JSON.stringify(otpError));
-   
-   // Store official data temporarily for after OTP verification
+   // Show PIN screen
    S._pendingOfficial = official;
    S._otpEmail = cleanEmail;
    S._otpValue = '';
@@ -505,15 +504,22 @@ async function verifyEmail(email) {
 }
 
 async function handleOtpSubmit() {
- const code = (S._otpValue || '').trim();
- if (!code || code.length !== 6) {
-   S.gateError = 'Please enter the 6-digit code from your email.'; render();
+ const pin = (S._otpValue || '').trim();
+ if (!pin || pin.length !== 4) {
+   S.gateError = 'Please enter your 4-digit PIN.'; render();
    return;
  }
  S.gateLoading = true; S.gateError = ''; render();
  try {
-   const { data, error } = await sb.auth.verifyOtp({ email: S._otpEmail, token: code, type: 'magiclink' });
+   // Verify PIN server-side (PIN never exposed to browser)
+   const { data: valid, error } = await sb.rpc('verify_pin', { p_email: S._otpEmail, p_pin: pin });
    if (error) throw new Error(error.message || JSON.stringify(error));
+   
+   if (!valid) {
+     S.gateError = 'Incorrect PIN. Please try again.';
+     S.gateLoading = false; render();
+     return;
+   }
    
    const official = S._pendingOfficial;
    S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: S._otpEmail };
@@ -522,6 +528,8 @@ async function handleOtpSubmit() {
    S.f.official_email = S._otpEmail;
    if (official.province) S.f.province = official.province;
    if (official.district) S.f.district = official.district;
+   
+   try { localStorage.setItem('ddd_official_email', S._otpEmail); } catch(e) {}
    
    // Notify admin (non-blocking)
    notifyLogin(S.official);
@@ -533,8 +541,8 @@ async function handleOtpSubmit() {
    render();
    await loadAll();
  } catch(e) {
-   console.error('OTP error:', e);
-   S.gateError = 'Invalid or expired code. Please try again.';
+   console.error('PIN error:', e);
+   S.gateError = 'Something went wrong. Please try again.';
    S.gateLoading = false; render();
  }
 }
@@ -546,8 +554,8 @@ async function handleGateSubmit() {
  await verifyEmail(S._gateEmailValue || '');
 }
 
-async function logout() {
- try { await sb.auth.signOut(); } catch(e) {}
+function logout() {
+ try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
  S.authState = 'gate';
  S.official = { full_name:'', role:'', province:'', district:'', email:'' };
  S.gateError = '';
@@ -648,7 +656,7 @@ function renderEmailGate() {
      <div class="gate-top">
        <img src="${LOGO}" alt="DDD Logo">
        <h1>Welcome to the Learner Improvement Interventions Tracker</h1>
-       <p>Enter your registered email address to receive a verification code</p>
+       <p>Enter your registered email address to access the tracker</p>
      </div>
      <div class="gate-body">
        <label for="gate-email">Your email address</label>
@@ -660,7 +668,7 @@ function renderEmailGate() {
        >
        <div class="gate-err ${S.gateError?'show':''}">${esc(S.gateError)}</div>
        <button class="gate-btn" onclick="handleGateSubmit()" ${S.gateLoading?'disabled':''}>
-         ${S.gateLoading?'<span class="gate-spinner"></span>Sending code...':'Continue'}
+         ${S.gateLoading?'<span class="gate-spinner"></span>Verifying...':'Continue'}
        </button>
        <div class="gate-note">
          Only pre-registered officials can access this tool.<br>
@@ -692,12 +700,12 @@ function renderOtpGate() {
    <div class="gate-card">
      <div class="gate-top">
        <img src="${LOGO}" alt="DDD Logo">
-       <h1>Check your email</h1>
-       <p>We sent a 6-digit verification code to <strong>${esc(S._otpEmail)}</strong></p>
+       <h1>Enter your PIN</h1>
+       <p>Signing in as <strong>${esc(S._otpEmail)}</strong></p>
      </div>
      <div class="gate-body">
-       <label for="gate-otp">Enter verification code</label>
-       <input type="text" id="gate-otp" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" style="text-align:center;font-size:24px;letter-spacing:8px;font-weight:700"
+       <label for="gate-otp">Your 4-digit PIN</label>
+       <input type="password" id="gate-otp" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="text-align:center;font-size:28px;letter-spacing:12px;font-weight:700"
          value="${esc(S._otpValue||'')}"
          oninput="S._otpValue=this.value.replace(/[^0-9]/g,'')"
          onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit()}"
@@ -705,10 +713,11 @@ function renderOtpGate() {
        >
        <div class="gate-err ${S.gateError?'show':''}">${esc(S.gateError)}</div>
        <button class="gate-btn" onclick="handleOtpSubmit()" ${S.gateLoading?'disabled':''}>
-         ${S.gateLoading?'<span class="gate-spinner"></span>Verifying...':'Verify & Sign In'}
+         ${S.gateLoading?'<span class="gate-spinner"></span>Verifying...':'Sign In'}
        </button>
        <div class="gate-note">
-         Didn\u2019t receive the code? Check your spam folder or <a href="#" onclick="event.preventDefault();S.authState='gate';S.gateError='';S.gateLoading=false;render()" style="color:var(--teal);font-weight:600">try again</a>
+         Forgot your PIN? Contact the DDD Interventions Manager on <a href="mailto:victor@newleaders.co.za" style="color:var(--teal);font-weight:600">victor@newleaders.co.za</a><br>
+         <a href="#" onclick="event.preventDefault();S.authState='gate';S.gateError='';S.gateLoading=false;render()" style="color:var(--teal);font-weight:600">Use a different email</a>
        </div>
      </div>
    </div>
