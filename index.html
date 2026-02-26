@@ -387,7 +387,7 @@ const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
 const S = {
- loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'',
+ loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'', _otpValue:'', _otpEmail:'',
  official:{full_name:'User',role:'',province:'',district:'',email:''},
  view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{},
  saving:false, submitted:false, expandedSchool:null,
@@ -440,71 +440,91 @@ async function notifyLogin(official) {
 }
 
 async function checkAuth() {
- // Check if we have a saved email in localStorage
- let savedEmail = '';
- try { savedEmail = localStorage.getItem('ddd_official_email') || ''; } catch(e) {}
- 
- if (savedEmail) {
-   // Verify saved email is still in the approved list
-   S.authState = 'checking';
-   S.loading = true;
-   render();
-   const verified = await verifyEmail(savedEmail, true);
-   if (!verified) {
-     // Email no longer approved — clear and show gate
-     try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
-     S.authState = 'gate';
-     S.loading = false;
-     render();
+ // Check for existing Supabase session
+ try {
+   const { data: { session } } = await sb.auth.getSession();
+   if (session && session.user) {
+     const email = session.user.email;
+     const { data, error } = await sb.from('officials').select('*').eq('email', email).eq('is_active', true).limit(1);
+     if (!error && data && data.length > 0) {
+       const official = data[0];
+       S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: email };
+       S.f.official_name = official.full_name || '';
+       S.f.official_role = official.role || '';
+       S.f.official_email = email;
+       if (official.province) S.f.province = official.province;
+       if (official.district) S.f.district = official.district;
+       S.authState = 'ready';
+       S.loading = true;
+       render();
+       await loadAll();
+       return;
+     }
    }
- } else {
-   S.authState = 'gate';
-   S.loading = false;
+ } catch(e) { console.warn('Session check failed:', e); }
+ 
+ S.authState = 'gate';
+ S.loading = false;
+ render();
+}
+
+async function verifyEmail(email) {
+ const cleanEmail = email.trim().toLowerCase();
+ if (!cleanEmail) {
+   S.gateError = 'Please enter your email address.'; S.gateLoading = false; render();
+   return;
+ }
+ try {
+   // Step 1: Check officials table
+   const { data, error } = await sb.from('officials').select('*').eq('email', cleanEmail).eq('is_active', true).limit(1);
+   if (error) throw new Error(error.message || JSON.stringify(error));
+   const official = (data && data.length > 0) ? data[0] : null;
+   if (!official) {
+     S.gateError = 'This email is not registered. Contact the DDD Interventions Manager on victor@newleaders.co.za for access.';
+     S.gateLoading = false; render();
+     return;
+   }
+   
+   // Step 2: Send OTP via Supabase Auth
+   const { error: otpError } = await sb.auth.signInWithOtp({ email: cleanEmail });
+   if (otpError) throw new Error(otpError.message || JSON.stringify(otpError));
+   
+   // Store official data temporarily for after OTP verification
+   S._pendingOfficial = official;
+   S._otpEmail = cleanEmail;
+   S._otpValue = '';
+   S.gateError = '';
+   S.gateLoading = false;
+   S.authState = 'otp';
    render();
+ } catch(e) {
+   console.error('Gate error:', e);
+   S.gateError = 'Could not verify: ' + (e.message||e);
+   S.gateLoading = false; render();
  }
 }
 
-async function verifyEmail(email, silent) {
- const cleanEmail = email.trim().toLowerCase();
- if (!cleanEmail) {
-   if (!silent) { S.gateError = 'Please enter your email address.'; S.gateLoading = false; render(); }
-   return false;
+async function handleOtpSubmit() {
+ const code = (S._otpValue || '').trim();
+ if (!code || code.length !== 6) {
+   S.gateError = 'Please enter the 6-digit code from your email.'; render();
+   return;
  }
+ S.gateLoading = true; S.gateError = ''; render();
  try {
-   const { data, error } = await sb
-     .from('officials')
-     .select('*')
-     .eq('email', cleanEmail)
-     .eq('is_active', true)
-     .limit(1);
-   
+   const { data, error } = await sb.auth.verifyOtp({ email: S._otpEmail, token: code, type: 'email' });
    if (error) throw new Error(error.message || JSON.stringify(error));
    
-   const official = (data && data.length > 0) ? data[0] : null;
-   
-   if (!official) {
-     if (!silent) { S.gateError = 'This email is not registered. Contact the DDD Interventions Manager on victor@newleaders.co.za for access.'; S.gateLoading = false; render(); }
-     return false;
-   }
-   
-   // Success — populate official info and unlock app
-   S.official = {
-     full_name: official.full_name || 'Official',
-     role: official.role || '',
-     province: official.province || '',
-     district: official.district || '',
-     email: cleanEmail
-   };
+   const official = S._pendingOfficial;
+   S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: S._otpEmail };
    S.f.official_name = official.full_name || '';
    S.f.official_role = official.role || '';
-   S.f.official_email = cleanEmail;
+   S.f.official_email = S._otpEmail;
    if (official.province) S.f.province = official.province;
    if (official.district) S.f.district = official.district;
    
-   try { localStorage.setItem('ddd_official_email', cleanEmail); } catch(e) {}
-   
-   // Notify admin on fresh login (non-blocking)
-   if (!silent) notifyLogin(S.official);
+   // Notify admin (non-blocking)
+   notifyLogin(S.official);
    
    S.authState = 'ready';
    S.gateError = '';
@@ -512,11 +532,10 @@ async function verifyEmail(email, silent) {
    S.loading = true;
    render();
    await loadAll();
-   return true;
  } catch(e) {
-   console.error('Gate error:', e);
-   if (!silent) { S.gateError = 'Could not verify: ' + (e.message||e); S.gateLoading = false; render(); }
-   return false;
+   console.error('OTP error:', e);
+   S.gateError = 'Invalid or expired code. Please try again.';
+   S.gateLoading = false; render();
  }
 }
 
@@ -524,15 +543,19 @@ async function handleGateSubmit() {
  S.gateLoading = true;
  S.gateError = '';
  render();
- await verifyEmail(S._gateEmailValue || '', false);
+ await verifyEmail(S._gateEmailValue || '');
 }
 
-function logout() {
- try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
+async function logout() {
+ try { await sb.auth.signOut(); } catch(e) {}
  S.authState = 'gate';
  S.official = { full_name:'', role:'', province:'', district:'', email:'' };
  S.gateError = '';
  S.gateLoading = false;
+ S._gateEmailValue = '';
+ S._otpValue = '';
+ S._otpEmail = '';
+ S._pendingOfficial = null;
  S.view = 'log';
  S.f.formStep = -1;
  S.submitted = false;
@@ -596,6 +619,7 @@ function render() {
  const app = document.getElementById('app');
  if (S.loading) { app.innerHTML = `<div class="loading"><div class="spinner"></div><div>Loading tracker...</div></div>`; return; }
  if (S.authState === 'gate') { app.innerHTML = renderEmailGate(); return; }
+ if (S.authState === 'otp') { app.innerHTML = renderOtpGate(); return; }
  if (S.error) { app.innerHTML = `<div class="loading"><div style="font-size:48px"></div><div style="color:var(--red)">${esc(S.error)}</div><button class="btn btn-teal btn-sm" onclick="S.loading=true;render();loadAll()">Retry</button></div>`; return; }
 
  const o = S.official;
@@ -624,7 +648,7 @@ function renderEmailGate() {
      <div class="gate-top">
        <img src="${LOGO}" alt="DDD Logo">
        <h1>Welcome to the Learner Improvement Interventions Tracker</h1>
-       <p>Enter your registered email address to access the tracker</p>
+       <p>Enter your registered email address to receive a verification code</p>
      </div>
      <div class="gate-body">
        <label for="gate-email">Your email address</label>
@@ -636,11 +660,55 @@ function renderEmailGate() {
        >
        <div class="gate-err ${S.gateError?'show':''}">${esc(S.gateError)}</div>
        <button class="gate-btn" onclick="handleGateSubmit()" ${S.gateLoading?'disabled':''}>
-         ${S.gateLoading?'<span class="gate-spinner"></span>Verifying...':'Continue'}
+         ${S.gateLoading?'<span class="gate-spinner"></span>Sending code...':'Continue'}
        </button>
        <div class="gate-note">
          Only pre-registered officials can access this tool.<br>
          If you don\u2019t have access, contact the DDD Interventions Manager on <a href="mailto:victor@newleaders.co.za" style="color:var(--teal);font-weight:600">victor@newleaders.co.za</a>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="footer" style="max-width:440px">
+   <img src="${LOGO}" alt="DDD">
+   <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span>
+ </div>`;
+}
+
+function renderOtpGate() {
+ return `
+ <header class="hdr">
+   <div class="hdr-bar"></div>
+   <div class="hdr-content">
+     <img class="hdr-logo" src="${LOGO}" alt="DDD Logo">
+     <div class="hdr-titles">
+       <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
+       <div class="hdr-title">Learner Improvement Interventions Tracker</div>
+       <div class="hdr-sub">Start with your DDD data. Log what you did. See the difference you make.</div>
+     </div>
+   </div>
+ </header>
+ <div class="gate-wrap fade-in">
+   <div class="gate-card">
+     <div class="gate-top">
+       <img src="${LOGO}" alt="DDD Logo">
+       <h1>Check your email</h1>
+       <p>We sent a 6-digit verification code to <strong>${esc(S._otpEmail)}</strong></p>
+     </div>
+     <div class="gate-body">
+       <label for="gate-otp">Enter verification code</label>
+       <input type="text" id="gate-otp" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" style="text-align:center;font-size:24px;letter-spacing:8px;font-weight:700"
+         value="${esc(S._otpValue||'')}"
+         oninput="S._otpValue=this.value.replace(/[^0-9]/g,'')"
+         onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit()}"
+         ${S.gateLoading?'disabled':''}
+       >
+       <div class="gate-err ${S.gateError?'show':''}">${esc(S.gateError)}</div>
+       <button class="gate-btn" onclick="handleOtpSubmit()" ${S.gateLoading?'disabled':''}>
+         ${S.gateLoading?'<span class="gate-spinner"></span>Verifying...':'Verify & Sign In'}
+       </button>
+       <div class="gate-note">
+         Didn\u2019t receive the code? Check your spam folder or <a href="#" onclick="event.preventDefault();S.authState='gate';S.gateError='';S.gateLoading=false;render()" style="color:var(--teal);font-weight:600">try again</a>
        </div>
      </div>
    </div>
