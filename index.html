@@ -296,8 +296,8 @@ const LOGO = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0Z
 const SUPA_URL = 'https://bqznmupkqsxxlyiiqrys.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxem5tdXBrcXN4eGx5aWlxcnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMjUwNDEsImV4cCI6MjA4NjcwMTA0MX0.gtltfQ6YjsyqzHZLhtZbAF2XR6D-_plUr7HRJUXg0DY';
 
-// RESEND (login notifications)
-const RESEND_KEY = 're_JQijPN9R_Fd2fdjtTXvAvAacHLBPmKtUC';
+// NOTIFICATIONS (login alerts via Cloudflare Worker → Resend)
+const NOTIFY_URL = 'https://ddd-notify.victor-67b.workers.dev';
 const ADMIN_EMAIL = 'victor@newleaders.co.za';
 
 // CONFIG 
@@ -419,9 +419,9 @@ const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
 async function notifyLogin(official) {
  try {
    const loginTime = new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' });
-   await fetch('https://api.resend.com/emails', {
+   await fetch(NOTIFY_URL, {
      method: 'POST',
-     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_KEY },
+     headers: { 'Content-Type': 'application/json' },
      body: JSON.stringify({
        from: 'DDD Tracker <onboarding@resend.dev>',
        to: [ADMIN_EMAIL],
