@@ -112,6 +112,48 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-wrap{max-width:720px;margin:0 auto;padding:16px 16px 40px}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:500px){.stats-row{grid-template-columns:1fr 1fr}.dash-charts-row{grid-template-columns:1fr !important}}
+
+/* ═══ MOBILE RESPONSIVE OVERRIDES ═══ */
+@media(max-width:500px){
+  /* Sub-nav: 3×2 grid instead of horizontal scroll */
+  .dash-subnav{display:grid !important;grid-template-columns:1fr 1fr 1fr;gap:5px;overflow-x:visible;padding:8px 12px 6px}
+  .dash-subnav button{white-space:normal;font-size:11px;padding:8px 4px;line-height:1.25;text-align:center;min-height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .dash-subnav .sn-badge{margin-left:0;margin-top:1px}
+  /* Coverage table: collapsible detail rows on mobile */
+  .cov-table th.cov-hide,.cov-table td.cov-hide{display:none}
+  .cov-table th.cov-chevron,.cov-table td.cov-chevron{display:table-cell !important}
+  .cov-table th,.cov-table td{font-size:11px;padding:8px 6px}
+  .cov-table th:first-child,.cov-table td:first-child{max-width:140px}
+  .cov-detail{display:none}
+  .cov-detail.open{display:table-row}
+  .cov-row{cursor:pointer}
+  .cov-row:active{background:var(--teal-lt) !important}
+  /* Pipeline metrics: stack vertically */
+  .pipeline-metrics{flex-direction:column !important;gap:6px !important}
+  .pipeline-arrow{display:none !important}
+  .pipeline-metric{flex-direction:row !important;justify-content:space-between;padding:8px 12px !important;border-radius:8px;background:#fff}
+  .pipeline-metric .pm-num{font-size:20px !important}
+  .pipeline-metric .pm-label{font-size:11px !important;text-align:left !important}
+  /* Schools stats row */
+  .schools-stats{grid-template-columns:1fr 1fr 1fr !important}
+  .schools-stats>div{padding:10px 8px !important}
+  .schools-stats .ss-num{font-size:22px !important}
+  .schools-stats .ss-label{font-size:9px !important}
+  /* Monthly timeline: ensure labels fit */
+  .timeline-bar-label{font-size:7px !important}
+  /* Toolkit tabs */
+  .tk-tabs{gap:4px;padding:8px 8px}
+  .tk-tab{padding:8px 10px;font-size:11px}
+  /* Toolkit designer: challenge grid single column on small screens */
+  .tk-ch-grid{grid-template-columns:1fr !important}
+  /* Toolkit progress steps */
+  .tk-prog{flex-wrap:wrap}
+  .tk-prog-s{font-size:9px;padding:5px 4px}
+  /* Form 2-col grids: single column */
+  .form-grid-2{grid-template-columns:1fr !important}
+  /* Review table values: allow wrapping */
+  .review-value{max-width:55%;word-break:break-word}
+}
 .stat-card{background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--teal)}
 .stat-card.orange{border-color:var(--orange)}
 .stat-card.green{border-color:var(--green)}
@@ -131,6 +173,11 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-subnav button:not(.active):hover{border-color:var(--teal);color:var(--teal);background:var(--teal-lt);transform:translateY(-1px)}
 .dash-subnav .sn-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px;padding:0 4px}
 .dash-subnav-hint{text-align:center;font-size:10px;color:var(--grey);padding:6px 16px 0;margin:0 -16px;background:#fff}
+
+/* Coverage table expand (mobile only) */
+.cov-table .cov-chevron{display:none}
+.cov-detail{display:none}
+.cov-row{cursor:default}
 
 /* Barrier bars */
 .bar-chart{display:flex;flex-direction:column;gap:8px}
@@ -1121,27 +1168,27 @@ function renderFormStep3(){
         <div style="font-size:11px;color:var(--grey);margin-bottom:10px;line-height:1.5">Select the type of issue you observed, then fill in the numbers</div>
         <div style="margin-bottom:10px"><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Type of data issue</label><select onchange="S.f.insight_type=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><option value="">Select what you observed...</option><option ${S.f.insight_type==='subject-performance'?'selected':''} value="subject-performance">Subject / pass rate issue</option><option ${S.f.insight_type==='learner-attendance'?'selected':''} value="learner-attendance">Learner attendance issue</option><option ${S.f.insight_type==='educator-attendance'?'selected':''} value="educator-attendance">Educator attendance issue</option><option ${S.f.insight_type==='sba-exam-gap'?'selected':''} value="sba-exam-gap">SBA-Exam mark gap</option><option ${S.f.insight_type==='curriculum-coverage'?'selected':''} value="curriculum-coverage">Curriculum coverage issue</option><option ${S.f.insight_type==='promotion-criteria'?'selected':''} value="promotion-criteria">Promotion criteria / at-risk learners</option><option ${S.f.insight_type==='other-issue'?'selected':''} value="other-issue">Other data issue</option></select></div>
         ${S.f.insight_type==='subject-performance'?``:''}        ${S.f.insight_type==='learner-attendance'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners with attendance issues</label><input type="number" min="0" placeholder="e.g. 45" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Absent how many days?</label><input type="number" min="0" placeholder="e.g. 10" value="${S.f.insight_attendance_days}" oninput="S.f.insight_attendance_days=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><div style="font-size:10px;color:var(--grey);margin-top:2px">Days absent or more</div></div>
         </div>`:''}
         ${S.f.insight_type==='educator-attendance'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Educators with attendance issues</label><input type="number" min="0" placeholder="e.g. 5" value="${S.f.insight_educator_absent}" oninput="S.f.insight_educator_absent=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Absent how many days?</label><input type="number" min="0" placeholder="e.g. 4" value="${S.f.insight_attendance_days}" oninput="S.f.insight_attendance_days=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><div style="font-size:10px;color:var(--grey);margin-top:2px">Days absent or more</div></div>
         </div>`:''}
         ${S.f.insight_type==='sba-exam-gap'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">SBA-Exam gap size</label><div style="display:flex;align-items:center;gap:4px"><input type="number" min="0" max="100" placeholder="e.g. 22" value="${S.f.insight_sba_exam_gap}" oninput="S.f.insight_sba_exam_gap=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;text-align:center"><span style="font-size:13px;color:var(--grey);font-weight:600">%</span></div></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners affected</label><input type="number" min="0" placeholder="e.g. 120" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
         </div>`:''}
         ${S.f.insight_type==='curriculum-coverage'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Curriculum covered</label><div style="display:flex;align-items:center;gap:4px"><input type="number" min="0" max="100" placeholder="e.g. 60" value="${S.f.insight_curriculum_pct}" oninput="S.f.insight_curriculum_pct=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;text-align:center"><span style="font-size:13px;color:var(--grey);font-weight:600">%</span></div><div style="font-size:10px;color:var(--grey);margin-top:2px">Of expected pace at this point in the term</div></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners affected</label><input type="number" min="0" placeholder="e.g. 200" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
         </div>`:''}
         ${S.f.insight_type==='promotion-criteria'?`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">Learners at risk</label><input type="number" min="0" placeholder="e.g. 35" value="${S.f.insight_learners_affected}" oninput="S.f.insight_learners_affected=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"></div>
           <div><label style="font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block">What criteria are they missing?</label><select onchange="S.f.insight_threshold=this.value;render()" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px"><option value="">Select...</option><option ${S.f.insight_threshold==='missed-one-criteria'?'selected':''} value="missed-one-criteria">Missing one criteria for promotion</option><option ${S.f.insight_threshold==='missed-multiple'?'selected':''} value="missed-multiple">Missing several criteria</option><option ${S.f.insight_threshold==='below-30'?'selected':''} value="below-30">Below 30% (not passing)</option><option ${S.f.insight_threshold==='at-30-39'?'selected':''} value="at-30-39">At 30-39% (close to passing)</option><option ${S.f.insight_threshold==='progressed'?'selected':''} value="progressed">Progressed learners needing support</option></select></div>
         </div>
@@ -1643,12 +1690,12 @@ ${tab==='insights'?`
      ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)')}
      ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)')}
      <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:8px">
-       <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
-         <div><div style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
-         <div style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div><div style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Outcome</div></div>
-         <div style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div><div style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Completion Rate</div></div>
+      <div class="pipeline-metrics" style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
+         <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Outcome</div></div>
+         <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Completion Rate</div></div>
        </div>
      </div>
    </div>
@@ -1698,15 +1745,16 @@ ${tab==='coverage'?`
    <div class="dash-section-hdr"><h3>Geographic Coverage</h3><span style="font-size:11px;color:var(--grey)">${districts.length} district${districts.length!==1?'s':''} across ${activeProvinces.length} province${activeProvinces.length!==1?'s':''}</span></div>
    <div class="dash-section-body">
      <div class="dash-section-desc">Where your interventions are concentrated and where there may be gaps. Districts with no recent activity may need attention.</div>
-     ${districts.length ? `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">
+     ${districts.length ? `<div style="overflow-x:auto"><table class="cov-table" style="width:100%;border-collapse:collapse;font-size:11px">
        <thead><tr style="background:#F5F6FA">
          <th style="text-align:left;padding:8px 10px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Province / District</th>
          <th style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Activities</th>
-         <th style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Schools</th>
-         <th style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Learners</th>
-         <th style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">DDD %</th>
-         <th style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Outcomes</th>
+         <th class="cov-hide" style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Schools</th>
+         <th class="cov-hide" style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Learners</th>
+         <th class="cov-hide" style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">DDD %</th>
+         <th class="cov-hide" style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Outcomes</th>
          <th style="text-align:right;padding:8px 10px;font-weight:700;color:var(--navy);border-bottom:2px solid #e0e0e0">Last Active</th>
+         <th class="cov-chevron" style="padding:8px 4px;border-bottom:2px solid #e0e0e0;width:28px"></th>
        </tr></thead>
        <tbody>${districts.map((d,i)=>{
          const daysSince = d.lastDate ? Math.floor((now - new Date(d.lastDate))/(1000*60*60*24)) : 999;
@@ -1715,17 +1763,41 @@ ${tab==='coverage'?`
          const topBarrierD = {};
          d.barriers.forEach(b=>{topBarrierD[b]=(topBarrierD[b]||0)+1});
          const mainBarrier = Object.entries(topBarrierD).sort((a,b)=>b[1]-a[1])[0];
-         return `<tr style="border-bottom:1px solid #f0f0f0;${i%2===1?'background:#FAFBFC':''}">
+         const rowId = 'covRow_'+i;
+         return `<tr class="cov-row" style="border-bottom:1px solid #f0f0f0;${i%2===1?'background:#FAFBFC':''}" onclick="toggleCovRow('${rowId}',this)">
            <td style="padding:8px 10px">
              <div style="font-weight:600;color:var(--navy)">${esc(d.district||'All')}</div>
-             <div style="font-size:10px;color:var(--grey)">${esc(d.province)}${mainBarrier?' · <span style="color:'+freshColor+'">'+esc(mainBarrier[0])+'</span>':''}</div>
+             <div style="font-size:10px;color:var(--grey)">${esc(d.province)}${mainBarrier?' &middot; <span style="color:'+freshColor+'">'+esc(mainBarrier[0])+'</span>':''}</div>
            </td>
            <td style="text-align:center;padding:8px 6px;font-weight:700;color:var(--navy)">${d.activities}</td>
-           <td style="text-align:center;padding:8px 6px">${d.schools.size}</td>
-           <td style="text-align:center;padding:8px 6px">${d.learners>999?(d.learners/1000).toFixed(1)+'k':d.learners}</td>
-           <td style="text-align:center;padding:8px 6px"><span style="color:${dddPctD>=60?'var(--green)':dddPctD>=40?'var(--orange)':'var(--red)'};font-weight:600">${dddPctD}%</span></td>
-           <td style="text-align:center;padding:8px 6px;font-weight:600;color:${d.outcomes?'var(--green)':'var(--grey)'}">${d.outcomes}</td>
+           <td class="cov-hide" style="text-align:center;padding:8px 6px">${d.schools.size}</td>
+           <td class="cov-hide" style="text-align:center;padding:8px 6px">${d.learners>999?(d.learners/1000).toFixed(1)+'k':d.learners}</td>
+           <td class="cov-hide" style="text-align:center;padding:8px 6px"><span style="color:${dddPctD>=60?'var(--green)':dddPctD>=40?'var(--orange)':'var(--red)'};font-weight:600">${dddPctD}%</span></td>
+           <td class="cov-hide" style="text-align:center;padding:8px 6px;font-weight:600;color:${d.outcomes?'var(--green)':'var(--grey)'}">${d.outcomes}</td>
            <td style="text-align:right;padding:8px 10px"><span style="font-size:10px;font-weight:600;color:${freshColor}">${daysSince<=1?'Today':daysSince+'d ago'}</span></td>
+           <td class="cov-chevron" style="text-align:center;padding:8px 4px"><span class="cov-chev" style="font-size:12px;color:var(--teal);transition:transform .2s;display:inline-block">&#9660;</span></td>
+         </tr>
+         <tr id="${rowId}" class="cov-detail">
+           <td colspan="8" style="padding:0">
+             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 12px;background:var(--teal-lt);border-bottom:2px solid var(--teal)">
+               <div style="background:#fff;border-radius:6px;padding:8px 10px;text-align:center">
+                 <div style="font-size:18px;font-weight:800;color:var(--navy)">${d.schools.size}</div>
+                 <div style="font-size:10px;font-weight:600;color:var(--grey)">Schools</div>
+               </div>
+               <div style="background:#fff;border-radius:6px;padding:8px 10px;text-align:center">
+                 <div style="font-size:18px;font-weight:800;color:var(--navy)">${d.learners>999?(d.learners/1000).toFixed(1)+'k':d.learners}</div>
+                 <div style="font-size:10px;font-weight:600;color:var(--grey)">Learners</div>
+               </div>
+               <div style="background:#fff;border-radius:6px;padding:8px 10px;text-align:center">
+                 <div style="font-size:18px;font-weight:800;color:${dddPctD>=60?'var(--green)':dddPctD>=40?'var(--orange)':'var(--red)'}">${dddPctD}%</div>
+                 <div style="font-size:10px;font-weight:600;color:var(--grey)">DDD Usage</div>
+               </div>
+               <div style="background:#fff;border-radius:6px;padding:8px 10px;text-align:center">
+                 <div style="font-size:18px;font-weight:800;color:${d.outcomes?'var(--green)':'var(--grey)'}">${d.outcomes}</div>
+                 <div style="font-size:10px;font-weight:600;color:var(--grey)">Outcomes</div>
+               </div>
+             </div>
+           </td>
          </tr>`;
        }).join('')}</tbody>
      </table></div>` : '<div style="text-align:center;color:var(--grey);padding:20px;font-size:12px">No activities logged yet</div>'}
@@ -1779,7 +1851,7 @@ ${tab==='trends'?`
          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
            <div style="font-size:10px;font-weight:700;color:var(--navy)">${count}</div>
            <div style="width:100%;max-width:40px;height:${h}px;background:linear-gradient(180deg,var(--teal),#074445);border-radius:4px 4px 0 0;transition:height .4s"></div>
-           <div style="position:absolute;bottom:2px;font-size:8px;color:var(--grey);white-space:nowrap;transform:rotate(-30deg);transform-origin:top center">${monthLabel(m)}</div>
+           <div class="timeline-bar-label" style="position:absolute;bottom:2px;font-size:8px;color:var(--grey);white-space:nowrap;transform:rotate(-30deg);transform-origin:top center">${monthLabel(m)}</div>
          </div>`;
        }).join('')}
      </div>` : '<div style="text-align:center;color:var(--grey);padding:20px;font-size:12px">No timeline data yet</div>'}
@@ -1849,18 +1921,18 @@ ${tab==='trends'?`
 
 ${tab==='impact'?`
  <!-- ═══ IMPACT SUMMARY ═══ -->
- <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+ <div class="schools-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--green)">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${impactItems.length}</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Outcomes</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${impactItems.length}</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Outcomes</div>
    </div>
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--teal)">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${impactItems.reduce((s,i)=>s+i.learners,0)>999?(impactItems.reduce((s,i)=>s+i.learners,0)/1000).toFixed(1)+'k':impactItems.reduce((s,i)=>s+i.learners,0)}</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Learners Reached</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${impactItems.reduce((s,i)=>s+i.learners,0)>999?(impactItems.reduce((s,i)=>s+i.learners,0)/1000).toFixed(1)+'k':impactItems.reduce((s,i)=>s+i.learners,0)}</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Learners Reached</div>
    </div>
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--blue)">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${pipelineOutcomePct}%</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Pipeline Rate</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${pipelineOutcomePct}%</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Pipeline Rate</div>
    </div>
  </div>
 
@@ -2014,18 +2086,18 @@ function renderDashboardSchools(decs,acts,outs,now){
  if (!Object.keys(schoolVisits).length) return '<div style="padding:30px;text-align:center;color:var(--grey);font-size:12px">No school visits logged yet. Start logging activities to see your schools here.</div>';
 
  return `
- <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+ <div class="schools-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--teal)">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${Object.keys(schoolVisits).length}</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Schools</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${Object.keys(schoolVisits).length}</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Schools</div>
    </div>
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--green)">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${Object.values(schoolVisits).filter(v=>v.count>=2).length}</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Repeat Visits</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${Object.values(schoolVisits).filter(v=>v.count>=2).length}</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Repeat Visits</div>
    </div>
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid ${Object.values(schoolVisits).filter(v=>v.hasFollowUp).length?'var(--red)':'var(--blue)'}">
-     <div style="font-size:28px;font-weight:800;color:var(--navy)">${Object.values(schoolVisits).filter(v=>v.hasFollowUp).length}</div>
-     <div style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Follow-ups Due</div>
+     <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${Object.values(schoolVisits).filter(v=>v.hasFollowUp).length}</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Follow-ups Due</div>
    </div>
  </div>
 
@@ -2117,7 +2189,7 @@ function tkDesigner() {
  const steps=['What is the challenge?','What did you see?','What can you do?','Ready to act'];
  return`<div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:15px;font-weight:700;color:#1A2332;margin:0">Design an Intervention</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">Use your DDD data to plan a response that fits your schools</p></div> <div style="padding:16px">
  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;margin-bottom:14px"><a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;padding:7px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap">Open DDD Dashboard</a><div style="font-size:11px;color:var(--grey-dk);line-height:1.5">Open the dashboard in another tab \u2014 you will need the numbers from there to fill in Step 2</div></div>
- <div class="tk-prog">${steps.map((s,i)=>`<div class="tk-prog-s" style="background:${S.dStep===i?'#0B8E8D':S.dStep>i?'#E8F5E9':'#f3f2f1'};color:${S.dStep===i?'#fff':S.dStep>i?'#7AB648':'#607D8B'}" onclick="S.dStep=${i};render()">${i+1}. ${s}</div>`).join('')}</div> ${S.dStep===0?`<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#1A2332">What challenge are you seeing at your school(s)?</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${chs.map(c=>`<div class="tk-ch${S.dChallenge===c.id?' sel':''}" onclick="S.dChallenge='${c.id}';S.dStep=1;render()" style="background:${S.dChallenge===c.id?c.color+'10':'#f7f9fc'};${S.dChallenge===c.id?'border-color:'+c.color+'':''};color:${c.color}"><div style="font-size:13px;font-weight:700;color:#1A2332">${c.label}</div><div style="font-size:11px;color:#607D8B;margin-top:4px">${c.desc}</div><div style="font-size:10px;color:${c.color};margin-top:6px;font-weight:600">Use: ${c.report}</div><div class="tap-hint" style="color:${c.color};opacity:.7;margin-top:6px">Tap to select</div></div>`).join('')}</div>`:''}
+ <div class="tk-prog">${steps.map((s,i)=>`<div class="tk-prog-s" style="background:${S.dStep===i?'#0B8E8D':S.dStep>i?'#E8F5E9':'#f3f2f1'};color:${S.dStep===i?'#fff':S.dStep>i?'#7AB648':'#607D8B'}" onclick="S.dStep=${i};render()">${i+1}. ${s}</div>`).join('')}</div> ${S.dStep===0?`<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#1A2332">What challenge are you seeing at your school(s)?</div><div class="tk-ch-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${chs.map(c=>`<div class="tk-ch${S.dChallenge===c.id?' sel':''}" onclick="S.dChallenge='${c.id}';S.dStep=1;render()" style="background:${S.dChallenge===c.id?c.color+'10':'#f7f9fc'};${S.dChallenge===c.id?'border-color:'+c.color+'':''};color:${c.color}"><div style="font-size:13px;font-weight:700;color:#1A2332">${c.label}</div><div style="font-size:11px;color:#607D8B;margin-top:4px">${c.desc}</div><div style="font-size:10px;color:${c.color};margin-top:6px;font-weight:600">Use: ${c.report}</div><div class="tap-hint" style="color:${c.color};opacity:.7;margin-top:6px">Tap to select</div></div>`).join('')}</div>`:''}
  ${S.dStep===1?tkDesignerData():''}
  ${S.dStep===2?tkDesignerResponse():''}
  ${S.dStep===3?tkDesignerPlan():''}
@@ -2342,6 +2414,25 @@ function renderOutcomeModal(){
  </div></div>`;
  document.body.appendChild(el);
  document.addEventListener('keydown',function outcomeEsc(e){if(e.key==='Escape'){closeOutcomeModal();document.removeEventListener('keydown',outcomeEsc)}});
+}
+
+// Coverage table row expand/collapse (mobile only)
+function toggleCovRow(rowId, triggerRow) {
+  if (window.innerWidth > 500) return;
+  const detailRow = document.getElementById(rowId);
+  if (!detailRow) return;
+  const isOpen = detailRow.classList.contains('open');
+  // Close all other open detail rows first
+  document.querySelectorAll('.cov-detail.open').forEach(r => {
+    r.classList.remove('open');
+    const prevRow = r.previousElementSibling;
+    if (prevRow) { const ch = prevRow.querySelector('.cov-chev'); if (ch) ch.style.transform = 'rotate(0deg)'; }
+  });
+  if (!isOpen) {
+    detailRow.classList.add('open');
+    const chev = triggerRow.querySelector('.cov-chev');
+    if (chev) chev.style.transform = 'rotate(180deg)';
+  }
 }
 
 function fmtDate(d) { if(!d)return'—'; try{return new Date(d).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d} }
