@@ -166,6 +166,16 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:10px 20px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
+
+/* Update banner */
+.update-banner{position:fixed;bottom:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff;padding:14px 16px;box-shadow:0 -4px 16px rgba(0,0,0,.2);transform:translateY(100%);transition:transform .4s ease;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.update-banner.visible{transform:translateY(0)}
+.update-banner-text{font-size:13px;line-height:1.5;text-align:center}
+.update-banner-text strong{color:var(--green)}
+.update-banner-btn{padding:10px 20px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.update-banner-btn.primary{background:var(--green);color:#fff}
+.update-banner-btn.secondary{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.update-draft-badge{position:fixed;bottom:16px;right:16px;z-index:150;background:var(--green);color:#fff;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.2);animation:fadeIn .3s ease;cursor:default}
 .fade-in{animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .empty{text-align:center;padding:32px;color:var(--grey);font-size:13px;font-style:italic}
@@ -386,6 +396,10 @@ const TK_POLICIES = {
 };
 
 // STATE 
+const APP_VERSION = '2026.02.27.1';
+const VERSION_CHECK_URL = 'version.txt'; // Hosted alongside the HTML on GitHub Pages
+const VERSION_CHECK_INTERVAL = 2 * 60 * 1000; // Check every 2 minutes
+
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
@@ -682,6 +696,8 @@ async function loadAll() {
  // If empty, inject demo data so dashboard is useful immediately
  if (S.decisions.length === 0) injectDemo();
  S.loading = false; S.error = null;
+ // Restore any saved form draft (from auto-update or page refresh)
+ if (!S._draftRestored) { S._draftRestored = true; restoreFormDraft(); }
  } catch(e) { S.error = e.message; S.loading = false; }
  render();
 }
@@ -2346,7 +2362,127 @@ function prefillFromDesigner(){
  render();window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ═══════════════════════════════════
+// AUTO-UPDATE SYSTEM
+// ═══════════════════════════════════
+
+// Check if the form has unsaved user data (not just defaults)
+function isFormDirty() {
+  const f = S.f;
+  if (S.view !== 'log' || f.formStep < 0 || S.submitted) return false;
+  // Check if user has entered meaningful data beyond defaults
+  return !!(f.activity_type || f.description || f.action_type || f.decision_type
+    || f.schools || f.insight_detail || f.insight_pass_rate
+    || (f.subjects && f.subjects.length) || (f.grades && f.grades.length)
+    || (f.ddd_reports && f.ddd_reports.length) || f.learners_reached
+    || f.follow_up_desc || f.doc_url);
+}
+
+// Save form draft to sessionStorage
+function saveFormDraft() {
+  try {
+    const draft = {
+      f: S.f,
+      view: S.view,
+      openSections: S.openSections,
+      savedAt: new Date().toISOString(),
+      version: APP_VERSION
+    };
+    sessionStorage.setItem('ddd_form_draft', JSON.stringify(draft));
+    return true;
+  } catch(e) { return false; }
+}
+
+// Restore form draft from sessionStorage (called once on load)
+function restoreFormDraft() {
+  try {
+    const raw = sessionStorage.getItem('ddd_form_draft');
+    if (!raw) return false;
+    sessionStorage.removeItem('ddd_form_draft');
+    const draft = JSON.parse(raw);
+    // Only restore if draft is less than 2 hours old
+    const age = Date.now() - new Date(draft.savedAt).getTime();
+    if (age > 2 * 60 * 60 * 1000) return false;
+    // Restore form state
+    if (draft.f) {
+      // Preserve auth-related fields from current session
+      const keepFields = ['official_name','official_email','official_role','official_specialisation','official_role_other','official_specialisation_other'];
+      keepFields.forEach(k => { if (S.f[k]) draft.f[k] = S.f[k]; });
+      S.f = draft.f;
+    }
+    if (draft.view) S.view = draft.view;
+    if (draft.openSections) S.openSections = draft.openSections;
+    // Show a gentle notice that their work was restored
+    setTimeout(() => showToast('Your in-progress form has been restored'), 500);
+    return true;
+  } catch(e) { return false; }
+}
+
+// Background version checker
+let _updateAvailable = false;
+let _updateBannerShown = false;
+
+async function checkForUpdates() {
+  try {
+    const resp = await fetch(VERSION_CHECK_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!resp.ok) return;
+    const remoteVersion = (await resp.text()).trim();
+    if (remoteVersion && remoteVersion !== APP_VERSION) {
+      _updateAvailable = true;
+      handleUpdateAvailable();
+    }
+  } catch(e) { /* Silently fail — user might be offline */ }
+}
+
+function handleUpdateAvailable() {
+  if (_updateBannerShown) return;
+  // If user is NOT mid-form → auto-refresh silently
+  if (!isFormDirty()) {
+    window.location.reload();
+    return;
+  }
+  // User IS mid-form → save draft, show banner
+  saveFormDraft();
+  showUpdateBanner();
+}
+
+function showUpdateBanner() {
+  _updateBannerShown = true;
+  let banner = document.getElementById('update-banner');
+  if (banner) { banner.classList.add('visible'); return; }
+  banner = document.createElement('div');
+  banner.id = 'update-banner';
+  banner.className = 'update-banner';
+  banner.innerHTML = `
+    <div class="update-banner-text">
+      <strong>New version available.</strong> Your form has been saved and will be restored automatically.
+    </div>
+    <button class="update-banner-btn primary" onclick="applyUpdate()">Update now</button>
+    <button class="update-banner-btn secondary" onclick="dismissUpdateBanner()">Later</button>
+  `;
+  document.body.appendChild(banner);
+  // Slight delay for CSS transition
+  requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('visible')));
+}
+
+function applyUpdate() {
+  saveFormDraft();
+  window.location.reload();
+}
+
+function dismissUpdateBanner() {
+  const banner = document.getElementById('update-banner');
+  if (banner) banner.classList.remove('visible');
+  // Re-check in 5 minutes
+  setTimeout(() => { _updateBannerShown = false; if (_updateAvailable) handleUpdateAvailable(); }, 5 * 60 * 1000);
+}
+
 // INIT 
 checkAuth();
+// Start version polling after a short delay (don't slow down initial load)
+setTimeout(() => {
+  checkForUpdates();
+  setInterval(checkForUpdates, VERSION_CHECK_INTERVAL);
+}, 10000);
 </script>
 </body></html>
