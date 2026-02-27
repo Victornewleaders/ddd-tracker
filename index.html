@@ -472,7 +472,7 @@ const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36
 const S = {
  loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'', _otpValue:'', _otpEmail:'', _officialId:null,
  official:{full_name:'User',role:'',province:'',district:'',email:''},
- view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{}, outcomeModal:null,
+ view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{}, outcomeModal:null, pipelineDrill:null,
  saving:false, submitted:false, expandedSchool:null,
  tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
  dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
@@ -839,6 +839,9 @@ function render() {
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
  if(S.outcomeModal) renderOutcomeModal();
  else { const stale=document.getElementById('outcome-modal-overlay'); if(stale)stale.remove(); }
+
+ if(S.pipelineDrill) renderPipelineDrillModal();
+ else { const stale2=document.getElementById('pipeline-drill-overlay'); if(stale2)stale2.remove(); }
 }
 
 function renderEmailGate() {
@@ -850,7 +853,7 @@ function renderEmailGate() {
      <div class="hdr-titles">
        <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
        <div class="hdr-title">Learner Improvement Interventions Tracker</div>
-       <div class="hdr-sub">Start with your DDD data. Log what you did. See the difference you make.</div>
+       <div class="hdr-sub">Sign in to continue.</div>
      </div>
    </div>
  </header>
@@ -877,7 +880,7 @@ function renderEmailGate() {
          Only pre-registered officials can access this tool.<br>
          If you don\u2019t have access, contact the DDD Interventions Manager on <a href="mailto:victor@newleaders.co.za" style="color:var(--teal);font-weight:600">victor@newleaders.co.za</a>
        </div>
-       <div style="margin-top:16px;padding:12px 14px;background:#F5F7FA;border-radius:8px;border-left:3px solid var(--teal)">
+       <div style="margin-top:16px;padding:12px 14px;background:#F5F7FA;border-radius:8px;border:1px solid #D0D7DE">
          <div style="font-size:11px;color:#607D8B;line-height:1.6">By signing in, you agree that information you enter — including activity logs, school visits, and outcomes — will be used by the DDD Programme to track and improve learner interventions. Your data is stored securely and will only be shared with authorised programme staff for programme improvement purposes.</div>
        </div>
      </div>
@@ -898,7 +901,7 @@ function renderOtpGate() {
      <div class="hdr-titles">
        <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
        <div class="hdr-title">Learner Improvement Interventions Tracker</div>
-       <div class="hdr-sub">Start with your DDD data. Log what you did. See the difference you make.</div>
+       <div class="hdr-sub">Sign in to continue.</div>
      </div>
    </div>
  </header>
@@ -925,7 +928,7 @@ function renderOtpGate() {
          Forgot your PIN? Contact the DDD Interventions Manager on <a href="mailto:victor@newleaders.co.za" style="color:var(--teal);font-weight:600">victor@newleaders.co.za</a><br>
          <a href="#" onclick="event.preventDefault();S.authState='gate';S.gateError='';S.gateLoading=false;render()" style="color:var(--teal);font-weight:600">Use a different email</a>
        </div>
-       <div style="margin-top:16px;padding:12px 14px;background:#F5F7FA;border-radius:8px;border-left:3px solid var(--teal)">
+       <div style="margin-top:16px;padding:12px 14px;background:#F5F7FA;border-radius:8px;border:1px solid #D0D7DE">
          <div style="font-size:11px;color:#607D8B;line-height:1.6">By signing in, you agree that information you enter — including activity logs, school visits, and outcomes — will be used by the DDD Programme to track and improve learner interventions. Your data is stored securely and will only be shared with authorised programme staff for programme improvement purposes.</div>
        </div>
      </div>
@@ -1799,13 +1802,24 @@ function renderDashboard() {
  }
 
  // ── HELPER: funnel bar ──
- function funnelBar(label, count, total, color) {
+ function funnelBar(label, count, total, color, drillKey) {
    const pct = total ? Math.round((count/total)*100) : 0;
    const width = total ? Math.max(Math.round((count/total)*100), 8) : 8;
-   return `<div style="margin-bottom:10px">
+
+   const clickable = !!drillKey;
+   const attrs = clickable
+     ? `role="button" tabindex="0" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" style="cursor:pointer"`
+     : '';
+   const hint = clickable ? `<div style="font-size:10px;color:var(--grey);margin-top:2px">Tap to view details</div>` : '';
+
+   return `<div style="margin-bottom:10px" ${attrs}>
      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
-       <div style="font-size:12px;font-weight:600;color:var(--navy)">${label}</div>
-       <div style="font-size:12px"><strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
+       <div>
+         <div style="font-size:12px;font-weight:600;color:var(--navy)">${label}</div>
+         ${hint}
+       </div>
+       <div style="font-size:12px">
+       ${clickable ? `<button type="button" class="btn secondary" onclick="event.stopPropagation();openPipelineDrill('${drillKey}')" style="padding:4px 8px;font-size:11px;line-height:1.2;margin-left:8px">View list</button>` : ''}<strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
      </div>
      <div style="height:28px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
        <div style="height:100%;width:${width}%;background:${color};border-radius:6px;transition:width .5s;display:flex;align-items:center;padding-left:8px"></div>
@@ -1864,9 +1878,9 @@ ${tab==='insights'?`
    <div class="dash-section-hdr"><h3>Intervention Pipeline</h3><span style="font-size:11px;color:var(--grey)">Decision → Action → Outcome</span></div>
    <div class="dash-section-body">
      <div class="dash-section-desc">How many of your interventions are completing the full cycle? A strong programme converts decisions into actions and actions into measurable outcomes.</div>
-     ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)')}
-     ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)')}
-     ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)')}
+     ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)', 'decisions')}
+     ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)', 'actions')}
+     ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)', 'outcomes')}
      <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:8px">
       <div class="pipeline-metrics" style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
          <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
@@ -2544,6 +2558,144 @@ function renderPolicyModal(){
 }
 
 // UTILITIES 
+
+function openPipelineDrill(kind){
+  // Guard against opening when nothing to show
+  const decs = applyDashFilters(S.decisions || []);
+  const decIds = new Set(decs.map(d => d.id));
+  const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
+  const actIds = new Set(acts.map(a => a.id));
+  const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
+
+  const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
+  if(!counts[kind]){ toast('No ' + (kind||'records') + ' to show for the current filters.'); return; }
+
+  S.pipelineDrill = { kind: kind };
+  render();
+}
+
+function closePipelineDrill(){
+  S.pipelineDrill = null;
+  render();
+}
+
+function renderPipelineDrillModal(){
+  const m = S.pipelineDrill; if(!m) return;
+  const existing = document.getElementById('pipeline-drill-overlay');
+  if(existing) existing.remove();
+
+  const kind = m.kind;
+  const decs = applyDashFilters(S.decisions || []);
+  const decById = Object.fromEntries(decs.map(d => [d.id, d]));
+  const decIds = new Set(decs.map(d => d.id));
+  const actsAll = (S.actions||[]).filter(a => decIds.has(a.decision_id));
+  const actById = Object.fromEntries(actsAll.map(a => [a.id, a]));
+  const actIds = new Set(actsAll.map(a => a.id));
+  const outsAll = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
+
+  let title = 'Details';
+  let subtitle = '';
+  let rows = [];
+
+  if(kind === 'decisions'){
+    title = 'Decisions Logged';
+    subtitle = 'Tap an item to open it in the Activity Log.';
+    rows = decs.map(d => ({
+      id: d.id,
+      primary: d.decision_made || d.insight || d.data_viewed || '(Decision)',
+      meta: [ (d.details&&d.details.district)||'', (d.details&&d.details.schools)||'', d.date||'' ].filter(Boolean).join(' • ')
+    }));
+  } else if(kind === 'actions'){
+    title = 'Actions Taken';
+    subtitle = 'Tap an item to open it in the Activity Log.';
+    rows = actsAll.map(a => {
+      const d = decById[a.decision_id] || {};
+      const det = d.details || {};
+      return {
+        id: a.id,
+        primary: a.action_taken || '(Action)',
+        meta: [ det.district||'', det.schools||'', a.status||'', a.target_date||'' ].filter(Boolean).join(' • '),
+        link: a.decision_id
+      };
+    });
+  } else if(kind === 'outcomes'){
+    title = 'Outcomes Recorded';
+    subtitle = 'Tap an item to open it in the Activity Log.';
+    rows = outsAll.map(o => {
+      const a = actById[o.action_id] || {};
+      const d = decById[a.decision_id] || {};
+      const det = d.details || {};
+      return {
+        id: o.id,
+        primary: o.description || '(Outcome)',
+        meta: [ det.district||'', det.schools||'', o.metric||'', o.value||'', o.date||'' ].filter(Boolean).join(' • '),
+        link: a.decision_id
+      };
+    });
+  }
+
+  const el = document.createElement('div');
+  el.id = 'pipeline-drill-overlay';
+  el.innerHTML = `
+    <div class="modal-bg" onclick="closePipelineDrill()">
+      <div class="modal-box" onclick="event.stopPropagation()" style="max-width:720px">
+        <div style="padding:16px 20px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">VIEW DETAILS</div>
+            <div style="font-size:16px;font-weight:800">${esc(title)}</div>
+            ${subtitle?`<div style="font-size:12px;color:#B8DCDC;margin-top:4px">${esc(subtitle)}</div>`:''}
+          </div>
+          <button class="btn secondary" style="padding:8px 10px" onclick="closePipelineDrill()">Close</button>
+        </div>
+
+        <div style="padding:16px 20px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            <button class="btn ${kind==='decisions'?'primary':'secondary'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px">Decisions (${decs.length})</button>
+            <button class="btn ${kind==='actions'?'primary':'secondary'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px">Actions (${actsAll.length})</button>
+            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px">Outcomes (${outsAll.length})</button>
+          </div>
+
+          <div style="background:#F7F9FC;border:1px solid #ECEFF1;border-radius:10px;overflow:hidden">
+            ${rows.length? rows.map(r => `
+              <div style="padding:12px 12px;border-bottom:1px solid #ECEFF1;cursor:pointer" onclick="openPipelineChain('${esc(r.link||r.id)}')">
+                <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.35">${esc(r.primary)}</div>
+                ${r.meta?`<div style="font-size:12px;color:var(--grey);margin-top:4px;line-height:1.35">${esc(r.meta)}</div>`:''}
+              </div>
+            `).join('') : `<div style="padding:14px;color:var(--grey);font-size:13px">No items match your current filters.</div>`}
+          </div>
+
+          <div style="margin-top:12px;font-size:12px;color:var(--grey);line-height:1.5">
+            Tip: Use the dashboard filters (Province/District/Circuit/School) to narrow this list.
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(el);
+
+  // Escape: close on ESC
+  const handler = (e)=>{ if(e.key==='Escape'){ document.removeEventListener('keydown',handler); closePipelineDrill(); } };
+  document.addEventListener('keydown', handler);
+}
+
+// Jump to the Log view and open the relevant decision "chain"
+function openPipelineChain(id){
+  // If the click came from an action/outcome row, id is already decision_id; if it came from a decision row, it's decision id.
+  const decisionId = id;
+  closePipelineDrill();
+  S.view = 'log';
+  // Expand the chain in the log view (if supported); otherwise prefill a search hint.
+  S.expandedChains = S.expandedChains || {};
+  S.expandedChains[decisionId] = true;
+  // Set a gentle hint so the user sees it immediately
+  toast('Opening the selected item in Activity Log…');
+  render();
+  // Attempt to scroll to item after render
+  setTimeout(()=>{
+    const el = document.querySelector('[data-chain-id="'+decisionId+'"]') || document.getElementById(decisionId);
+    if(el && el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 150);
+}
 function renderOutcomeModal(){
  const m=S.outcomeModal;if(!m)return;
  const existing=document.getElementById('outcome-modal-overlay');
