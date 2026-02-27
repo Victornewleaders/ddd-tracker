@@ -1834,7 +1834,102 @@ function renderDashboard() {
    return ml[parseInt(m)-1]+' '+y.slice(2);
  }
 
- // ── TAB STATE ──
+ 
+// ── HELPER: expandable schools table (for low-friction viewing) ──
+function renderSchoolsExpandableTable(prefix, schoolArr){
+  const pid = prefix.replace(/[^a-zA-Z0-9_:-]/g,'_');
+  const searchId = pid + "_sch_search";
+  const tableId  = pid + "_sch_tbl";
+  // Lightweight client-side filter (no re-render needed)
+  setTimeout(()=>{ 
+    const inp = document.getElementById(searchId);
+    const tbl = document.getElementById(tableId);
+    if(!inp || !tbl) return;
+    if(inp._wired) return;
+    inp._wired = true;
+    inp.addEventListener('input', ()=> {
+      const q = (inp.value||'').toLowerCase().trim();
+      const rows = tbl.querySelectorAll('tbody tr');
+      rows.forEach(r=>{
+        const t = (r.getAttribute('data-name')||'').toLowerCase();
+        r.style.display = (!q || t.includes(q)) ? '' : 'none';
+      });
+    });
+  },0);
+
+  return `
+    <div style="margin-top:10px;background:#fff;border:1px solid #e6e6e6;border-radius:8px;padding:10px 12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.4px">School list</div>
+        <input id="${searchId}" type="text" placeholder="Search school name…" style="flex:1;min-width:160px;max-width:280px;padding:8px 10px;border:1px solid #d9d9d9;border-radius:6px;font-size:12px" />
+      </div>
+      <div style="max-height:220px;overflow:auto;border:1px solid #eef0f2;border-radius:6px">
+        <table id="${tableId}" style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:#F5F6FA">
+              <th style="text-align:left;padding:8px 10px;font-weight:700;color:var(--navy);border-bottom:1px solid #e6e6e6">School</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${schoolArr.map((s,i)=>`<tr data-name="${esc(s)}" style="border-bottom:1px solid #f0f0f0">
+              <td style="padding:8px 10px;color:#37474F">${i+1}. ${esc(s)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:10px;color:var(--grey);margin-top:6px;line-height:1.4">Tip: type a few letters to filter the list.</div>
+    </div>
+  `;
+}
+
+function toggleSchoolsTable(actionId){
+  S.showSchoolsTable = (S.showSchoolsTable===actionId) ? null : actionId;
+  render();
+}
+function toggleImpactSchools(outId){
+  S.showImpactSchools = (S.showImpactSchools===outId) ? null : outId;
+  render();
+}
+
+
+// ── SIMPLE SCHOOLS LIST MODAL (re-used across Dashboard / Pipeline / Insights) ──
+function parseSchoolsList(str){
+  return (str||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
+function openSchoolsListModal(title, encodedSchools){
+  const existing = document.getElementById('schools-list-modal-overlay');
+  if(existing) existing.remove();
+  const schoolsStr = decodeURIComponent(encodedSchools||'');
+  const arr = parseSchoolsList(schoolsStr);
+  const el = document.createElement('div');
+  el.id = 'schools-list-modal-overlay';
+  el.innerHTML = `
+    <div class="modal-bg" onclick="closeSchoolsListModal()">
+      <div class="modal-box" onclick="event.stopPropagation()" style="max-width:640px">
+        <div style="padding:14px 18px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">SCHOOLS</div>
+            <div style="font-size:16px;font-weight:800">${esc(title||'School list')}</div>
+            <div style="font-size:12px;color:#B8DCDC;margin-top:4px">${arr.length} selected</div>
+          </div>
+          <button class="btn secondary" style="padding:8px 10px" onclick="closeSchoolsListModal()">Close</button>
+        </div>
+        <div style="padding:14px 18px">
+          ${arr.length ? renderSchoolsExpandableTable('sch_modal', arr) : `<div style="padding:12px;color:var(--grey);font-size:13px">No schools were recorded for this item.</div>`}
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(el);
+  const handler = (e)=>{ if(e.key==='Escape'){ document.removeEventListener('keydown',handler); closeSchoolsListModal(); } };
+  document.addEventListener('keydown', handler);
+}
+function closeSchoolsListModal(){
+  const el = document.getElementById('schools-list-modal-overlay');
+  if(el) el.remove();
+}
+
+// ── TAB STATE ──
  const tab = S.dashTab || 'insights';
 
  // ═══════════════════════════════════
@@ -2146,8 +2241,19 @@ ${tab==='impact'?`
      ${impactItems.map(imp=>`<div style="padding:10px 12px;background:#F5F6F7;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green)">
        <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:3px">${esc(imp.metric||'Outcome')}: ${esc(imp.value||'')}</div>
        <div style="font-size:11px;color:#37474F;line-height:1.5">${esc(imp.description)}</div>
-       <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--grey)">
-         <span>${esc(imp.schools)}${imp.district?' · '+esc(imp.district):''}</span><span>${fmtDate(imp.date)}</span>
+       <div style="margin-top:6px;font-size:10px;color:var(--grey)">
+         ${(()=>{
+            const arr=(imp.schools||'').split(',').map(s=>s.trim()).filter(Boolean);
+            const n=arr.length;
+            const prev=arr.slice(0,2).join(', ');
+            const key=(imp.id||('a'+imp.action_id+'_'+imp.date));
+            return `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">${prev?esc(prev)+(n>2?' + '+(n-2)+' more':''):esc(imp.schools||'')}${imp.district?' · '+esc(imp.district):''}</div>
+              ${n>2?`<button type="button" class="btn secondary btn-sm" onclick="toggleImpactSchools('${key}');event.stopPropagation()" style="padding:4px 8px;font-size:11px">${S.showImpactSchools===key?'Hide':'View'} schools</button>`:''}
+              <div style="white-space:nowrap">${fmtDate(imp.date)}</div>
+            </div>
+            ${n>2 && S.showImpactSchools===key ? renderSchoolsExpandableTable('out_'+key, arr) : ''}`;
+          })()}
        </div>
        ${imp.evidence?`<div style="font-size:10px;color:var(--teal);margin-top:3px">Evidence: ${esc(imp.evidence)}</div>`:''}
      </div>`).join('')}
@@ -2211,7 +2317,12 @@ function renderDashboardUpdate(decs,acts,outs){
          <!-- SCHOOL & DISTRICT INFO -->
          <div style="background:#F7F9FC;border-radius:8px;padding:10px 14px;margin-bottom:14px">
            ${det.district?'<div style="font-size:13px;color:var(--navy);margin-bottom:4px"><strong>District:</strong> '+esc(det.district)+'</div>':''}
-           ${schoolCount>0?'<div style="font-size:13px;color:var(--navy);margin-bottom:2px"><strong>'+schoolCount+' school'+(schoolCount!==1?'s':'')+':</strong></div><div style="font-size:12px;color:var(--grey-dk);line-height:1.6;'+(schoolCount>5?'max-height:120px;overflow-y:auto':'')+'">'+schoolArr.map(s=>esc(s)).join(', ')+'</div>':''}
+           ${schoolCount>0?`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+             <div style="font-size:13px;color:var(--navy);margin-bottom:2px"><strong>Schools:</strong> ${schoolCount} selected</div>
+             <button type="button" class="btn secondary btn-sm" onclick="toggleSchoolsTable('${a.id}')" style="padding:6px 10px;font-size:12px">${S.showSchoolsTable===a.id?'Hide list':'View list'}</button>
+           </div>
+           <div style="font-size:12px;color:var(--grey-dk);line-height:1.6;margin-top:2px">${(()=>{const prev=schoolArr.slice(0,2).join(', ');return prev?esc(prev)+(schoolCount>2?' + '+(schoolCount-2)+' more':''):''})()}</div>
+           ${S.showSchoolsTable===a.id?renderSchoolsExpandableTable('act_'+a.id, schoolArr):''}`:''}
            ${parentDec&&parentDec.date?'<div style="font-size:12px;color:var(--grey);margin-top:6px">Logged on '+fmtDate(parentDec.date)+'</div>':''}
          </div>
 
@@ -2600,11 +2711,17 @@ function renderPipelineDrillModal(){
   if(kind === 'decisions'){
     title = 'Decisions Logged';
     subtitle = 'Tap an item to open it in the Activity Log.';
-    rows = decs.map(d => ({
-      id: d.id,
-      primary: d.decision_made || d.insight || d.data_viewed || '(Decision)',
-      meta: [ (d.details&&d.details.district)||'', (d.details&&d.details.schools)||'', d.date||'' ].filter(Boolean).join(' • ')
-    }));
+    rows = decs.map(d => {
+      const det = d.details || {};
+      return {
+        id: d.id,
+        primary: d.decision_made || d.insight || d.data_viewed || '(Decision)',
+        district: det.district || '',
+        schools: det.schools || '',
+        meta: [ det.district||'', d.date||'' ].filter(Boolean).join(' • '),
+        link: d.id
+      };
+    });
   } else if(kind === 'actions'){
     title = 'Actions Taken';
     subtitle = 'Tap an item to open it in the Activity Log.';
@@ -2614,7 +2731,9 @@ function renderPipelineDrillModal(){
       return {
         id: a.id,
         primary: a.action_taken || '(Action)',
-        meta: [ det.district||'', det.schools||'', a.status||'', a.target_date||'' ].filter(Boolean).join(' • '),
+        district: det.district || '',
+        schools: det.schools || '',
+        meta: [ det.district||'', a.status||'', a.target_date||'' ].filter(Boolean).join(' • '),
         link: a.decision_id
       };
     });
@@ -2628,7 +2747,9 @@ function renderPipelineDrillModal(){
       return {
         id: o.id,
         primary: o.description || '(Outcome)',
-        meta: [ det.district||'', det.schools||'', o.metric||'', o.value||'', o.date||'' ].filter(Boolean).join(' • '),
+        district: det.district || '',
+        schools: det.schools || '',
+        meta: [ det.district||'', o.metric||'', o.value||'', o.date||'' ].filter(Boolean).join(' • '),
         link: a.decision_id
       };
     });
@@ -2650,9 +2771,9 @@ function renderPipelineDrillModal(){
 
         <div style="padding:16px 20px">
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <button class="btn ${kind==='decisions'?'primary':'secondary'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px">Decisions (${decs.length})</button>
-            <button class="btn ${kind==='actions'?'primary':'secondary'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px">Actions (${actsAll.length})</button>
-            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px">Outcomes (${outsAll.length})</button>
+            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Decisions (${decs.length})</button>
+            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Actions (${actsAll.length})</button>
+            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes (${outsAll.length})</button>
           </div>
 
           <div style="background:#F7F9FC;border:1px solid #ECEFF1;border-radius:10px;overflow:hidden">
@@ -2660,6 +2781,17 @@ function renderPipelineDrillModal(){
               <div style="padding:12px 12px;border-bottom:1px solid #ECEFF1;cursor:pointer" onclick="openPipelineChain('${esc(r.link||r.id)}')">
                 <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.35">${esc(r.primary)}</div>
                 ${r.meta?`<div style="font-size:12px;color:var(--grey);margin-top:4px;line-height:1.35">${esc(r.meta)}</div>`:''}
+                ${(()=>{ 
+                    const arr = parseSchoolsList(r.schools||'');
+                    if(!arr.length) return '';
+                    const n = arr.length;
+                    const prev = arr.slice(0,2).join(', ');
+                    const enc = encodeURIComponent(r.schools||'');
+                    return `<div style="font-size:12px;color:var(--grey);margin-top:6px;line-height:1.35;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+                      <div><span style="font-weight:600;color:var(--grey-dk)">Schools:</span> ${n} selected${prev?` &middot; ${esc(prev)}${n>2?' + '+(n-2)+' more':''}`:''}</div>
+                      <button type="button" class="btn secondary" onclick="event.stopPropagation();openSchoolsListModal('Schools', '${enc}')" style="padding:4px 8px;font-size:11px;line-height:1.2">View list</button>
+                    </div>`;
+                  })()}
               </div>
             `).join('') : `<div style="padding:14px;color:var(--grey);font-size:13px">No items match your current filters.</div>`}
           </div>
