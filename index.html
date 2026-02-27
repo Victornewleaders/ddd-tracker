@@ -96,6 +96,12 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 
 /* Buttons */
 .btn{padding:10px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:.15s}
+.btn.secondary{background:#fff;border:1px solid #D0D7DE;color:#111827}
+.btn.secondary:hover{background:#F3F4F6}
+.btn.secondary:active{transform:translateY(1px)}
+.btn.pill{border-radius:999px;padding:10px 14px}
+.btn.pill.btn-sm{padding:8px 12px}
+
 .btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal-dk)}
 .btn-outline{background:#fff;color:var(--teal);border:1px solid var(--teal)}.btn-outline:hover{background:var(--teal-lt)}
 .btn-sm{padding:6px 14px;font-size:12px;border-radius:4px}
@@ -369,6 +375,11 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+// Compatibility: some Android WebViews do not expose a global `event` in inline handlers.
+// Provide a safe fallback so buttons remain responsive.
+if (typeof window.event === 'undefined') {
+  window.event = { stopPropagation: function(){}, preventDefault: function(){} };
+}
 // Logo and config will be injected
 const LOGO = "data:image/jpeg;base64,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";
 const SUPA_URL = 'https://bqznmupkqsxxlyiiqrys.supabase.co';
@@ -1819,7 +1830,7 @@ function renderDashboard() {
          ${hint}
        </div>
        <div style="font-size:12px">
-       ${clickable ? `<button type="button" class="btn secondary" onclick="event.stopPropagation();openPipelineDrill('${drillKey}')" style="padding:4px 8px;font-size:11px;line-height:1.2;margin-left:8px">View list</button>` : ''}<strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
+       ${clickable ? `<button type="button" class="btn secondary pill" onclick="openPipelineDrill(\'${drillKey}\', event)" style="padding:4px 8px;font-size:11px;line-height:1.2;margin-left:8px">Show list</button>` : ''}<strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
      </div>
      <div style="height:28px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
        <div style="height:100%;width:${width}%;background:${color};border-radius:6px;transition:width .5s;display:flex;align-items:center;padding-left:8px"></div>
@@ -1896,7 +1907,8 @@ function toggleImpactSchools(outId){
 function parseSchoolsList(str){
   return (str||'').split(',').map(s=>s.trim()).filter(Boolean);
 }
-function openSchoolsListModal(title, encodedSchools){
+function openSchoolsListModal(title, encodedSchools, evt){
+  if(evt && evt.stopPropagation) evt.stopPropagation();
   const existing = document.getElementById('schools-list-modal-overlay');
   if(existing) existing.remove();
   const schoolsStr = decodeURIComponent(encodedSchools||'');
@@ -1912,7 +1924,7 @@ function openSchoolsListModal(title, encodedSchools){
             <div style="font-size:16px;font-weight:800">${esc(title||'School list')}</div>
             <div style="font-size:12px;color:#B8DCDC;margin-top:4px">${arr.length} selected</div>
           </div>
-          <button class="btn secondary" style="padding:8px 10px" onclick="closeSchoolsListModal()">Close</button>
+          <button class="btn secondary pill" style="padding:8px 10px" onclick="closeSchoolsListModal()">Close</button>
         </div>
         <div style="padding:14px 18px">
           ${arr.length ? renderSchoolsExpandableTable('sch_modal', arr) : `<div style="padding:12px;color:var(--grey);font-size:13px">No schools were recorded for this item.</div>`}
@@ -2249,7 +2261,7 @@ ${tab==='impact'?`
             const key=(imp.id||('a'+imp.action_id+'_'+imp.date));
             return `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
               <div style="flex:1;min-width:200px">${prev?esc(prev)+(n>2?' + '+(n-2)+' more':''):esc(imp.schools||'')}${imp.district?' · '+esc(imp.district):''}</div>
-              ${n>2?`<button type="button" class="btn secondary btn-sm" onclick="toggleImpactSchools('${key}');event.stopPropagation()" style="padding:4px 8px;font-size:11px">${S.showImpactSchools===key?'Hide':'View'} schools</button>`:''}
+              ${n>2?`<button type="button" class="btn secondary pill btn-sm" onclick="toggleImpactSchools('${key}');event.stopPropagation()" style="padding:4px 8px;font-size:11px">${S.showImpactSchools===key?'Hide':'View'} schools</button>`:''}
               <div style="white-space:nowrap">${fmtDate(imp.date)}</div>
             </div>
             ${n>2 && S.showImpactSchools===key ? renderSchoolsExpandableTable('out_'+key, arr) : ''}`;
@@ -2319,7 +2331,7 @@ function renderDashboardUpdate(decs,acts,outs){
            ${det.district?'<div style="font-size:13px;color:var(--navy);margin-bottom:4px"><strong>District:</strong> '+esc(det.district)+'</div>':''}
            ${schoolCount>0?`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
              <div style="font-size:13px;color:var(--navy);margin-bottom:2px"><strong>Schools:</strong> ${schoolCount} selected</div>
-             <button type="button" class="btn secondary btn-sm" onclick="toggleSchoolsTable('${a.id}')" style="padding:6px 10px;font-size:12px">${S.showSchoolsTable===a.id?'Hide list':'View list'}</button>
+             <button type="button" class="btn secondary pill btn-sm" onclick="toggleSchoolsTable('${a.id}')" style="padding:6px 10px;font-size:12px">${S.showSchoolsTable===a.id?'Hide list':'View list'}</button>
            </div>
            <div style="font-size:12px;color:var(--grey-dk);line-height:1.6;margin-top:2px">${(()=>{const prev=schoolArr.slice(0,2).join(', ');return prev?esc(prev)+(schoolCount>2?' + '+(schoolCount-2)+' more':''):''})()}</div>
            ${S.showSchoolsTable===a.id?renderSchoolsExpandableTable('act_'+a.id, schoolArr):''}`:''}
@@ -2670,7 +2682,8 @@ function renderPolicyModal(){
 
 // UTILITIES 
 
-function openPipelineDrill(kind){
+function openPipelineDrill(kind, evt){
+  if(evt && evt.stopPropagation) evt.stopPropagation();
   // Guard against opening when nothing to show
   const decs = applyDashFilters(S.decisions || []);
   const decIds = new Set(decs.map(d => d.id));
@@ -2766,7 +2779,7 @@ function renderPipelineDrillModal(){
             <div style="font-size:16px;font-weight:800">${esc(title)}</div>
             ${subtitle?`<div style="font-size:12px;color:#B8DCDC;margin-top:4px">${esc(subtitle)}</div>`:''}
           </div>
-          <button class="btn secondary" style="padding:8px 10px" onclick="closePipelineDrill()">Close</button>
+          <button class="btn secondary pill" style="padding:8px 10px" onclick="closePipelineDrill()">Close</button>
         </div>
 
         <div style="padding:16px 20px">
@@ -2789,7 +2802,7 @@ function renderPipelineDrillModal(){
                     const enc = encodeURIComponent(r.schools||'');
                     return `<div style="font-size:12px;color:var(--grey);margin-top:6px;line-height:1.35;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
                       <div><span style="font-weight:600;color:var(--grey-dk)">Schools:</span> ${n} selected${prev?` &middot; ${esc(prev)}${n>2?' + '+(n-2)+' more':''}`:''}</div>
-                      <button type="button" class="btn secondary" onclick="event.stopPropagation();openSchoolsListModal('Schools', '${enc}')" style="padding:4px 8px;font-size:11px;line-height:1.2">View list</button>
+                      <button type="button" class="btn secondary pill" onclick="openSchoolsListModal('Schools', '${enc}', event)" style="padding:4px 8px;font-size:11px;line-height:1.2">Show list</button>
                     </div>`;
                   })()}
               </div>
