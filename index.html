@@ -124,6 +124,12 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-section-hdr h3{font-size:14px;font-weight:700;color:var(--navy)}
 .dash-section-body{padding:14px 16px}
 .dash-section-desc{font-size:12px;color:var(--grey-dk);line-height:1.6;margin-bottom:12px}
+.dash-subnav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0 12px;position:sticky;top:0;z-index:10;background:#F5F6FA;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.dash-subnav::-webkit-scrollbar{display:none}
+.dash-subnav button{flex-shrink:0;font-size:11px;font-weight:600;padding:6px 12px;border-radius:16px;border:1.5px solid #d0d4db;background:#fff;color:var(--grey-dk);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.dash-subnav button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.dash-subnav button:hover{border-color:var(--teal)}
+.dash-subnav .sn-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px;padding:0 4px}
 
 /* Barrier bars */
 .bar-chart{display:flex;flex-direction:column;gap:8px}
@@ -278,9 +284,6 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .tk-iv{background:var(--off);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
 .tk-iv:active{transform:scale(.995)}
 .tk-iv.sel{border-color:var(--teal);background:#fff}
-.tk-peer{padding:12px 0;border-bottom:1px solid #f3f2f1;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.tk-peer:last-child{border-bottom:none}
-.tk-sort{padding:4px 8px;border-radius:4px;border:none;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
 .tk-filt{padding:4px 10px;border-radius:4px;border:1px solid #e1dfdd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;background:#fff;transition:.15s}
 .tk-filt.on{border-color:var(--teal);background:var(--teal-lt);color:var(--teal-dk)}
 .tk-ctx{background:linear-gradient(135deg,var(--teal-lt),var(--green-lt));border:1px solid #B2DFDB;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:center;margin-bottom:14px}
@@ -328,7 +331,26 @@ const INTERVENTION_TRIGGERS = ["Learners below 30% (not passing)","Learners at 3
 
 // PAM duty alignment (lightweight — what mandate does this action fulfil?)
 const DDD_TOOLS = ["School Dashboard","Learner Chart Report","Promotion by Grade","Term to Date","FET Promotion Profiles","Senior Phase Promotion Profiles","Intermediate Phase Promotion Profiles","Term 4 Promotion Predictions","School Achievement Report","Grade 6 Performance Insights","Curriculum Overview","Management & Governance Overview","Over-age Learners","Educator Info","Other"];
-const SUBJECTS = ["Mathematics","Mathematical Literacy","English HL","English FAL","Afrikaans HL","Afrikaans FAL","IsiZulu","IsiXhosa","Sepedi","Setswana","Sesotho","Life Sciences","Physical Sciences","Natural Sciences","Social Sciences","EMS","Business Studies","Accounting","Economics","Life Orientation","Life Skills","Technology","Geography","History","CAT","Tourism","Agricultural Sciences"];
+const SUBJECTS = [
+ "Mathematics","Mathematical Literacy","Technical Mathematics","Technical Sciences",
+ "English HL","English FAL","Afrikaans HL","Afrikaans FAL",
+ "IsiZulu HL","IsiZulu FAL","IsiXhosa HL","IsiXhosa FAL",
+ "Sepedi HL","Sepedi FAL","Setswana HL","Setswana FAL",
+ "Sesotho HL","Sesotho FAL","SiSwati HL","SiSwati FAL",
+ "IsiNdebele HL","IsiNdebele FAL","Tshivenda HL","Tshivenda FAL",
+ "Xitsonga HL","Xitsonga FAL","SA Sign Language HL",
+ "Life Sciences","Physical Sciences","Natural Sciences","Social Sciences",
+ "Accounting","Business Studies","Economics","EMS",
+ "Geography","History","Life Orientation","Life Skills",
+ "Technology","Information Technology","CAT",
+ "Engineering Graphics and Design","Civil Technology","Electrical Technology","Mechanical Technology",
+ "Agricultural Sciences","Agricultural Management Practices","Agricultural Technology",
+ "Tourism","Hospitality Studies","Consumer Studies",
+ "Visual Arts","Dramatic Arts","Dance Studies","Design","Music",
+ "Religion Studies","Marine Sciences",
+ "Creative Arts",
+ "Other"
+];
 const GRADES = ["R","1","2","3","4","5","6","7","8","9","10","11","12"];
 const SIP_FOCUS_AREAS = ["Reading and literacy","Maths and numeracy","Improving specific subjects","Learner attendance and keeping learners in school","Covering the curriculum on time","Tests, exams and marking","Educator training and mentoring","School leadership and management","Working with parents and the community"];
 const SUPPORT_NEEDED = ["More visits from subject advisors","A specialist to help with a specific subject","Help for progressed learners","Mentoring for the principal or HoDs","Staffing problem \u2014 needs to go to HR/PED","Learning materials and resources","Learner welfare or psychosocial support","Building or infrastructure problem","On track \u2014 keep doing what we're doing"];
@@ -339,16 +361,6 @@ const CTX_LEARNERS = ["No major concerns","High absenteeism","Welfare concerns",
 const DDD_DASHBOARD_URL = 'https://app.powerbi.com/view?r=eyJrIjoiOGNjNGRhNjctOGE3OC00OTljLThlMzYtMTNhYjk3YThlZjQ3IiwidCI6IjQwMzBiNTFhLWJlNDQtNDM3OS1hMTAzLWFhMzE4OGUzMjFhMiJ9';
 
 // TOOLKIT DATA 
-const RD = {
- entity:{circuit:"Ane Circuit 5",district:"Alfred Nzo East",province:"Eastern Cape",school:"School A",quintile:1},
- learners:{total:2748,gr10:1073,gr11:897,gr12:778},
- promotion:{promoted:1697,notPromoted:1051,rate:61.8},
- attendance:{total:2748,zeroAbsent:1446,low:1055,medium:217,high:29,chronic:1,avgDays:1.7},
- performance:{avgMark:46.2,below30:206,range30_39:498,range40_49:993,above50:1051},
- fetCriteria:{metAll:1697,missedOne:441,missedMultiple:610,profiles:{levelUp:817,other:500,atRisk30:285,atRiskHL:95,dna30:333,dnaHL:84,dnaMultiple:561,dnaHL30:49,dna40:24}},
- predictions:{promTrue:1051,promFalse:919,noData:778}
-};
-
 const TK_REPORTS = [
  {id:"lcr",name:"Learner Chart Report",icon:"LCR",color:"#0B8E8D",desc:"Profile every learner by attendance, marks, promotion status, over-age status, and subject-level achievement — with downloadable learner-level data",bestFor:["Identify at-risk learners by name","Attendance and absence profiling","Over-age learner tracking","Subject-level distinctions, near-distinctions, and near-failures","Filtering by promotion status, colour-coded marks, or performance bands"],path:"DDD Dashboard → Reports tab → Select Phase, Grade & Subject → Click 'Learner Chart'",dataPoints:["Summary: Gender split, Term Promotion %, Over-Age %, Failing 2+ Subjects %","Circuit/school breakdown table: Learner Count, %Female, %Male, Term Promotion, Over-Age, Failing 2+ per sub-entity","Learners Not Promoted: % not achieving in Home Language, FAL, Numeracy, and 2+ subjects","Subject Achievement Insights: Distinctions (80-100%), Near Distinctions (75-79%), Near Failures (less than 5% from pass) per subject","Downloadable learner-level data: Days Absent, Avg Report Mark, Failures, Distinctions, colour-coded subject marks (green/yellow/red)"],realInsight:"At School A, 704 learners (26%) score below 40%. Downloading the Learner Chart and sorting by 'Days Absent' reveals 30 learners with 16+ days absent AND below 40% — the highest-priority group for intervention. Filtering by colour on subject columns instantly shows which subjects are pulling learners down.",policyLink:"SA Schools Act"},
  {id:"fpc",name:"FET Promotion Criteria Profiles",icon:"FPC",color:"#E8952E",desc:"See exactly which promotion criteria learners are meeting or missing",bestFor:["Profile at-risk FET learners","Identify 'one criteria away' learners","Subject-specific gap analysis"],path:"DDD Dashboard → Select School → FET Promotion Criteria Profiles",dataPoints:["Achievement category","Criteria profile","2nd & 5th highest subject","Home Language level"],realInsight:"441 learners at School A (16%) missed just ONE promotion criteria. Of these, 333 need just 30%+ in one more subject — the lowest lift interventions with highest impact."},
@@ -359,21 +371,15 @@ const TK_REPORTS = [
 ];
 
 const TK_INTERVENTIONS = [
- {id:1,name:"Attendance Monitoring Plan",category:"Attendance",difficulty:"Quick Win",timeToImpact:"2-4 weeks",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Learner Attendance & Term to Date Walkthrough",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify chronically absent learners via DDD Learner Chart, establish daily tracking, and trigger parent engagement at threshold days.",steps:["DDD Dashboard → Reports tab → Select Phase → Learner Chart → Download Data → Sort by 'Days Absent' descending","Flag learners with 10+ days absent","Set up daily register monitoring by class teacher","Trigger parent meeting at 15+ days","Weekly report to SMT on attendance recovery"],effectiveness:78,usedBy:42,provinces:["EC","KZN","LP"],comparableResults:"In Mopani East, 3 schools reduced chronic absenteeism by 34% in one term using this approach."},
- {id:2,name:"Targeted Learner Support",category:"Academic Support",difficulty:"Core",timeToImpact:"1 term",dddReports:["fpc","lcr"],policyRef:"Promotion Policy",webinar:{name:"Learner Profiling Using FET Promotion Criteria Profiles",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Profile learners using FET Promotion Criteria data, group by achievement category, then provide differentiated support — focusing maximum effort on learners who missed one criteria (highest return on effort).",steps:["Download FET Promotion Criteria data from DDD Dashboard","Profile and group learners: 'Level Up' | 'At Risk' | 'Missed One' | 'Missed Multiple'","Assign intervention intensity per group — most support to 'Missed One' (highest ROI)","Deploy targeted support: extra lessons, tailored materials, differentiated teaching","Track movement between groups termly to measure progress"],effectiveness:85,usedBy:67,provinces:["GP","NW","FS","EC"],comparableResults:"In Lejweleputswa, School B improved Gr10 Maths from 41% to 64% after 6 weeks of targeted support based on learner profiling."},
- {id:3,name:"Saturday / Extra Classes Programme",category:"Academic Support",difficulty:"Core",timeToImpact:"1-2 terms",dddReports:["t4p","fpc","lcr"],policyRef:"CAPS",webinar:{name:"Using Term 4 Promotion Predictions for Targeted Support",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Data-driven extra classes targeting predicted non-promoted learners in specific subjects identified via DDD predictions.",steps:["Use Term 4 Predictions to identify FALSE-predicted learners","Cross-reference with FET Profiles for subject gaps","Schedule subject-specific Saturday sessions (08:00-12:00)","Track attendance at each session","Monitor prediction shifts after Term 2 data submission"],effectiveness:72,usedBy:38,provinces:["FS","GP","MP","KZN"],comparableResults:"520 learners in Lejweleputswa Saturday programme; monitoring attendance after 3 sessions showed 82% retention."},
- {id:4,name:"SBA-Exam Alignment Audit",category:"Assessment Quality",difficulty:"Advanced",timeToImpact:"1 term",dddReports:["sar"],policyRef:"CAPS Assessment",webinar:{name:"School Achievement Report Deep Dive",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify schools with 20%+ SBA-Exam gap using School Achievement Report, then moderate assessment tasks.",steps:["Pull School Achievement Report → compare SBA vs Exam marks","Flag subjects with 20%+ gap","Subject advisors to moderate SBA tasks before administration","Conduct lesson observations for assessment alignment","Re-check gap after next formal assessment"],effectiveness:68,usedBy:23,provinces:["KZN","GP","EC"],comparableResults:"In Pinetown, 4 schools with 20%+ Maths Lit SBA-Exam gap reduced it to <8% after moderation intervention."},
- {id:5,name:"Underperforming School Rapid Response",category:"School Support",difficulty:"Advanced",timeToImpact:"1-2 terms",dddReports:["g6p","sar","lcr"],policyRef:"Circular D3",webinar:{name:"Identifying and Supporting Underperforming Schools with DDD",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Comprehensive support for schools meeting Circular D3 underperformance criteria or Section 58B.",steps:["Use Grade 6 Performance Insights → identify 'True' underperforming schools","Or use School Achievement → identify secondary schools with <70% NSC pass rate","Deploy circuit manager + subject advisor team","Co-develop Subject Improvement Plan with school","Fortnightly monitoring visits for one term"],effectiveness:74,usedBy:31,provinces:["GP","NW"],comparableResults:"23 of 26 targeted districts exceeded 85% NSC pass rate. 4.9% improvement in NSC pass rate among participating schools."},
- {id:6,name:"Parent Engagement Campaign",category:"Community",difficulty:"Quick Win",timeToImpact:"Ongoing",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Using Learner Chart Data for Parent Conversations",path:"DDD Dashboard → DDD Learning Hub → Tip-Sheets and Videos"},description:"Engage parents of learners with poor attendance or declining marks using DDD evidence in conversations.",steps:["DDD Dashboard → Reports tab → Learner Chart → Download Data → Filter for learners with declining marks or high absence","Prepare individual learner evidence sheets","Schedule parent meetings (individual or group)","Share DDD data visually — show attendance and marks side by side","Agree on home-support commitments with follow-up date"],effectiveness:65,usedBy:54,provinces:["EC","KZN","LP","MP","GP","FS","NW","NC"],comparableResults:"DDD Case Study: 52% of school-based actors reported engaging parents as a top action taken using DDD data."}
+ {id:1,name:"Attendance Monitoring Plan",category:"Attendance",difficulty:"Quick Win",timeToImpact:"2-4 weeks",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Learner Attendance & Term to Date Walkthrough",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify chronically absent learners via DDD Learner Chart, establish daily tracking, and trigger parent engagement at threshold days.",steps:["DDD Dashboard → Reports tab → Select Phase → Learner Chart → Download Data → Sort by 'Days Absent' descending","Flag learners with 10+ days absent","Set up daily register monitoring by class teacher","Trigger parent meeting at 15+ days","Weekly report to SMT on attendance recovery"]},
+ {id:2,name:"Targeted Learner Support",category:"Academic Support",difficulty:"Core",timeToImpact:"1 term",dddReports:["fpc","lcr"],policyRef:"Promotion Policy",webinar:{name:"Learner Profiling Using FET Promotion Criteria Profiles",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Profile learners using FET Promotion Criteria data, group by achievement category, then provide differentiated support — focusing maximum effort on learners who missed one criteria (highest return on effort).",steps:["Download FET Promotion Criteria data from DDD Dashboard","Profile and group learners: 'Level Up' | 'At Risk' | 'Missed One' | 'Missed Multiple'","Assign intervention intensity per group — most support to 'Missed One' (highest ROI)","Deploy targeted support: extra lessons, tailored materials, differentiated teaching","Track movement between groups termly to measure progress"]},
+ {id:3,name:"Saturday / Extra Classes Programme",category:"Academic Support",difficulty:"Core",timeToImpact:"1-2 terms",dddReports:["t4p","fpc","lcr"],policyRef:"CAPS",webinar:{name:"Using Term 4 Promotion Predictions for Targeted Support",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Data-driven extra classes targeting predicted non-promoted learners in specific subjects identified via DDD predictions.",steps:["Use Term 4 Predictions to identify FALSE-predicted learners","Cross-reference with FET Profiles for subject gaps","Schedule subject-specific Saturday sessions (08:00-12:00)","Track attendance at each session","Monitor prediction shifts after Term 2 data submission"]},
+ {id:4,name:"SBA-Exam Alignment Audit",category:"Assessment Quality",difficulty:"Advanced",timeToImpact:"1 term",dddReports:["sar"],policyRef:"CAPS Assessment",webinar:{name:"School Achievement Report Deep Dive",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify schools with 20%+ SBA-Exam gap using School Achievement Report, then moderate assessment tasks.",steps:["Pull School Achievement Report → compare SBA vs Exam marks","Flag subjects with 20%+ gap","Subject advisors to moderate SBA tasks before administration","Conduct lesson observations for assessment alignment","Re-check gap after next formal assessment"]},
+ {id:5,name:"Underperforming School Rapid Response",category:"School Support",difficulty:"Advanced",timeToImpact:"1-2 terms",dddReports:["g6p","sar","lcr"],policyRef:"Circular D3",webinar:{name:"Identifying and Supporting Underperforming Schools with DDD",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Comprehensive support for schools meeting Circular D3 underperformance criteria or Section 58B.",steps:["Use Grade 6 Performance Insights → identify 'True' underperforming schools","Or use School Achievement → identify secondary schools with <70% NSC pass rate","Deploy circuit manager + subject advisor team","Co-develop Subject Improvement Plan with school","Fortnightly monitoring visits for one term"]},
+ {id:6,name:"Parent Engagement Campaign",category:"Community",difficulty:"Quick Win",timeToImpact:"Ongoing",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Using Learner Chart Data for Parent Conversations",path:"DDD Dashboard → DDD Learning Hub → Tip-Sheets and Videos"},description:"Engage parents of learners with poor attendance or declining marks using DDD evidence in conversations.",steps:["DDD Dashboard → Reports tab → Learner Chart → Download Data → Filter for learners with declining marks or high absence","Prepare individual learner evidence sheets","Schedule parent meetings (individual or group)","Share DDD data visually — show attendance and marks side by side","Agree on home-support commitments with follow-up date"]}
 ];
 
-const TK_PEERS = [
- {entity:"Ane Circuit 1",district:"Alfred Nzo East",learners:6442,promoRate:72,topIntervention:"Targeted Learner Support",result:"+8% promotion rate",context:"Similar quintile 1, rural FET schools"},
- {entity:"Ane Circuit 3",district:"Alfred Nzo East",learners:3959,promoRate:74,topIntervention:"Saturday / Extra Classes Programme",result:"+6% Maths pass rate",context:"Comparable class sizes and staffing"},
- {entity:"Ane Circuit 4",district:"Alfred Nzo East",learners:2868,promoRate:77,topIntervention:"Attendance Monitoring Plan",result:"34% reduction in chronic absence",context:"Similar learner demographics"},
- {entity:"Mopani East (LP)",district:"Mopani East",learners:4200,promoRate:69,topIntervention:"Underperforming School Rapid Response",result:"6.2% improvement in NSC pass rate",context:"Rural, language barrier context"},
- {entity:"John Taolo Gaetsewe (NC)",district:"JTG",learners:3400,promoRate:65,topIntervention:"SBA-Exam Alignment Audit",result:"SBA-Exam gap reduced to <8% at 3 schools",context:"Vacant posts, similar challenges"}
-];
+const TK_PEERS = []; // Will populate from captured data as officials log activities
 
 const TK_POLICIES = {
  "Promotion Policy":{full:"National Policy Pertaining to Programme and Promotion Requirements (NCS Grades R-12)",criteria:["FET (Gr 10-12): 40% in 3 subjects (inc HL) + 30% in 3 subjects","Senior Phase (Gr 7-9): Level 4 in HL, Level 3 in FAL + Maths + 3 others, Level 2 in 2 others","Intermediate (Gr 4-6): Level 4 in HL, Level 3 in FAL + Maths + 2 others","Foundation (Gr R-3): Level 4 in HL, Level 3 in FAL + Maths","SBA Weightings: Foundation 100% | Intermediate 75/25 | Senior 40/60 | FET 25/75","Retention: Max once per phase (4 years max)","Condonation: Max 2% in 1 subject (Gr 12 only)","Progressed learners MUST receive support in the next grade"]},
@@ -396,14 +402,14 @@ const S = {
  saving:false, submitted:false, expandedSchool:null,
  tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
  dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
- dashScope:'My Activities', dashPeriod:'All Time',
+ dashScope:'My Activities', dashPeriod:'All Time', dashTab:'overview',
  ddd_last_checked:(()=>{try{return localStorage.getItem('ddd_last_checked')||''}catch(e){return''}})(),
  dIn:{school:'',district:'',grade:'',subject:'',passRate:'',learnersAffected:'',detail:''},
  openSections:{1:false,2:false,3:false,4:false},
  f: {
  province:'',district:'',circuit:'',schools:'',_schoolQ:'',_schoolDDOpen:false,term:'Term 1 2026',activity_date:today(),
  activity_type:'',intervention_theme:'',subjects:[],grades:[],description:'',
- ddd_used:'',ddd_reports:[],ddd_access_date:'',ddd_dashboard_confirmed:'',data_insight:'',decision_type:'',action_type:'',action_other:'',
+ ddd_used:'',ddd_reports:[],ddd_access_date:'',ddd_dashboard_confirmed:'',data_insight:'',decision_type:'',decision_other:'',action_type:'',action_other:'',activity_type_other:'',intervention_theme_other:'',official_role_other:'',official_specialisation_other:'',subjects_other:'',
  ctx_staffing:[],ctx_resources:[],ctx_learners:[],ctx_notes:'',
  learners_reached:'',follow_up:false,follow_up_desc:'',
  doc_url:'',doc_name:'',
@@ -462,6 +468,7 @@ async function checkAuth() {
        if (official.district) S.f.district = official.district;
        S.authState = 'ready';
        S.loading = true;
+       resetInactivityTimer();
        render();
        await loadAll();
        return;
@@ -540,6 +547,7 @@ async function handleOtpSubmit() {
    S.authState = 'ready';
    S.gateError = '';
    S.gateLoading = false;
+   resetInactivityTimer();
    S.loading = true;
    render();
    await loadAll();
@@ -558,6 +566,7 @@ async function handleGateSubmit() {
 }
 
 function logout() {
+ if (_inactivityTimer) { clearTimeout(_inactivityTimer); _inactivityTimer = null; }
  try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
  S.authState = 'gate';
  S.official = { full_name:'', role:'', province:'', district:'', email:'' };
@@ -573,6 +582,24 @@ function logout() {
  render();
  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// INACTIVITY TIMEOUT (30 minutes)
+const INACTIVITY_LIMIT_MS = 30 * 60 * 1000;
+let _inactivityTimer = null;
+function resetInactivityTimer() {
+  if (_inactivityTimer) clearTimeout(_inactivityTimer);
+  if (S.authState !== 'ready') return;
+  _inactivityTimer = setTimeout(() => {
+    if (S.authState === 'ready') {
+      logout();
+      S.gateError = 'You were signed out due to inactivity.';
+      render();
+    }
+  }, INACTIVITY_LIMIT_MS);
+}
+['click','keydown','scroll','touchstart','mousemove'].forEach(evt =>
+  document.addEventListener(evt, resetInactivityTimer, { passive: true })
+);
 
 // STATUS UPDATE & OUTCOME RECORDING
 async function updateActionStatus(actionId, newStatus) {
@@ -963,14 +990,14 @@ function renderFormStep1(){
     <div class="field-row"><div class="field"><label>Circuit <span style="font-weight:400;color:var(--grey)">(optional)</span></label><select onchange="S.f.circuit=this.value;S.f.schools='';S.f._schoolQ='';render()"><option value="">Select circuit</option>${(CIRCUITS_MAP[S.f.district]||[]).map(c=>`<option ${S.f.circuit===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
     <div class="field"><label>School(s)<span class="req">*</span></label><div class="hint">Select one or more schools${S.f.circuit?' in '+esc(S.f.circuit):S.f.district?' in '+esc(S.f.district):''}</div>${schoolPickerHTML()}</div>
     <div class="field-row"><div class="field"><label>Your name<span class="req">*</span></label><input type="text" placeholder="e.g. Ms F Moshoeshoe" value="${esc(S.f.official_name)}" oninput="S.f.official_name=this.value"></div><div class="field"><label>Email address<span class="req">*</span></label><input type="email" placeholder="e.g. name@education.gov.za" value="${esc(S.f.official_email)}" oninput="S.f.official_email=this.value"></div></div>
-    <div class="field-row"><div class="field"><label>Designation<span class="req">*</span></label><select onchange="S.f.official_role=this.value"><option value="">Select...</option>${['Chief Director','Chief Education Specialist','Deputy Chief Education Specialist','Deputy Director General','Deputy Minister','Director','Director General','Member','Senior Education Specialist','Circuit Manager','Subject Advisor','Cluster Lead','Provincial Manager','District Director','Principal','Deputy Principal','HoD','Other'].map(r=>'<option '+(S.f.official_role===r?'selected':'')+'>'+r+'</option>').join('')}</select></div><div class="field"><label>Specialisation<span class="req">*</span></label><select onchange="S.f.official_specialisation=this.value"><option value="">Select...</option>${['Corporate Services','Curriculum','DDD Project Role','Education Partners','EMIS & IT','Management & Governance'].map(s=>'<option '+(S.f.official_specialisation===s?'selected':'')+'>'+s+'</option>').join('')}</select></div></div>
+    <div class="field-row"><div class="field"><label>Designation<span class="req">*</span></label><select onchange="S.f.official_role=this.value;if(this.value!=='Other')S.f.official_role_other='';render()"><option value="">Select...</option>${['Chief Director','Chief Education Specialist','Deputy Chief Education Specialist','Deputy Director General','Deputy Minister','Director','Director General','Member','Senior Education Specialist','Circuit Manager','Subject Advisor','Cluster Lead','Provincial Manager','District Director','Principal','Deputy Principal','HoD','Other'].map(r=>'<option '+(S.f.official_role===r?'selected':'')+'>'+r+'</option>').join('')}</select>${S.f.official_role==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please specify your designation..." value="'+esc(S.f.official_role_other)+'" oninput="S.f.official_role_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div><div class="field"><label>Specialisation<span class="req">*</span></label><select onchange="S.f.official_specialisation=this.value;if(this.value!=='Other')S.f.official_specialisation_other='';render()"><option value="">Select...</option>${['Corporate Services','Curriculum','DDD Project Role','Education Partners','EMIS & IT','Management & Governance','Other'].map(s=>'<option '+(S.f.official_specialisation===s?'selected':'')+'>'+s+'</option>').join('')}</select>${S.f.official_specialisation==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please specify your specialisation..." value="'+esc(S.f.official_specialisation_other)+'" oninput="S.f.official_specialisation_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div></div>
     <div style="text-align:right;margin-top:12px"><button class="btn btn-teal" onclick="S.f.formStep=1;render()">Next &rarr;</button></div>
   </div></div>`;
 }
 function renderFormStep2(){
   return `<div class="section fade-in"><div class="sec-hdr green" style="border-color:var(--green)"><div><h2>2. What Happened</h2><p>What type of activity and which subjects/grades?</p></div></div><div class="sec-body">
-    <div class="field-row"><div class="field"><label>Activity Type<span class="req">*</span></label><select onchange="S.f.activity_type=this.value"><option value="">Select...</option>${ACTIVITY_TYPES.map(t=>`<option ${S.f.activity_type===t?'selected':''}>${t}</option>`).join('')}</select></div><div class="field"><label>Intervention Theme</label><select onchange="S.f.intervention_theme=this.value"><option value="">Select...</option>${THEMES.map(t=>`<option ${S.f.intervention_theme===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
-    <div class="field"><label>Subject(s)</label><div class="hint">Tap all that apply</div><div class="tags">${SUBJECTS.map(s=>{const se=s.replace(/'/g,"\\\'");return`<label class="tag"><input type="checkbox" ${S.f.subjects.includes(s)?'checked':''} onchange="togArr(S.f.subjects,'${se}',this.checked)"><span>${s}</span></label>`}).join('')}</div></div>
+    <div class="field-row"><div class="field"><label>Activity Type<span class="req">*</span></label><select onchange="S.f.activity_type=this.value;if(this.value!=='Other')S.f.activity_type_other='';render()"><option value="">Select...</option>${ACTIVITY_TYPES.map(t=>`<option ${S.f.activity_type===t?'selected':''}>${t}</option>`).join('')}</select>${S.f.activity_type==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe the activity type..." value="'+esc(S.f.activity_type_other)+'" oninput="S.f.activity_type_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div><div class="field"><label>Intervention Theme</label><select onchange="S.f.intervention_theme=this.value;if(this.value!=='Other')S.f.intervention_theme_other='';render()"><option value="">Select...</option>${THEMES.map(t=>`<option ${S.f.intervention_theme===t?'selected':''}>${t}</option>`).join('')}</select>${S.f.intervention_theme==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe the theme..." value="'+esc(S.f.intervention_theme_other)+'" oninput="S.f.intervention_theme_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div></div>
+    <div class="field"><label>Subject(s)</label><div class="hint">Tap all that apply</div><div class="tags">${SUBJECTS.map(s=>{const se=s.replace(/'/g,"\\\'");return`<label class="tag"><input type="checkbox" ${S.f.subjects.includes(s)?'checked':''} onchange="togArr(S.f.subjects,'${se}',this.checked);render()"><span>${s}</span></label>`}).join('')}</div>${S.f.subjects.includes('Other')?'<div style="margin-top:6px"><input type="text" placeholder="Please specify the subject..." value="'+esc(S.f.subjects_other)+'" oninput="S.f.subjects_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div>
     <div class="field"><label>Grade(s)</label><div class="hint">Tap all that apply</div><div class="tags">${GRADES.map(g=>`<label class="tag"><input type="checkbox" ${S.f.grades.includes(g)?'checked':''} onchange="togArr(S.f.grades,'${g}',this.checked)"><span>Gr ${g}</span></label>`).join('')}</div></div>
     <div class="field"><label>SIP Focus Area(s) <span style="font-weight:400;color:var(--grey)">(optional)</span></label><div class="source-tag">From: School Improvement Plan</div><div class="hint">Select all areas this activity addresses</div><div class="checkbox-grp">${SIP_FOCUS_AREAS.map(a=>{const ae=a.replace(/'/g,"\\\'");return`<label><input type="checkbox" ${S.f.sip_focus_areas.includes(a)?'checked':''} onchange="togArr(S.f.sip_focus_areas,'${ae}',this.checked)"><span>${a}</span></label>`}).join('')}</div></div>
     <div class="field"><label>Brief description</label><div class="hint">1-2 lines: what happened?</div><textarea rows="2" placeholder="e.g. Modelled fractions teaching strategy with 3 Foundation Phase educators..." oninput="S.f.description=this.value">${esc(S.f.description)}</textarea></div>
@@ -1081,7 +1108,7 @@ function renderFormStep3(){
     ${S.f.ddd_used==='no'?`<div style="background:#f8f9fa;border-radius:8px;padding:12px 14px;margin:8px 0"><div style="font-size:12px;color:var(--grey-dk);line-height:1.6">No problem \u2014 not every activity needs DDD data. But next time, try opening the dashboard first. Even a quick look can show you which learners or schools need your help most.</div><a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);font-size:12px;font-weight:600;text-decoration:none;margin-top:6px">Save the DDD Dashboard link for next time \u2192</a></div>`:''}
     ${pc?`<div style="background:var(--blue-lt);border-radius:8px;padding:10px 14px;margin:8px 0;border-left:3px solid var(--blue)"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px">Promotion criteria \u2014 ${phase} Phase (${pc.phases})</div><div style="font-size:9px;color:var(--grey)">${pc.ref}</div></div><div style="margin-top:4px;font-size:11px;color:#37474F;line-height:1.6">${pc.criteria.join(' \u00b7 ')}</div><div style="font-size:10px;color:var(--grey);margin-top:4px">${pc.sba} \u00b7 ${pc.retention}${pc.condonation?' \u00b7 '+pc.condonation:''}</div></div>`:''}
     <div class="field"><label>What made you decide to act? <span style="font-weight:400;color:var(--grey)">(optional)</span></label><div class="hint">What did you see in the data that made you step in?</div><select onchange="S.f.intervention_trigger=this.value;if(this.value!=='Other')S.f.intervention_trigger_other='';render()"><option value="">Select...</option>${INTERVENTION_TRIGGERS.map(t=>'<option '+(S.f.intervention_trigger===t?'selected':'')+'>'+t+'</option>').join('')}</select>${S.f.intervention_trigger==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe what made you act..." value="'+esc(S.f.intervention_trigger_other)+'" oninput="S.f.intervention_trigger_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div>
-    <div class="field-row"><div class="field"><label>Decision made</label><div class="hint">What did you decide to do based on the data? This is the strategic call you made.</div><select onchange="S.f.decision_type=this.value"><option value="">Select...</option>${DECISIONS.map(d=>'<option '+(S.f.decision_type===d?'selected':'')+'>'+d+'</option>').join('')}</select></div><div class="field"><label>Action taken<span class="req">*</span></label><div class="hint">What did you actually do on the ground to carry out that decision?</div><select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>'<option '+(S.f.action_type===a?'selected':'')+'>'+a+'</option>').join('')}</select></div></div>
+    <div class="field-row"><div class="field"><label>Decision made</label><div class="hint">What did you decide to do based on the data? This is the strategic call you made.</div><select onchange="S.f.decision_type=this.value;if(this.value!=='Other')S.f.decision_other='';render()"><option value="">Select...</option>${DECISIONS.map(d=>'<option '+(S.f.decision_type===d?'selected':'')+'>'+d+'</option>').join('')}</select>${S.f.decision_type==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe the decision..." value="'+esc(S.f.decision_other)+'" oninput="S.f.decision_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div><div class="field"><label>Action taken<span class="req">*</span></label><div class="hint">What did you actually do on the ground to carry out that decision?</div><select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>'<option '+(S.f.action_type===a?'selected':'')+'>'+a+'</option>').join('')}</select></div></div>
     ${S.f.action_type==='Other'?`<div class="field"><label>Describe action</label><textarea rows="2" placeholder="Describe..." oninput="S.f.action_other=this.value">${esc(S.f.action_other)}</textarea></div>`:''}
     
     <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-outline" onclick="S.f.formStep=1;render()">&larr; Back</button><button class="btn btn-teal" onclick="S.f.formStep=3;render()">Next &rarr;</button></div>
@@ -1089,9 +1116,9 @@ function renderFormStep3(){
 }
 function renderFormStep4(){
   return `<div class="section fade-in"><div class="sec-hdr orange" style="border-color:var(--orange)"><div><h2>4. Context & Follow-up</h2><p>School context, support needs, and next steps</p></div></div><div class="sec-body">
-    <div class="field"><label>What Support Do These Schools Need?</label><div class="hint">Select all that apply \u2014 helps district officials prioritise and allocate resources</div><div class="checkbox-grp">${SUPPORT_NEEDED.map(s=>{const se=s.replace(/'/g,"\\\'").replace(/\u2014/g,'\u2014');return`<label><input type="checkbox" ${S.f.support_needed.includes(s)?'checked':''} onchange="togArr(S.f.support_needed,'${se}',this.checked)"><span>${s}</span></label>`}).join('')}</div></div>
+    <div class="field"><label>What Support Do These Schools Need?</label><div class="hint">Select all that apply \u2014 helps district officials prioritise and allocate resources</div><div class="checkbox-grp">${SUPPORT_NEEDED.map(s=>{const se=s.replace(/'/g,"\\\'").replace(/\u2014/g,'\u2014');return`<label><input type="checkbox" ${S.f.support_needed.includes(s)?'checked':''} onchange="togCtx(S.f.support_needed,'${se}',this.checked,'support')"><span>${s}</span></label>`}).join('')}</div></div>
     <div class="field"><label>How Much Support Is Needed? <span style="font-weight:400;color:var(--grey)">(optional)</span></label><div class="hint">How much help does this school need?</div><div class="radio-grp"><label><input type="radio" name="supportLvl" value="light" ${S.f.support_level==='light'?'checked':''} onchange="S.f.support_level='light';render()"><span><strong>Light touch</strong> \u2014 school is coping, just needs a check-in now and then</span></label><label><input type="radio" name="supportLvl" value="regular" ${S.f.support_level==='regular'?'checked':''} onchange="S.f.support_level='regular';render()"><span><strong>Regular support</strong> \u2014 needs regular visits, e.g. every two weeks</span></label><label><input type="radio" name="supportLvl" value="intensive" ${S.f.support_level==='intensive'?'checked':''} onchange="S.f.support_level='intensive';render()"><span><strong>Intensive support</strong> \u2014 serious challenges, needs a team effort from multiple people</span></label></div></div>
-    <div class="field"><label>School context</label><div class="hint">Tap all that apply across schools visited</div><div style="margin-bottom:8px"><span class="tag-grp-title">Staffing:</span><div class="tags" style="display:inline-flex">${CTX_STAFFING.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_staffing.includes(s)?'checked':''} onchange="togArr(S.f.ctx_staffing,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div></div><div style="margin-bottom:8px"><span class="tag-grp-title">Resources:</span><div class="tags" style="display:inline-flex">${CTX_RESOURCES.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_resources.includes(s)?'checked':''} onchange="togArr(S.f.ctx_resources,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div></div><div><span class="tag-grp-title">Learners:</span><div class="tags" style="display:inline-flex">${CTX_LEARNERS.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_learners.includes(s)?'checked':''} onchange="togArr(S.f.ctx_learners,'${s}',this.checked)"><span>${s}</span></label>`).join('')}</div></div></div>
+    <div class="field"><label>School context</label><div class="hint">Tap all that apply across schools visited</div><div style="margin-bottom:8px"><span class="tag-grp-title">Staffing:</span><div class="tags" style="display:inline-flex">${CTX_STAFFING.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_staffing.includes(s)?'checked':''} onchange="togCtx(S.f.ctx_staffing,'${s}',this.checked,'staffing')"><span>${s}</span></label>`).join('')}</div></div><div style="margin-bottom:8px"><span class="tag-grp-title">Resources:</span><div class="tags" style="display:inline-flex">${CTX_RESOURCES.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_resources.includes(s)?'checked':''} onchange="togCtx(S.f.ctx_resources,'${s}',this.checked,'resources')"><span>${s}</span></label>`).join('')}</div></div><div><span class="tag-grp-title">Learners:</span><div class="tags" style="display:inline-flex">${CTX_LEARNERS.map(s=>`<label class="tag tag-orange"><input type="checkbox" ${S.f.ctx_learners.includes(s)?'checked':''} onchange="togCtx(S.f.ctx_learners,'${s}',this.checked,'learners')"><span>${s}</span></label>`).join('')}</div></div></div>
     <div class="field"><label>Context note <span style="font-weight:400;color:var(--grey)">(optional)</span></label><textarea rows="2" placeholder="e.g. No permanent Maths educator since Term 3 2025..." oninput="S.f.ctx_notes=this.value">${esc(S.f.ctx_notes)}</textarea></div>
     <div class="field-row"><div class="field"><label>Learners reached</label><div class="hint">Approximate number impacted</div><input type="number" placeholder="e.g. 120" min="0" value="${S.f.learners_reached}" oninput="S.f.learners_reached=this.value"></div><div class="field"><label>Follow-up needed?</label><div class="radio-grp"><label><input type="radio" name="fup" value="yes" ${S.f.follow_up?'checked':''} onchange="S.f.follow_up=true;render()"><span>Yes</span></label><label><input type="radio" name="fup" value="no" ${!S.f.follow_up?'checked':''} onchange="S.f.follow_up=false;render()"><span>No</span></label></div></div></div>
     ${S.f.follow_up?`<div class="field"><label>Follow-up description</label><textarea rows="2" placeholder="e.g. Return visit in 2 weeks to check implementation..." oninput="S.f.follow_up_desc=this.value">${esc(S.f.follow_up_desc)}</textarea></div>`:''}
@@ -1114,8 +1141,8 @@ function renderFormReview(){
   const f=S.f;
   return`<div class="section fade-in"><div class="sec-hdr" style="border-color:var(--navy)"><div><h2>5. Review & Submit</h2><p>Check your entry before submitting</p></div></div><div class="sec-body">
     <div class="review-card"><div class="review-card-hdr" style="color:var(--teal)">Location & Date</div>${rvRow('Term',f.term)}${rvRow('Province',f.province)}${rvRow('District',f.district)}${rvRow('Circuit',f.circuit)}${rvRow('Date',f.activity_date)}${rvRow('School(s)',f.schools)}${rvRow('Official',f.official_name)}${rvRow('Email',f.official_email)}${rvRow('Designation',f.official_role)}${rvRow('Specialisation',f.official_specialisation)}</div>
-    <div class="review-card"><div class="review-card-hdr" style="color:var(--green)">Activity Details</div>${rvRow('Theme',f.intervention_theme)}${rvRow('Activity',f.activity_type)}${rvRow('Grades',f.grades.length?f.grades.map(g=>'Gr '+g).join(', '):'')}${rvRow('Subjects',f.subjects.join(', '))}${rvRow('SIP Focus',f.sip_focus_areas.length?f.sip_focus_areas.join('; '):'')}${rvRow('Description',f.description)}</div>
-    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Report Accessed',f.ddd_access_date||'')}${rvRow('Logged into Dashboard',f.ddd_dashboard_confirmed==='yes'?'Yes':f.ddd_dashboard_confirmed==='no'?'No':'')}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Decision',f.decision_type)}${rvRow('Action',f.action_type)}</div>
+    <div class="review-card"><div class="review-card-hdr" style="color:var(--green)">Activity Details</div>${rvRow('Theme',f.intervention_theme==='Other'&&f.intervention_theme_other?'Other: '+f.intervention_theme_other:f.intervention_theme)}${rvRow('Activity',f.activity_type==='Other'&&f.activity_type_other?'Other: '+f.activity_type_other:f.activity_type)}${rvRow('Grades',f.grades.length?f.grades.map(g=>'Gr '+g).join(', '):'')}${rvRow('Subjects',f.subjects.map(s=>s==='Other'&&f.subjects_other?'Other: '+f.subjects_other:s).join(', '))}${rvRow('SIP Focus',f.sip_focus_areas.length?f.sip_focus_areas.join('; '):'')}${rvRow('Description',f.description)}</div>
+    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Report Accessed',f.ddd_access_date||'')}${rvRow('Logged into Dashboard',f.ddd_dashboard_confirmed==='yes'?'Yes':f.ddd_dashboard_confirmed==='no'?'No':'')}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Decision',f.decision_type==='Other'&&f.decision_other?'Other: '+f.decision_other:f.decision_type)}${rvRow('Action',f.action_type==='Other'&&f.action_other?'Other: '+f.action_other:f.action_type)}</div>
     <div class="review-card"><div class="review-card-hdr" style="color:var(--orange)">Context & Follow-up</div>${rvRow('Support Needed',f.support_needed.length?f.support_needed.join('; '):'')}${rvRow('Support Level',supLbl(f.support_level))}${rvRow('Context',[...f.ctx_staffing,...f.ctx_resources,...f.ctx_learners].filter(c=>c!=='All posts filled'&&c!=='Adequate'&&c!=='No major concerns').join(', '))}${f.ctx_notes?rvRow('Notes',f.ctx_notes):''}${rvRow('Learners Reached',f.learners_reached)}${rvRow('Follow-up',f.follow_up?'Yes':'No')}${f.follow_up?rvRow('Follow-up Detail',f.follow_up_desc):''}${f.doc_file_name?rvRow('Attached',''+f.doc_file_name):''}${f.doc_url?rvRow('Link',f.doc_name||f.doc_url):''}</div>
     <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-outline" onclick="S.f.formStep=3;render()">&larr; Back</button><button class="btn btn-teal" onclick="submitForm()" ${S.saving?'disabled':''} style="min-width:160px">${S.saving?'<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></span> Submitting...':'Submit'}</button></div>
   </div></div>`;
@@ -1135,6 +1162,43 @@ function togArr(arr, val, add) {
  if (!add && i!==-1) arr.splice(i,1);
 }
 
+// Context toggles with mutual exclusivity
+const CTX_EXCLUSIVE = {
+ staffing: [['All posts filled','Vacant post(s)']],
+ resources: [['Adequate','Textbook shortage','No devices/connectivity','Infrastructure issues','LTSM not delivered']],
+ learners: [['No major concerns','High absenteeism','Welfare concerns','Overcrowded classrooms','Language barriers','Progressed learners present','Learning difficulties / barriers']]
+};
+function togCtx(arr, val, add, group) {
+ if (add) {
+   const rules = CTX_EXCLUSIVE[group] || [];
+   if (group === 'staffing') {
+     // "All posts filled" and "Vacant post(s)" are mutually exclusive
+     if (val === 'All posts filled') { const vi = arr.indexOf('Vacant post(s)'); if(vi!==-1) arr.splice(vi,1); }
+     if (val === 'Vacant post(s)') { const vi = arr.indexOf('All posts filled'); if(vi!==-1) arr.splice(vi,1); }
+   }
+   if (group === 'resources') {
+     // "Adequate" excludes all others; any other excludes "Adequate"
+     if (val === 'Adequate') { arr.length = 0; }
+     else { const vi = arr.indexOf('Adequate'); if(vi!==-1) arr.splice(vi,1); }
+   }
+   if (group === 'learners') {
+     // "No major concerns" excludes all others; any other excludes "No major concerns"
+     if (val === 'No major concerns') { arr.length = 0; }
+     else { const vi = arr.indexOf('No major concerns'); if(vi!==-1) arr.splice(vi,1); }
+   }
+   if (group === 'support') {
+     // "On track" excludes all others; any other excludes "On track"
+     if (val.startsWith('On track')) { arr.length = 0; }
+     else { for(let k=arr.length-1;k>=0;k--){if(arr[k].startsWith('On track'))arr.splice(k,1);} }
+   }
+   if (!arr.includes(val)) arr.push(val);
+ } else {
+   const i = arr.indexOf(val);
+   if (i!==-1) arr.splice(i,1);
+ }
+ render();
+}
+
 function renderSuccess() {
  const insight=buildInsightStatement();
  return `<div class="form-wrap"><div class="section"><div class="success fade-in"> <h2>Thank you!</h2> <p>Your activity has been recorded. You now have a record of the support you provided — and your dashboard will show the difference your work is making.</p>
@@ -1147,7 +1211,7 @@ function renderSuccess() {
    <div style="font-size:12px;color:var(--navy);line-height:1.6">Try opening the DDD Dashboard first and writing down the numbers you see \u2014 pass rates, how many learners, which subjects. Entries with real numbers help us show the difference your work is making.</div>
    <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);font-size:12px;font-weight:600;text-decoration:none;margin-top:6px">Save the DDD Dashboard link \u2192</a>
  </div>`}
- <div style="margin-top:12px;padding:14px;background:var(--off);border-radius:8px;text-align:left"> <div style="font-size:11px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div> <div style="font-size:12px;color:var(--navy);line-height:1.6"> <strong>${esc(S.f.activity_type)}</strong> at <strong>${esc(S.f.schools)}</strong><br> ${S.f.district}, ${S.f.province} \u00b7 ${S.f.activity_date}<br> ${S.f.subjects.length ? 'Subjects: ' + S.f.subjects.join(', ') + '<br>' : ''}
+ <div style="margin-top:12px;padding:14px;background:var(--off);border-radius:8px;text-align:left"> <div style="font-size:11px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div> <div style="font-size:12px;color:var(--navy);line-height:1.6"> <strong>${esc(S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type)}</strong> at <strong>${esc(S.f.schools)}</strong><br> ${S.f.district}, ${S.f.province} \u00b7 ${S.f.activity_date}<br> ${S.f.subjects.length ? 'Subjects: ' + S.f.subjects.map(s=>s==='Other'&&S.f.subjects_other?'Other: '+S.f.subjects_other:s).join(', ') + '<br>' : ''}
  ${S.f.action_type ? 'Action: ' + esc(S.f.action_type) : ''}
  ${S.f.learners_reached ? ' \u00b7 ~' + S.f.learners_reached + ' learners' : ''}
  </div> </div> <div style="display:flex;gap:10px;justify-content:center;margin-top:20px"> <button class="btn btn-teal" onclick="resetForm()">Log Another</button> <button class="btn btn-outline" onclick="S.view='dashboard';render()">View Dashboard</button> </div> </div></div></div>`;
@@ -1158,16 +1222,21 @@ function renderSuccess() {
 // 
 async function submitForm() {
  if (!S.f.province || !S.f.district || !S.f.schools || !S.f.official_role || !S.f.official_specialisation || !S.f.official_email) { showToast('Please complete Where & When (including Designation and Specialisation)'); S.openSections[1]=true; render(); setTimeout(()=>{const el=document.getElementById('sec1');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},100); return; }
+ if (S.f.official_role==='Other'&&!S.f.official_role_other.trim()) { showToast('Please specify your designation'); S.openSections[1]=true; render(); return; }
+ if (S.f.official_specialisation==='Other'&&!S.f.official_specialisation_other.trim()) { showToast('Please specify your specialisation'); S.openSections[1]=true; render(); return; }
  if (!S.f.activity_type) { showToast('Please select an activity type'); S.openSections[2]=true; render(); setTimeout(()=>{const el=document.getElementById('sec2');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},100); return; }
+ if (S.f.activity_type==='Other'&&!S.f.activity_type_other.trim()) { showToast('Please describe the activity type'); S.openSections[2]=true; render(); return; }
  if (!S.f.ddd_used) { showToast('Please indicate if DDD data was used'); S.openSections[3]=true; render(); setTimeout(()=>{const el=document.getElementById('sec3');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},100); return; }
  if (!S.f.action_type) { showToast('Please select an action taken'); S.openSections[3]=true; render(); setTimeout(()=>{const el=document.getElementById('sec3');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},100); return; }
+ if (S.f.action_type==='Other'&&!S.f.action_other.trim()) { showToast('Please describe the action taken'); S.openSections[3]=true; render(); return; }
 
  S.saving = true; render();
 
  const details = {
  province:S.f.province, district:S.f.district, circuit:S.f.circuit, schools:S.f.schools, term:S.f.term,
- activity_type:S.f.activity_type, intervention_theme:S.f.intervention_theme,
- subjects:S.f.subjects, grades:S.f.grades, description:S.f.description,
+ activity_type:S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type,
+ intervention_theme:S.f.intervention_theme==='Other'&&S.f.intervention_theme_other?'Other: '+S.f.intervention_theme_other:S.f.intervention_theme,
+ subjects:S.f.subjects.map(s=>s==='Other'&&S.f.subjects_other?'Other: '+S.f.subjects_other:s), grades:S.f.grades, description:S.f.description,
  ddd_used:S.f.ddd_used, ddd_reports:S.f.ddd_reports, ddd_access_date:S.f.ddd_access_date||null, ddd_dashboard_confirmed:S.f.ddd_dashboard_confirmed||null,
  insight_type:S.f.insight_type,
  insight_detail:S.f.insight_detail,
@@ -1177,12 +1246,15 @@ async function submitForm() {
  insight_sba_exam_gap:S.f.insight_sba_exam_gap?parseFloat(S.f.insight_sba_exam_gap):null,
  insight_curriculum_pct:S.f.insight_curriculum_pct?parseFloat(S.f.insight_curriculum_pct):null,
  insight_statement:buildInsightStatement(),
- decision_type:S.f.decision_type,
+ decision_type:S.f.decision_type==='Other'&&S.f.decision_other?'Other: '+S.f.decision_other:S.f.decision_type,
  ctx_staffing:S.f.ctx_staffing, ctx_resources:S.f.ctx_resources, ctx_learners:S.f.ctx_learners, ctx_notes:S.f.ctx_notes,
  learners_reached:S.f.learners_reached ? parseInt(S.f.learners_reached) : null,
  follow_up:S.f.follow_up, follow_up_desc:S.f.follow_up_desc,
       sip_focus_areas:S.f.sip_focus_areas, support_needed:S.f.support_needed, support_level:S.f.support_level,
-      intervention_trigger:S.f.intervention_trigger,      official_name:S.f.official_name, official_email:S.f.official_email, official_role:S.f.official_role, official_specialisation:S.f.official_specialisation
+      intervention_trigger:S.f.intervention_trigger,
+      official_name:S.f.official_name, official_email:S.f.official_email,
+      official_role:S.f.official_role==='Other'&&S.f.official_role_other?'Other: '+S.f.official_role_other:S.f.official_role,
+      official_specialisation:S.f.official_specialisation==='Other'&&S.f.official_specialisation_other?'Other: '+S.f.official_specialisation_other:S.f.official_specialisation
  };
 
  const decId = genId('DEC');
@@ -1195,9 +1267,9 @@ async function submitForm() {
  id: decId,
  intervention_id: S.interventions[0]?.id || null,
  ddd_tool: S.f.ddd_reports.join(', '),
- data_viewed: S.f.activity_type + ' — ' + S.f.schools,
+ data_viewed: (S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type) + ' — ' + S.f.schools,
  insight: buildInsightStatement() || S.f.insight_detail || S.f.description,
- decision_made: S.f.decision_type || S.f.activity_type,
+ decision_made: (S.f.decision_type==='Other'&&S.f.decision_other?'Other: '+S.f.decision_other:S.f.decision_type) || (S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type),
  contextual_factors: [...S.f.ctx_staffing,...S.f.ctx_resources,...S.f.ctx_learners].join(', ') + (S.f.ctx_notes ? ' | ' + S.f.ctx_notes : ''),
  made_by: S.f.official_name || S.official.full_name || 'User',
  date: S.f.activity_date,
@@ -1237,13 +1309,13 @@ function resetForm() {
  S.submitted = false;
  S.f = {
  province:S.f.province, district:S.f.district, circuit:S.f.circuit, schools:'', _schoolQ:'', _schoolDDOpen:false, term:S.f.term, activity_date:today(),
- activity_type:'', intervention_theme:'', subjects:[], grades:[], description:'',
- ddd_used:'', ddd_reports:[], ddd_access_date:'', ddd_dashboard_confirmed:'', decision_type:'', action_type:'', action_other:'',
+ activity_type:'', activity_type_other:'', intervention_theme:'', intervention_theme_other:'', subjects:[], subjects_other:'', grades:[], description:'',
+ ddd_used:'', ddd_reports:[], ddd_access_date:'', ddd_dashboard_confirmed:'', decision_type:'', decision_other:'', action_type:'', action_other:'',
  ctx_staffing:[], ctx_resources:[], ctx_learners:[], ctx_notes:'',
  learners_reached:'', follow_up:false, follow_up_desc:'',
  doc_url:'', doc_name:'',
     sip_focus_areas:[], support_needed:[], support_level:'', doc_file:null, doc_file_name:'',
-    formStep:-1, intervention_trigger:'', intervention_trigger_other:'',  official_name:S.f.official_name, official_email:S.f.official_email, official_role:S.f.official_role, official_specialisation:S.f.official_specialisation,
+    formStep:-1, intervention_trigger:'', intervention_trigger_other:'',  official_name:S.f.official_name, official_email:S.f.official_email, official_role:S.f.official_role, official_role_other:S.f.official_role_other, official_specialisation:S.f.official_specialisation, official_specialisation_other:S.f.official_specialisation_other,
     insight_type:'', insight_pass_rate:'', insight_learners_affected:'', insight_threshold:'', insight_detail:'', insight_educator_absent:'', insight_attendance_days:'', insight_sba_exam_gap:'', insight_curriculum_pct:''
   };
   S.openSections = {1:false,2:false,3:false,4:false};
@@ -1355,6 +1427,18 @@ function renderDashboard() {
  const attentionCount = openLoops.length + followUps.length + schoolsNeedingVisit.length;
 
  return `<div class="dash-wrap"> ${S.decisions[0]?.id?.startsWith('DEMO_') ? '<div class="demo-banner"> <strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
+
+ <!-- DASHBOARD SUB-NAV -->
+ <div class="dash-subnav">
+   <button class="${(S.dashTab||'overview')==='overview'?'active':''}" onclick="S.dashTab='overview';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Overview</button>
+   <button class="${(S.dashTab||'overview')==='update'?'active':''}" onclick="S.dashTab='update';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Update${(()=>{const n=acts.filter(a=>a.status!=='Completed'||!outs.some(o=>o.action_id===a.id)).length;return n?'<span class=\"sn-badge\" style=\"background:var(--blue-lt);color:var(--blue)\">'+n+'</span>':'';})()}</button>
+   <button class="${(S.dashTab||'overview')==='tracker'?'active':''}" onclick="S.dashTab='tracker';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Tracker</button>
+   <button class="${(S.dashTab||'overview')==='attention'?'active':''}" onclick="S.dashTab='attention';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Attention${attentionCount?'<span class=\"sn-badge\" style=\"background:#FFEBEE;color:var(--red)\">'+attentionCount+'</span>':''}</button>
+   <button class="${(S.dashTab||'overview')==='impact'?'active':''}" onclick="S.dashTab='impact';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Impact</button>
+   <button class="${(S.dashTab||'overview')==='schools'?'active':''}" onclick="S.dashTab='schools';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Schools</button>
+ </div>
+
+ ${(S.dashTab||'overview')==='overview'?`
  <!-- STAT CARDS --> <div class="stats-row"> <div class="stat-card"><div class="stat-num">${totalActivities}</div><div class="stat-label">Activities Logged</div></div> <div class="stat-card green"><div class="stat-num">${schoolSet.size}</div><div class="stat-label">Schools Reached</div></div> <div class="stat-card orange"><div class="stat-num">${totalLearners > 999 ? (totalLearners/1000).toFixed(1)+'k' : totalLearners}</div><div class="stat-label">Learners Reached</div></div> <div class="stat-card${attentionCount > 0 ? ' red' : ''}"><div class="stat-num">${attentionCount}</div><div class="stat-label">Need Attention</div></div> </div>
 
  <!-- ACTIVITY COMPLETION PROGRESS -->
@@ -1450,6 +1534,7 @@ function renderDashboard() {
  }).join('') : '<div style="font-size:11px;color:var(--grey);font-style:italic">No barriers recorded yet</div>'}
  </div> </div>
  </div>
+ `:''}
 
  <!-- TIME PERIOD FILTER -->
  <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
@@ -1458,13 +1543,14 @@ function renderDashboard() {
  </div>
  ${(S.dashPeriod||'All Time')!=='All Time'?`<div style="background:#FFF8E1;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#E07B2A;border-left:3px solid var(--orange)"><strong>Filter preview:</strong> Time-period filtering will be active in the connected version. Currently showing all data.</div>`:''}
 
+ ${(S.dashTab||'overview')==='update'?`
  <!-- UPDATE YOUR ACTIVITIES -->
  ${(()=>{
    const incomplete = acts.filter(a => a.status !== 'Completed' || !outs.some(o => o.action_id === a.id));
    const needsUpdate = incomplete.filter(a => a.status === 'In Progress' || a.status === 'Planned');
    const completedNoOutcome = acts.filter(a => a.status === 'Completed' && !outs.some(o => o.action_id === a.id));
    const allItems = [...needsUpdate, ...completedNoOutcome];
-   if (!allItems.length) return '';
+   if (!allItems.length) return '<div style="padding:20px;text-align:center;color:var(--grey);font-size:12px">All your activities are complete with outcomes recorded. Nice work.</div>';
    return `<div class="dash-section" style="border-left:3px solid var(--blue)">
      <div class="dash-section-hdr"><h3>Update Your Activities</h3><span style="font-size:11px;color:var(--grey)">${allItems.length} item${allItems.length!==1?'s':''}</span></div>
      <div class="dash-section-body" style="padding:12px 18px">
@@ -1475,10 +1561,19 @@ function renderDashboard() {
          const hasOutcome = outs.some(o => o.action_id === a.id);
          const SC = {'Completed':{bg:'var(--green-lt)',fg:'var(--green-dk)',dot:'var(--green)'},'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}};
          const sc = SC[a.status] || SC.Planned;
+         const schoolStr = det.schools || '';
+         const schoolArr = schoolStr.split(',').map(s=>s.trim()).filter(Boolean);
+         const schoolCount = schoolArr.length;
+         const uid = 'sch_' + a.id;
          return `<div style="background:#FAFBFC;border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;margin-bottom:6px">
            <div style="margin-bottom:10px">
              <div style="font-size:12px;font-weight:600;color:var(--navy);line-height:1.4">${esc(a.action_taken)}</div>
-             <div style="font-size:12px;color:var(--grey);margin-top:4px">${esc(det.schools||'')}${det.district?' · '+esc(det.district):''}${a.target_date?' · Target: '+fmtDate(a.target_date):''}</div>
+             <div style="font-size:11px;color:var(--grey);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+               ${schoolCount>0?`<span onclick="var el=document.getElementById('${uid}');el.style.display=el.style.display==='none'?'block':'none';this.querySelector('.arr').textContent=el.style.display==='none'?'\\u25B6':'\\u25BC'" style="cursor:pointer;color:var(--teal);font-weight:600"><span class="arr" style="font-size:9px;margin-right:3px">\\u25B6</span>${schoolCount} school${schoolCount!==1?'s':''}</span>`:''}
+               ${det.district?`<span>${esc(det.district)}</span>`:''}
+               ${a.target_date?`<span>Target: ${fmtDate(a.target_date)}</span>`:''}
+             </div>
+             ${schoolCount>0?`<div id="${uid}" style="display:none;margin-top:6px;max-height:180px;overflow-y:auto;border:1px solid #e8e8e8;border-radius:6px;background:#fff"><table style="width:100%;border-collapse:collapse;font-size:11px"><tbody>${schoolArr.map((s,i)=>`<tr style="border-bottom:1px solid #f0f0f0${i%2===1?';background:#FAFBFC':''}"><td style="padding:5px 10px;color:var(--navy)">${esc(s)}</td></tr>`).join('')}</tbody></table></div>`:''}
            </div>
            <div style="margin-bottom:10px">
              <div style="font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Status</div>
@@ -1494,8 +1589,9 @@ function renderDashboard() {
      </div>
    </div>`;
  })()}
+ `:''}
 
-
+ ${(S.dashTab||'overview')==='tracker'?`
  <!-- INTERVENTIONS IMPLEMENTATION TRACKER --> <div class="dash-section"> <div class="dash-section-hdr"><h3>Interventions Implementation Tracker</h3><span style="font-size:11px;color:var(--grey)">${chainsWithOutcome} of ${chainsTotal} complete</span></div>
  <div class="dash-section-body" style="padding:0">
  <div style="padding:12px 18px 4px"><div class="dash-section-desc" style="margin-bottom:10px">Track the full journey of each activity — from decision, to action, to outcome.</div></div>
@@ -1512,7 +1608,7 @@ function renderDashboard() {
  'In Progress':{bg:'var(--blue-lt)',fg:'var(--blue)',dot:'var(--blue)'},
  'Planned':{bg:'var(--grey-lt)',fg:'var(--grey)',dot:'var(--grey)'}
  };
- return `<div class="chain"> <div class="chain-hdr" onclick="S.expandedChains=S.expandedChains||{};S.expandedChains['${d.id}']=!S.expandedChains['${d.id}'];render()"> <div> <div class="chain-title">${esc(det.activity_type||d.decision_made||'Activity')} — ${esc(det.schools||'')}</div> <div class="chain-meta">${esc(det.district||'')}${det.province?' · '+esc(det.province):''} · ${fmtDate(d.date)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div> ${!expanded ? '<div class="tap-hint">Tap to view details</div>' : ''} </div> <div style="display:flex;align-items:center;gap:8px"> <div class="chain-dots"> <div class="chain-dot" style="background:var(--blue)">D</div> ${relActs.length ? '<div class="chain-dot" style="background:var(--orange)">A</div>' : ''}
+ return `<div class="chain"> <div class="chain-hdr" onclick="S.expandedChains=S.expandedChains||{};S.expandedChains['${d.id}']=!S.expandedChains['${d.id}'];render()"> <div> <div class="chain-title">${esc(det.activity_type||d.decision_made||'Activity')} — ${(()=>{const sa=(det.schools||'').split(',').map(s=>s.trim()).filter(Boolean);return sa.length<=2?esc(sa.join(', ')):esc(sa[0])+' + '+(sa.length-1)+' more'})()}</div> <div class="chain-meta">${esc(det.district||'')}${det.province?' · '+esc(det.province):''} · ${fmtDate(d.date)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div> ${!expanded ? '<div class="tap-hint">Tap to view details</div>' : ''} </div> <div style="display:flex;align-items:center;gap:8px"> <div class="chain-dots"> <div class="chain-dot" style="background:var(--blue)">D</div> ${relActs.length ? '<div class="chain-dot" style="background:var(--orange)">A</div>' : ''}
  ${S.outcomes.filter(o=>relActs.some(a=>a.id===o.action_id)).length ? '<div class="chain-dot" style="background:var(--green)">O</div>' : ''}
  </div> <span class="tap-chevron" style="transform:rotate(${expanded?'180':'0'}deg)">${expanded?'&#9650;':'&#9660;'}</span> </div> </div> <div class="chain-body${expanded?'':' collapsed'}"> <!-- Decision node --> <div class="node"> <div class="node-line"><div class="node-dot" style="background:var(--blue)">D</div>${relActs.length?'<div class="node-stem"></div>':''}</div> <div class="node-content" style="background:var(--blue-lt)"> <div class="node-type" style="color:var(--blue)">Decision — ${fmtDate(d.date)}</div> <div class="node-text">${esc(d.decision_made||det.decision_type||'')}</div> <div class="node-detail"> ${d.ddd_tool ? '<strong>DDD Tool:</strong> '+esc(d.ddd_tool)+'<br>' : ''}
  ${d.insight ? '<strong>Insight:</strong> '+esc(d.insight)+'<br>' : ''}
@@ -1545,20 +1641,23 @@ function renderDashboard() {
  }).join('')
  }
  </div> </div>
+ `:''}
 
+ ${(S.dashTab||'overview')==='attention'?`
  <!-- NEEDS YOUR ATTENTION --> ${attentionCount > 0 ? `
  <div class="dash-section" style="border-left:3px solid var(--red)"> <div class="dash-section-hdr"><h3>Needs Your Attention</h3><span style="font-size:11px;color:var(--grey)">${attentionCount} item${attentionCount!==1?'s':''}</span></div> <div class="dash-section-body" style="padding:8px 16px">
  <div class="dash-section-desc">These items need action from you — follow-ups overdue, activities without outcomes, or schools not visited recently.</div>
 
  ${openLoops.length ? `<div style="margin-bottom:14px"> <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${openLoops.length} action${openLoops.length!==1?'s':''} without an outcome recorded</div>
- ${openLoops.slice(0,5).map(ol => `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:var(--orange-lt);border-radius:6px;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(ol.schools)}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap"><button onclick="openOutcomeModal('${ol.id}')" style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--teal);color:#fff;border:none;cursor:pointer;font-weight:600;white-space:nowrap">Record Outcome</button><div style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;white-space:nowrap">${esc(ol.status)}</div></div> </div>`).join('')}
+ ${openLoops.slice(0,5).map(ol => {const sa=(ol.schools||'').split(',').map(s=>s.trim()).filter(Boolean);const schTxt=sa.length<=2?esc(sa.join(', ')):esc(sa[0])+' + '+(sa.length-1)+' more';return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:var(--orange-lt);border-radius:6px;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(ol.action)}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${schTxt}${ol.district?' · '+esc(ol.district):''}</div> </div> <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap"><button onclick="openOutcomeModal('${ol.id}')" style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--teal);color:#fff;border:none;cursor:pointer;font-weight:600;white-space:nowrap">Record Outcome</button><div style="font-size:10px;padding:3px 8px;border-radius:10px;background:var(--orange);color:#fff;white-space:nowrap">${esc(ol.status)}</div></div> </div>`}).join('')}
  ${openLoops.length > 5 ? `<div style="font-size:11px;color:var(--grey);margin-top:4px">+ ${openLoops.length-5} more</div>` : ''}
  </div>` : ''}
 
  ${followUps.length ? `<div style="margin-bottom:14px"> <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${followUps.length} follow-up${followUps.length!==1?'s':''} due</div>
  ${followUps.slice(0,5).map(f => {
    const urgency = f.daysSince > 21 ? {bg:'#FFEBEE',border:'var(--red)',label:'Overdue '+f.daysSince+'d',color:'var(--red)'} : f.daysSince > 10 ? {bg:'#FFF3E0',border:'var(--orange)',label:f.daysSince+'d ago',color:'var(--orange)'} : {bg:'var(--blue-lt)',border:'var(--blue)',label:f.daysSince+'d ago',color:'var(--blue)'};
-   return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:${urgency.bg};border-left:3px solid ${urgency.border};border-radius:0 6px 6px 0;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(f.schools||'')}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(f.desc)}</div> </div> <div style="text-align:right;white-space:nowrap"> <div style="font-size:10px;font-weight:700;color:${urgency.color}">${urgency.label}</div> <div style="font-size:10px;color:var(--grey)">${esc(f.district||'')}</div> </div> </div>`;
+   const fsa=(f.schools||'').split(',').map(s=>s.trim()).filter(Boolean);const fSchTxt=fsa.length<=2?esc(fsa.join(', ')):esc(fsa[0])+' + '+(fsa.length-1)+' more';
+   return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:${urgency.bg};border-left:3px solid ${urgency.border};border-radius:0 6px 6px 0;margin-bottom:4px;gap:10px"> <div style="flex:1;min-width:0"> <div style="font-size:12px;font-weight:600;color:var(--navy)">${fSchTxt}</div> <div style="font-size:11px;color:var(--grey);margin-top:2px">${esc(f.desc)}</div> </div> <div style="text-align:right;white-space:nowrap"> <div style="font-size:10px;font-weight:700;color:${urgency.color}">${urgency.label}</div> <div style="font-size:10px;color:var(--grey)">${esc(f.district||'')}</div> </div> </div>`;
  }).join('')}
  </div>` : ''}
 
@@ -1572,15 +1671,18 @@ function renderDashboard() {
 
  </div> </div>` : `
  <div class="dash-section" style="border-left:3px solid var(--green)"> <div class="dash-section-hdr"><h3>All Clear</h3></div> <div class="dash-section-body"> <p style="font-size:12px;color:var(--grey)">No outstanding follow-ups, open actions, or schools needing a return visit. Well done.</p> </div> </div>`}
+ `:''}
 
-
+ ${(S.dashTab||'overview')==='impact'?`
  <!-- MY IMPACT --> ${impactItems.length ? `
  <div class="dash-section" style="border-left:4px solid var(--green)"> <div class="dash-section-hdr"><h3>My Impact</h3><span style="font-size:13px;font-weight:700;color:var(--green-dk);background:var(--green-lt);padding:3px 10px;border-radius:12px">${impactItems.length} outcome${impactItems.length!==1?'s':''}</span></div> <div class="dash-section-body">
      <div class="dash-section-desc">Outcomes you've recorded — the real-world results of your interventions.</div>
  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"> <div style="background:var(--green-lt);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;text-align:center"> <div style="font-size:20px;font-weight:800;color:var(--green-dk)">${impactItems.reduce((s,i)=>s+i.learners,0) > 999 ? (impactItems.reduce((s,i)=>s+i.learners,0)/1000).toFixed(1)+'k' : impactItems.reduce((s,i)=>s+i.learners,0)}</div> <div style="font-size:10px;color:var(--grey)">Learners with recorded outcomes</div> </div> <div style="background:var(--green-lt);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;text-align:center"> <div style="font-size:20px;font-weight:800;color:var(--green-dk)">${impactItems.length}</div> <div style="font-size:10px;color:var(--grey)">Evidence items captured</div> </div> </div>
  ${impactItems.slice(0,5).map(imp => `<div style="padding:10px 12px;background:#F5F6F7;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green)"> <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:3px">${esc(imp.metric||'Outcome')}: ${esc(imp.value||'')}</div> <div style="font-size:11px;color:#37474F;line-height:1.5">${esc(imp.description)}</div> <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--grey)"> <span>${esc(imp.schools)}</span> <span>${fmtDate(imp.date)}</span> </div> ${imp.evidence ? `<div style="font-size:10px;color:var(--teal);margin-top:3px">Evidence: ${esc(imp.evidence)}</div>` : ''} </div>`).join('')}
- </div> </div>` : ''}
+ </div> </div>` : '<div style="padding:20px;text-align:center;color:var(--grey);font-size:12px">No outcomes recorded yet. Update your activities and record outcomes to see your impact here.</div>'}
+ `:''}
 
+ ${(S.dashTab||'overview')==='schools'?`
  <!-- MY SCHOOLS --> ${Object.keys(schoolVisits).length ? `
  <!-- DATA QUALITY INDICATOR -->
  ${(()=>{
@@ -1667,7 +1769,8 @@ function renderDashboard() {
    </div>`;
  }).join('')}
  </div> ${Object.keys(schoolVisits).length > 12 ? `<div style="font-size:11px;color:var(--grey);margin-top:8px">+ ${Object.keys(schoolVisits).length-12} more schools</div>` : ''}
- </div> </div>` : ''}
+ </div> </div>` : '<div style="padding:20px;text-align:center;color:var(--grey);font-size:12px">No school visits logged yet. Start logging activities to see your schools here.</div>'}
+ `:''}
 
  <!-- DASHBOARD NUDGE -->
  <div style="margin:16px 0 8px;background:linear-gradient(135deg,#074445,#0F7B7D);border-radius:10px;padding:14px 16px;text-align:center">
@@ -1709,7 +1812,6 @@ function tkDesigner() {
 }
 
 function tkStatCard(v,l,c,sub){return`<div style="background:#fff;border-radius:10px;padding:16px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:3px solid ${c};flex:1;min-width:120px"><div style="font-size:28px;font-weight:800;color:#1A2332;line-height:1">${v}</div><div style="font-size:10px;font-weight:600;color:#607D8B;text-transform:uppercase;letter-spacing:.5px;margin-top:4px">${l}</div>${sub?`<div style="font-size:10px;color:${c};margin-top:2px;font-weight:600">${sub}</div>`:''}</div>`}
-function tkBar(v,max,c,label,ct){return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="font-size:11px;color:#37474F;min-width:110px;text-align:right;font-weight:500">${label}</div><div style="flex:1;height:22px;background:#ECEFF1;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(v/max)*100}%;background:${c};border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:${v>0?'20px':'0'};transition:width .4s">${ct||v}</div></div></div>`}
 
 function tkDashCTA(path,reportName){return`<div style="margin-top:14px;background:linear-gradient(135deg,#074445,#0F7B7D);border-radius:10px;padding:14px 16px;text-align:center"><div style="font-size:11px;color:#B8DCDC;margin-bottom:6px;font-weight:600">Get the full learner-level detail on the DDD Dashboard</div><div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:10px">Open ${reportName}</div><div class="tk-path" style="background:rgba(255,255,255,.12);color:#fff;margin:0 0 10px;justify-content:center"><span style="font-family:monospace;color:#B8DCDC">${path}</span></div><div style="font-size:10px;color:#B8DCDC;line-height:1.5">The dashboard has the full breakdown by learner name, subject, and school — everything you need to plan your intervention</div></div>`}
 
@@ -1741,9 +1843,9 @@ function tkDesignerData(){
 function tkDesignerResponse(){
  const ch=S.dChallenge;
  const matched=TK_INTERVENTIONS.filter(i=>{if(ch==='attendance')return i.category==='Attendance'||i.category==='Community';if(ch==='performance'||ch==='promotion')return i.category==='Academic Support'||i.category==='Assessment Quality';return i.category==='Academic Support'||i.category==='School Support'});
- return`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px">What can you do about it?</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">These are proven interventions that other officials have used in similar situations. Tap any one to see how it works step by step.</div> ${matched.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);return`
- <div class="tk-iv${sel?' sel':''}" onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()"> <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700;font-size:13px;color:#1A2332">${iv.name}</div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:600">${iv.difficulty}</span><span style="font-size:10px;font-weight:700;color:#7AB648">${iv.effectiveness}% effective</span></div></div> <div style="font-size:11px;color:#607D8B;margin-top:4px">${iv.description}</div> <div style="font-size:10px;color:#0B8E8D;margin-top:4px">Used by ${iv.usedBy} officials \u00b7 ${iv.provinces.join(', ')} \u00b7 Takes ${iv.timeToImpact}</div> ${sel?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e1dfdd"> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div> <div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">HOW TO DO IT</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
- <div style="margin-top:10px;background:#FFF8E1;border-radius:8px;padding:10px;font-size:11px;color:#37474F"><strong style="color:#E8952E"> What others achieved:</strong> ${iv.comparableResults}</div> <div style="margin-top:6px"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} \u2014 View Policy</button></div> </div>`:''}
+ return`<div style="font-size:13px;font-weight:700;color:#1A2332;margin-bottom:4px">What can you do about it?</div><div style="font-size:11px;color:#607D8B;margin-bottom:12px">These are intervention approaches that work well with DDD data. Tap any one to see how it works step by step.</div> ${matched.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);return`
+ <div class="tk-iv${sel?' sel':''}" onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()"> <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700;font-size:13px;color:#1A2332">${iv.name}</div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:600">${iv.difficulty}</span></div></div> <div style="font-size:11px;color:#607D8B;margin-top:4px">${iv.description}</div> <div style="font-size:10px;color:#0B8E8D;margin-top:4px">Takes ${iv.timeToImpact} · Reports: ${reps.map(r=>r.name).join(', ')}</div> ${sel?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e1dfdd"> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div> <div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">HOW TO DO IT</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
+ <div style="margin-top:6px"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} \u2014 View Policy</button></div> </div>`:''}
  </div>`}).join('')}
  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm btn-outline" onclick="S.dStep=1;render()">\u2190 Back</button><button class="btn btn-sm btn-teal" style="flex:1" onclick="S.dStep=3;render()">Ready to act \u2192</button></div>`;}
 
@@ -1768,24 +1870,92 @@ function tkDesignerPlan(){
 // WHAT WORKS 
 function tkLibrary(){
  const cats=['All',...new Set(TK_INTERVENTIONS.map(i=>i.category))];
- const filtered=TK_INTERVENTIONS.filter(i=>S.filterCat==='All'||i.category===S.filterCat).sort((a,b)=>S.sortBy==='effectiveness'?b.effectiveness-a.effectiveness:b.usedBy-a.usedBy);
- return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"> <div style="display:flex;gap:4px;flex-wrap:wrap">${cats.map(c=>`<button class="tk-filt${S.filterCat===c?' on':''}" onclick="S.filterCat='${c}';render()">${c}</button>`).join('')}</div> <div style="display:flex;gap:4px">${[['effectiveness','By Effectiveness'],['popularity','Most Used']].map(([k,l])=>`<button class="tk-sort" style="background:${S.sortBy===k?'#0B8E8D':'#e1dfdd'};color:${S.sortBy===k?'#fff':'#607D8B'}" onclick="S.sortBy='${k}';render()">${l}</button>`).join('')}</div> </div> ${filtered.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);return`
- <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:10px;overflow:hidden"> <div onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()" style="padding:14px 16px;cursor:pointer"> <div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-weight:700;font-size:14px;color:#1A2332">${iv.name}</span><span style="font-size:9px;padding:2px 5px;border-radius:3px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:700">${iv.difficulty}</span></div> <div style="font-size:11px;color:#607D8B">${iv.description}</div></div> <div style="text-align:right;min-width:60px;flex-shrink:0"><div style="font-size:22px;font-weight:800;color:${iv.effectiveness>=75?'#7AB648':iv.effectiveness>=65?'#E8952E':'#607D8B'}">${iv.effectiveness}%</div><div style="font-size:9px;color:#607D8B">effective</div></div></div> <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><span style="font-size:10px;color:#607D8B">Used by <strong>${iv.usedBy}</strong> officials</span><span style="font-size:10px;color:#607D8B">${iv.timeToImpact}</span><span style="font-size:10px;color:#607D8B">${iv.provinces.join(', ')}</span></div> ${!sel?'<div class="tap-hint" style="margin-top:4px">Tap for implementation steps</div>':''} </div> ${sel?`<div style="padding:0 16px 16px;border-top:1px solid #f3f2f1"> <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div><div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div></div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">HOW TO DO IT</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
- <div style="margin-top:10px;background:#FFF8E1;border-radius:8px;padding:10px;font-size:11px;color:#37474F"><strong style="color:#E8952E"> What others achieved:</strong> ${iv.comparableResults}</div> <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} \u2014 View Policy</button></div> ${iv.webinar?`<div style="margin-top:10px;padding:10px 12px;background:#E3F2FD;border-radius:8px;border-left:3px solid #1565C0"><div style="font-size:10px;font-weight:700;color:#1565C0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">DDD Learning Hub</div><div style="font-size:12px;font-weight:600;color:#1A2332;margin-bottom:4px">${iv.webinar.name}</div><div style="font-size:11px;color:#37474F;line-height:1.5">Watch the training that walks through this approach step by step</div><div style="font-size:10px;color:#1565C0;margin-top:4px;font-family:monospace">${iv.webinar.path}</div></div>`:''} <div style="margin-top:10px;padding:10px 12px;background:#E0F4F4;border-radius:8px"><div style="font-size:11px;font-weight:700;color:#074445">Ready to start?</div><div style="font-size:11px;color:#37474F;line-height:1.5">Open the DDD Dashboard, find the data for your schools, then come back and log your activity</div></div> </div>`:''}
- </div>`}).join('')}`;
+ const myActs = S.actions||[];
+ const myOuts = S.outcomes||[];
+ // Count how many times this official used each intervention type
+ const usageCounts = {};
+ myActs.forEach(a => {
+   TK_INTERVENTIONS.forEach(iv => {
+     if ((a.action_taken||'').toLowerCase().includes(iv.name.toLowerCase().split(' ')[0]) || (a.action_taken||'').toLowerCase().includes(iv.name.toLowerCase())) {
+       usageCounts[iv.id] = (usageCounts[iv.id]||0) + 1;
+     }
+   });
+ });
+ const filtered=TK_INTERVENTIONS.filter(i=>S.filterCat==='All'||i.category===S.filterCat);
+ return`<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">A curated set of <strong>intervention approaches</strong> that work well with DDD data. Each includes step-by-step guidance, which DDD reports to use, and relevant policy references.</p>
+ <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">${cats.map(c=>`<button class="tk-filt${S.filterCat===c?' on':''}" onclick="S.filterCat='${c}';render()">${c}</button>`).join('')}</div>
+ ${filtered.map(iv=>{const sel=S.selIntv===iv.id;const reps=iv.dddReports.map(rid=>TK_REPORTS.find(r=>r.id===rid)).filter(Boolean);const myCount=usageCounts[iv.id]||0;return`
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:10px;overflow:hidden"> <div onclick="S.selIntv=S.selIntv===${iv.id}?null:${iv.id};render()" style="padding:14px 16px;cursor:pointer"> <div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap"><span style="font-weight:700;font-size:14px;color:#1A2332">${iv.name}</span><span style="font-size:9px;padding:2px 5px;border-radius:3px;background:${iv.difficulty==='Quick Win'?'#E8F5E9':iv.difficulty==='Core'?'#E3F2FD':'#FFF3E0'};color:${iv.difficulty==='Quick Win'?'#4CAF50':iv.difficulty==='Core'?'#1565C0':'#E8952E'};font-weight:700">${iv.difficulty}</span>${myCount?`<span style="font-size:9px;padding:2px 5px;border-radius:3px;background:var(--teal-lt);color:var(--teal-dk);font-weight:700">You: ${myCount}x</span>`:''}</div> <div style="font-size:11px;color:#607D8B">${iv.description}</div></div></div> <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><span style="font-size:10px;color:#607D8B">${iv.timeToImpact}</span><span style="font-size:10px;color:#607D8B">${reps.map(r=>r.name).join(', ')}</span></div> ${!sel?'<div class="tap-hint" style="margin-top:4px">Tap for implementation steps</div>':''} </div> ${sel?`<div style="padding:0 16px 16px;border-top:1px solid #f3f2f1"> <div style="margin-top:10px"><div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">DDD REPORTS TO USE</div><div class="tk-chips" style="margin-bottom:10px">${reps.map(r=>`<span class="tk-chip" style="background:${r.color}15;color:${r.color};font-weight:600">${r.name}</span>`).join('')}</div></div> <div style="font-size:11px;font-weight:700;color:#0B8E8D;margin-bottom:6px">HOW TO DO IT</div> ${iv.steps.map((s,i)=>`<div class="tk-step"><span class="tk-sn">${i+1}</span><span style="line-height:1.5">${s}</span></div>`).join('')}
+ <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center"><button class="tk-badge" onclick="event.stopPropagation();S.showPolicy='${iv.policyRef}';render()">${iv.policyRef} \u2014 View Policy</button></div> ${iv.webinar?`<div style="margin-top:10px;padding:10px 12px;background:#E3F2FD;border-radius:8px;border-left:3px solid #1565C0"><div style="font-size:10px;font-weight:700;color:#1565C0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">DDD Learning Hub</div><div style="font-size:12px;font-weight:600;color:#1A2332;margin-bottom:4px">${iv.webinar.name}</div><div style="font-size:11px;color:#37474F;line-height:1.5">Watch the training that walks through this approach step by step</div><div style="font-size:10px;color:#1565C0;margin-top:4px;font-family:monospace">${iv.webinar.path}</div></div>`:''} <div style="margin-top:10px;padding:10px 12px;background:#E0F4F4;border-radius:8px"><div style="font-size:11px;font-weight:700;color:#074445">Ready to start?</div><div style="font-size:11px;color:#37474F;line-height:1.5">Open the DDD Dashboard, find the data for your schools, then come back and log your activity</div></div> </div>`:''}
+ </div>`}).join('')}`; 
 }
 
 // PEER INSIGHTS 
 function tkPeers(){
- const d=RD;
- return`<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">See what <strong>other schools and circuits in similar situations</strong> are doing and what results they are getting.</p> <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">How similar circuits are performing</h3></div> <div style="padding:16px"> <div style="background:#FFF3E0;border-radius:8px;padding:12px;margin-bottom:14px;border-left:3px solid #E8952E"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:13px;color:#1A2332">Your circuit: ${d.entity.circuit}</div><div style="font-size:11px;color:#607D8B">Promotion rate: ${d.promotion.rate}% · ${d.learners.total} learners</div></div><div style="font-size:24px;font-weight:800;color:#E8952E">${d.promotion.rate}%</div></div></div> ${TK_PEERS.map((p,i)=>`<div class="tk-peer"><div style="flex:1"><div style="font-weight:700;font-size:13px;color:#1A2332">${p.entity}</div><div style="font-size:11px;color:#607D8B">${p.district} · ${p.learners.toLocaleString()} learners · ${p.context}</div><div style="margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="tk-chip" style="background:#E0F4F4;color:#0B8E8D;font-weight:600">${p.topIntervention}</span><span style="font-size:11px;color:#7AB648;font-weight:700">${p.result}</span></div></div><div style="text-align:right"><div style="font-size:22px;font-weight:800;color:${p.promoRate>d.promotion.rate?'#7AB648':'#607D8B'}">${p.promoRate}%</div><div style="font-size:9px;color:#607D8B">promo rate</div>${p.promoRate>d.promotion.rate?`<div style="font-size:10px;color:#7AB648;font-weight:600">+${(p.promoRate-d.promotion.rate).toFixed(0)}% vs yours</div>`:''}</div></div>`).join('')}
- </div> </div> <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden"> <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0"> What Is Working Across Provinces</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">Based on 131,770+ learners reached so far</p></div> <div style="padding:16px"> ${tkBar(67,70,'#0B8E8D','Targeted Learner Support','67 officials')}
- ${tkBar(54,70,'#7AB648','Parent Engagement','54 officials')}
- ${tkBar(42,70,'#1565C0','Attendance Plan','42 officials')}
- ${tkBar(38,70,'#E8952E','Saturday Classes','38 officials')}
- ${tkBar(31,70,'#074445','Rapid Response','31 officials')}
- ${tkBar(23,70,'#7B1FA2','SBA-Exam Audit','23 officials')}
- <div style="margin-top:12px;font-size:11px;color:#607D8B;line-height:1.6">Most useful DDD reports according to officials: <strong>FET Promotion Criteria Profiles</strong> and <strong>Learner Chart Report</strong>. Officials mainly use DDD to find learners who need help, spot underperforming schools, and plan what to do about it.</div> </div> </div> <div style="margin-top:12px;background:linear-gradient(135deg,#074445,#0F7B7D);border-radius:10px;padding:14px 16px;text-align:center"> <div style="font-size:11px;color:#B8DCDC;font-weight:600;margin-bottom:4px">Want to see how your own schools compare?</div> <div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:6px">Open the DDD Dashboard to see your actual performance numbers</div> <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(122,182,72,.9);color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;margin-top:6px">Open DDD Dashboard</a> </div>`;
+ // Aggregate from what THIS official has actually captured
+ const decs = S.decisions||[], acts = S.actions||[], outs = S.outcomes||[];
+ const totalActs = acts.length;
+ const totalOuts = outs.length;
+
+ // Build intervention type counts from captured actions
+ const actionCounts = {};
+ acts.forEach(a => {
+   const t = a.action_taken || 'Other';
+   actionCounts[t] = (actionCounts[t]||0) + 1;
+ });
+ const sortedActions = Object.entries(actionCounts).sort((a,b)=>b[1]-a[1]);
+
+ // Build outcome summary
+ const outcomeList = outs.map(o => {
+   const act = acts.find(a=>a.id===o.action_id);
+   const dec = act ? decs.find(d=>d.id===act.decision_id) : null;
+   const det = dec ? dec.details||{} : {};
+   return { metric: o.metric||'', value: o.value||'', desc: o.description||'', schools: det.schools||'', district: det.district||'' };
+ });
+
+ const hasData = totalActs >= 1;
+
+ return `<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">See what interventions are being used across the programme and what results are being reported. This section builds from <strong>real data captured by officials</strong> in this tracker.</p>
+
+ ${!hasData ? `
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:24px 20px;text-align:center;margin-bottom:16px">
+   <div style="font-size:36px;margin-bottom:10px;opacity:.3">&#9998;</div>
+   <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px">Not enough data yet</div>
+   <div style="font-size:12px;color:#607D8B;line-height:1.6;max-width:360px;margin:0 auto">As you and other officials log activities and record outcomes, this section will show which interventions are being used most, what results they are producing, and how your approach compares. Start by logging your first activity.</div>
+ </div>
+ ` : `
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden">
+   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Your Interventions So Far</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">${totalActs} action${totalActs!==1?'s':''} logged, ${totalOuts} outcome${totalOuts!==1?'s':''} recorded</p></div>
+   <div style="padding:16px">
+     ${sortedActions.length ? sortedActions.slice(0,6).map(([name,count])=>{
+       const pct = Math.round((count/Math.max(...sortedActions.map(s=>s[1])))*100);
+       const relOuts = outs.filter(o=>{const a=acts.find(ac=>ac.id===o.action_id);return a&&a.action_taken===name});
+       return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="font-weight:600;color:var(--navy)">${esc(name)}</span><span style="color:var(--grey)">${count} action${count!==1?'s':''}${relOuts.length?' · '+relOuts.length+' outcome'+(relOuts.length!==1?'s':''):''}</span></div><div style="height:6px;background:#ECEFF1;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--teal);border-radius:3px;transition:width .4s"></div></div>${relOuts.length?`<div style="font-size:10px;color:var(--green-dk);margin-top:2px;font-weight:600">${esc(relOuts[0].value||relOuts[0].description||'').slice(0,80)}</div>`:''}</div>`;
+     }).join('') : ''}
+   </div>
+ </div>
+
+ ${outcomeList.length ? `
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden">
+   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Results Reported</h3></div>
+   <div style="padding:16px">
+     ${outcomeList.slice(0,5).map(o=>`<div style="padding:8px 10px;background:#F5F6F7;border-radius:6px;margin-bottom:6px;border-left:3px solid var(--green)"><div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(o.metric||'Outcome')}: ${esc(o.value)}</div><div style="font-size:11px;color:#607D8B;margin-top:2px">${esc(o.desc).slice(0,120)}</div>${o.schools?`<div style="font-size:10px;color:var(--grey);margin-top:2px">${(()=>{const sa=o.schools.split(',').map(s=>s.trim()).filter(Boolean);return sa.length<=2?esc(sa.join(', ')):esc(sa[0])+' + '+(sa.length-1)+' more'})()}${o.district?' · '+esc(o.district):''}</div>`:''}</div>`).join('')}
+   </div>
+ </div>` : ''}
+ `}
+
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px">
+   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Peer Comparisons</h3></div>
+   <div style="padding:20px 16px;text-align:center">
+     <div style="font-size:12px;color:#607D8B;line-height:1.7;max-width:400px;margin:0 auto">This tracker is not directly linked to DDD data. To compare your circuit or district against others, open the <strong>DDD Dashboard</strong> and use the comparison reports. As more officials capture evidence here, aggregated insights will appear in this section.</div>
+   </div>
+ </div>
+
+ <div style="background:linear-gradient(135deg,#074445,#0F7B7D);border-radius:10px;padding:14px 16px;text-align:center">
+   <div style="font-size:11px;color:#B8DCDC;font-weight:600;margin-bottom:4px">Want to see how your schools compare?</div>
+   <div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:6px">Open the DDD Dashboard for actual performance data and circuit comparisons</div>
+   <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(122,182,72,.9);color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;margin-top:6px">Open DDD Dashboard</a>
+ </div>`;
 }
 
 // POLICY MODAL 
