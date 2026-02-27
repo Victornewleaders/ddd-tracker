@@ -1531,16 +1531,20 @@ function renderFilterBar(decs) {
     circuits = [...cs].sort();
   }
 
-  // Schools: from logged activities only (master list has 24k+ schools, too many for dropdown)
-  const schools = [];
-  decs.forEach(function(d) {
-    var det = d.details || {};
-    if (f.province !== 'All' && det.province !== f.province) return;
-    if (f.district !== 'All' && det.district !== f.district) return;
-    if (f.circuit !== 'All' && det.circuit !== f.circuit) return;
-    (det.schools || '').split(',').map(function(s) { return s.trim(); }).filter(Boolean).forEach(function(s) { if (!schools.includes(s)) schools.push(s); });
-  });
-  schools.sort();
+  // Schools: use the same master list as Log Activity (scoped by district/circuit to keep dropdown manageable)
+  let schools = [];
+  if (f.district !== 'All' && SCHOOLS_MAP[f.district]) {
+    if (f.circuit !== 'All' && SCHOOLS_MAP[f.district][f.circuit]) {
+      schools = (SCHOOLS_MAP[f.district][f.circuit] || []).map(function(x){ return x && x[0] ? x[0] : ''; }).filter(Boolean);
+    } else {
+      const ss = new Set();
+      Object.values(SCHOOLS_MAP[f.district]).forEach(function(arr){
+        (arr || []).forEach(function(x){ if (x && x[0]) ss.add(x[0]); });
+      });
+      schools = [...ss];
+    }
+    schools.sort();
+  }
 
   const provLocked = scope === 'district' || scope === 'own';
   const distLocked = scope === 'own';
@@ -1548,7 +1552,17 @@ function renderFilterBar(decs) {
   const filtered = applyDashFilters(decs);
 
   function sel(options, current, field, disabled) {
-    return '<select ' + (disabled ? 'disabled ' : '') + 'onchange="S.dashFilter.' + field + '=this.value;' +
+    const blockSchool = (field === 'school' && f.district === 'All');
+    const guardMsg = 'Please select a district first before selecting schools.';
+    const guard = field === 'school'
+      ? ' onmousedown="if(S.dashFilter.district===\'All\'){toast(\'' + guardMsg + '\');event.preventDefault();return false;}"' +
+        ' onfocus="if(S.dashFilter.district===\'All\'){toast(\'' + guardMsg + '\');this.blur();}"'
+      : '';
+    const faux = blockSchool ? 'style="opacity:.5;cursor:not-allowed" ' : '';
+    const pre = field === 'school'
+      ? "if(S.dashFilter.district==='All'){toast('" + guardMsg + "');this.value='All';return;}"
+      : '';
+    return '<select ' + (disabled ? 'disabled ' : '') + faux + guard + 'onchange="' + pre + 'S.dashFilter.' + field + '=this.value;' +
       (field === 'province' ? "S.dashFilter.district='All';S.dashFilter.circuit='All';S.dashFilter.school='All';" : '') +
       (field === 'district' ? "S.dashFilter.circuit='All';S.dashFilter.school='All';" : '') +
       (field === 'circuit' ? "S.dashFilter.school='All';" : '') +
