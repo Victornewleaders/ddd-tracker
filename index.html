@@ -1817,24 +1817,27 @@ function renderDashboard() {
    const pct = total ? Math.round((count/total)*100) : 0;
    const width = total ? Math.max(Math.round((count/total)*100), 8) : 8;
 
-   const clickable = !!drillKey;
-   const attrs = clickable
-     ? `role="button" tabindex="0" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" style="cursor:pointer"`
-     : '';
-   const hint = clickable ? `<div style="font-size:10px;color:var(--grey);margin-top:2px">Tap to view details</div>` : '';
+   const clickable = !!drillKey && count > 0;
+   const tapAttrs = clickable
+     ? `role="button" tabindex="0" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" ontouchstart="this.style.background='#F0F8F8'" ontouchend="this.style.background='#fff'" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:all .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15)"`
+     : `style="background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;margin-bottom:8px"`;
 
-   return `<div style="margin-bottom:10px" ${attrs}>
-     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
-       <div>
-         <div style="font-size:12px;font-weight:600;color:var(--navy)">${label}</div>
-         ${hint}
+   return `<div ${tapAttrs}>
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+       <div style="display:flex;align-items:center;gap:8px">
+         <div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0"></div>
+         <div style="font-size:13px;font-weight:700;color:var(--navy)">${label}</div>
        </div>
-       <div style="font-size:12px">
-       ${clickable ? `<button type="button" class="btn secondary pill" onclick="openPipelineDrill(\'${drillKey}\', event)" style="padding:4px 8px;font-size:11px;line-height:1.2;margin-left:8px">Show list</button>` : ''}<strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
+       <div style="display:flex;align-items:center;gap:6px">
+         <strong style="font-size:22px;color:${color}">${count}</strong>
+         <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span>
+         ${clickable ? '<span style="font-size:16px;color:'+color+'">▸</span>' : ''}
+       </div>
      </div>
-     <div style="height:28px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
-       <div style="height:100%;width:${width}%;background:${color};border-radius:6px;transition:width .5s;display:flex;align-items:center;padding-left:8px"></div>
+     <div style="height:24px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
+       <div style="height:100%;width:${width}%;background:${color};border-radius:6px;transition:width .5s"></div>
      </div>
+     ${clickable ? '<div style="font-size:11px;color:'+color+';margin-top:6px;font-weight:600;text-align:right">Tap to see details ▸</div>' : ''}
    </div>`;
  }
 
@@ -2258,13 +2261,22 @@ ${tab==='impact'?`
             const arr=(imp.schools||'').split(',').map(s=>s.trim()).filter(Boolean);
             const n=arr.length;
             const prev=arr.slice(0,2).join(', ');
-            const key=(imp.id||('a'+imp.action_id+'_'+imp.date));
-            return `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-              <div style="flex:1;min-width:200px">${prev?esc(prev)+(n>2?' + '+(n-2)+' more':''):esc(imp.schools||'')}${imp.district?' · '+esc(imp.district):''}</div>
-              ${n>2?`<button type="button" class="btn secondary pill btn-sm" onclick="toggleImpactSchools('${key}');event.stopPropagation()" style="padding:4px 8px;font-size:11px">${S.showImpactSchools===key?'Hide':'View'} schools</button>`:''}
-              <div style="white-space:nowrap">${fmtDate(imp.date)}</div>
+            return n>0 ? `
+            <div onclick="openSchoolsListModal('${esc(imp.metric||'Outcome').replace(/'/g,"\\'")}', '${encodeURIComponent(imp.schools||'')}')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:6px;background:#fff;border:1.5px solid var(--green);border-radius:8px;cursor:pointer;transition:all .15s;min-height:44px;-webkit-tap-highlight-color:rgba(122,182,72,.15)" ontouchstart="this.style.background='var(--green-lt)'" ontouchend="this.style.background='#fff'">
+              <span style="font-size:16px">🏫</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12px;font-weight:700;color:var(--navy)">${n} school${n!==1?'s':''}</div>
+                <div style="font-size:11px;color:var(--grey-dk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${prev?esc(prev)+(n>2?' +\u2009'+(n-2)+' more':''):''}</div>
+              </div>
+              <span style="font-size:16px;color:var(--green)">▸</span>
             </div>
-            ${n>2 && S.showImpactSchools===key ? renderSchoolsExpandableTable('out_'+key, arr) : ''}`;
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+              ${imp.district?'<span>'+esc(imp.district)+'</span>':'<span></span>'}
+              <span style="white-space:nowrap">${fmtDate(imp.date)}</span>
+            </div>` : `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <div>${prev?esc(prev):esc(imp.schools||'')}${imp.district?' · '+esc(imp.district):''}</div>
+              <div style="white-space:nowrap">${fmtDate(imp.date)}</div>
+            </div>`;
           })()}
        </div>
        ${imp.evidence?`<div style="font-size:10px;color:var(--teal);margin-top:3px">Evidence: ${esc(imp.evidence)}</div>`:''}
@@ -2329,12 +2341,21 @@ function renderDashboardUpdate(decs,acts,outs){
          <!-- SCHOOL & DISTRICT INFO -->
          <div style="background:#F7F9FC;border-radius:8px;padding:10px 14px;margin-bottom:14px">
            ${det.district?'<div style="font-size:13px;color:var(--navy);margin-bottom:4px"><strong>District:</strong> '+esc(det.district)+'</div>':''}
-           ${schoolCount>0?`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-             <div style="font-size:13px;color:var(--navy);margin-bottom:2px"><strong>Schools:</strong> ${schoolCount} selected</div>
-             <button type="button" class="btn secondary pill btn-sm" onclick="toggleSchoolsTable('${a.id}')" style="padding:6px 10px;font-size:12px">${S.showSchoolsTable===a.id?'Hide list':'View list'}</button>
+           ${schoolCount>0?`
+           <div onclick="openSchoolsListModal('${esc(a.action_taken).replace(/'/g,"\\'")}', '${encodeURIComponent(schoolStr)}')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:6px;background:#fff;border:2px solid var(--teal);border-radius:10px;cursor:pointer;transition:all .15s;min-height:52px;-webkit-tap-highlight-color:rgba(11,142,141,.15)" ontouchstart="this.style.background='var(--teal-lt)'" ontouchend="this.style.background='#fff'">
+             <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+               <span style="font-size:18px;color:var(--teal)">🏫</span>
+             </div>
+             <div style="flex:1;min-width:0">
+               <div style="font-size:14px;font-weight:700;color:var(--navy)">${schoolCount} school${schoolCount!==1?'s':''}</div>
+               <div style="font-size:12px;color:var(--grey-dk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(()=>{const prev=schoolArr.slice(0,2).join(', ');return prev?esc(prev)+(schoolCount>2?' +\u2009'+(schoolCount-2)+' more':''):''})()}</div>
+             </div>
+             <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;color:var(--teal)">
+               <span style="font-size:20px;line-height:1">▸</span>
+               <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:1px">Tap to<br>view</span>
+             </div>
            </div>
-           <div style="font-size:12px;color:var(--grey-dk);line-height:1.6;margin-top:2px">${(()=>{const prev=schoolArr.slice(0,2).join(', ');return prev?esc(prev)+(schoolCount>2?' + '+(schoolCount-2)+' more':''):''})()}</div>
-           ${S.showSchoolsTable===a.id?renderSchoolsExpandableTable('act_'+a.id, schoolArr):''}`:''}
+           `:''}
            ${parentDec&&parentDec.date?'<div style="font-size:12px;color:var(--grey);margin-top:6px">Logged on '+fmtDate(parentDec.date)+'</div>':''}
          </div>
 
