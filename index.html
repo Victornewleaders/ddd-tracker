@@ -592,7 +592,7 @@ async function handleOtpSubmit() {
  try {
    const { data, error } = await sb.auth.signInWithPassword({
      email: S._otpEmail,
-     password: pin
+     password: 'DD' + pin
    });
 
    if (error) {
