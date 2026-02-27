@@ -174,6 +174,20 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-subnav .sn-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px;padding:0 4px}
 .dash-subnav-hint{text-align:center;font-size:10px;color:var(--grey);padding:6px 16px 0;margin:0 -16px;background:#fff}
 
+/* Dashboard filter bar */
+.dash-filters{background:linear-gradient(135deg,#1A2332 0%,#2A3A4E 100%);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.dash-filters-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.dash-filter-grp label{display:block;font-size:9px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.dash-filter-grp select{width:100%;padding:7px 8px;border:1.5px solid rgba(255,255,255,.2);border-radius:6px;font-size:12px;font-weight:600;font-family:inherit;color:#fff;background:rgba(255,255,255,.1);cursor:pointer;appearance:auto;-webkit-appearance:auto}
+.dash-filter-grp select:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 2px rgba(11,142,141,.3)}
+.dash-filter-grp select:disabled{opacity:.5;cursor:not-allowed;background:rgba(255,255,255,.05)}
+.dash-filter-grp select option{color:#1A2332;background:#fff}
+.dash-filters-info{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.dash-filters-count{font-size:10px;color:rgba(255,255,255,.5)}
+.dash-filters-clear{font-size:10px;color:var(--teal);font-weight:700;background:none;border:none;cursor:pointer;font-family:inherit;padding:2px 8px;border-radius:4px;transition:.15s}
+.dash-filters-clear:hover{background:rgba(11,142,141,.2)}
+@media(max-width:500px){.dash-filters-row{grid-template-columns:1fr 1fr}}
+
 /* Coverage table expand (mobile only) */
 .cov-table .cov-chevron{display:none}
 .cov-detail{display:none}
@@ -452,13 +466,15 @@ const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 const genId = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
 const S = {
- loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'', _otpValue:'', _otpEmail:'',
+ loading:true, error:null, authState:'checking', gateError:'', gateLoading:false, _gateEmailValue:'', _otpValue:'', _otpEmail:'', _officialId:null,
  official:{full_name:'User',role:'',province:'',district:'',email:''},
  view:'log', decisions:[], actions:[], outcomes:[], interventions:[], expandedChains:{}, outcomeModal:null,
  saving:false, submitted:false, expandedSchool:null,
  tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
  dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
  dashScope:'My Activities', dashPeriod:'All Time', dashTab:'insights',
+ // Dashboard filters
+ dashFilter: { province:'All', district:'All', circuit:'All', school:'All' },
  ddd_last_checked:(()=>{try{return localStorage.getItem('ddd_last_checked')||''}catch(e){return''}})(),
  dIn:{school:'',district:'',grade:'',subject:'',passRate:'',learnersAffected:'',detail:''},
  openSections:{1:false,2:false,3:false,4:false},
@@ -476,9 +492,8 @@ const S = {
 };
 
 // SUPABASE 
-const memStore = {};
 const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
- auth: { storage: { getItem:k=>memStore[k]||null, setItem:(k,v)=>{memStore[k]=v}, removeItem:k=>{delete memStore[k]} }, flowType:'implicit', detectSessionInUrl:false }
+ auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
 
 async function notifyLogin(official) {
@@ -505,34 +520,36 @@ async function notifyLogin(official) {
 }
 
 async function checkAuth() {
- let savedEmail = '';
- try { savedEmail = localStorage.getItem('ddd_official_email') || ''; } catch(e) {}
- 
- if (savedEmail) {
-   S.authState = 'checking';
-   S.loading = true;
-   render();
-   try {
-     const { data, error } = await sb.from('officials').select('id,full_name,role,province,district,email,is_active').eq('email', savedEmail).eq('is_active', true).limit(1);
+ S.authState = 'checking';
+ S.loading = true;
+ render();
+
+ try {
+   const { data: { session } } = await sb.auth.getSession();
+   if (session) {
+     const { data, error } = await sb.from('officials')
+       .select('id,full_name,role,province,district,email,is_active')
+       .limit(1);
+
      if (!error && data && data.length > 0) {
        const official = data[0];
-       S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: savedEmail };
+       S._officialId = official.id;
+       S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: official.email || '' };
        S.f.official_name = official.full_name || '';
        S.f.official_role = official.role || '';
-       S.f.official_email = savedEmail;
+       S.f.official_email = official.email || '';
        if (official.province) S.f.province = official.province;
        if (official.district) S.f.district = official.district;
+       initDashFilters();
        S.authState = 'ready';
-       S.loading = true;
        resetInactivityTimer();
        render();
        await loadAll();
        return;
      }
-   } catch(e) { console.warn('Session check failed:', e); }
-   try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
- }
- 
+   }
+ } catch(e) { console.warn('Session check failed:', e); }
+
  S.authState = 'gate';
  S.loading = false;
  render();
@@ -545,17 +562,13 @@ async function verifyEmail(email) {
    return;
  }
  try {
-   const { data, error } = await sb.from('officials').select('id,full_name,role,province,district,email,is_active').eq('email', cleanEmail).eq('is_active', true).limit(1);
+   const { data, error } = await sb.rpc('check_official_exists', { p_email: cleanEmail });
    if (error) throw new Error(error.message || JSON.stringify(error));
-   const official = (data && data.length > 0) ? data[0] : null;
-   if (!official) {
+   if (!data) {
      S.gateError = 'This email is not registered. Contact the DDD Interventions Manager on victor@newleaders.co.za for access.';
      S.gateLoading = false; render();
      return;
    }
-   
-   // Show PIN screen
-   S._pendingOfficial = official;
    S._otpEmail = cleanEmail;
    S._otpValue = '';
    S.gateError = '';
@@ -577,29 +590,49 @@ async function handleOtpSubmit() {
  }
  S.gateLoading = true; S.gateError = ''; render();
  try {
-   // Verify PIN server-side (PIN never exposed to browser)
-   const { data: valid, error } = await sb.rpc('verify_pin', { p_email: S._otpEmail, p_pin: pin });
-   if (error) throw new Error(error.message || JSON.stringify(error));
-   
-   if (!valid) {
-     S.gateError = 'Incorrect PIN. Please try again.';
-     S.gateLoading = false; render();
-     return;
+   const { data, error } = await sb.auth.signInWithPassword({
+     email: S._otpEmail,
+     password: pin
+   });
+
+   if (error) {
+     if (error.message.includes('Invalid login')) {
+       S.gateError = 'Incorrect PIN. Please try again.';
+     } else {
+       S.gateError = 'Sign-in failed: ' + error.message;
+     }
+     S.gateLoading = false; render(); return;
    }
-   
-   const official = S._pendingOfficial;
-   S.official = { full_name: official.full_name || 'Official', role: official.role || '', province: official.province || '', district: official.district || '', email: S._otpEmail };
+
+   // Session is now set - JWT attached to all future requests
+   const { data: officials } = await sb.from('officials')
+     .select('id,full_name,role,province,district,email')
+     .limit(1);
+
+   const official = officials?.[0];
+   if (!official) {
+     S.gateError = 'Account not linked. Contact the DDD Interventions Manager.';
+     await sb.auth.signOut();
+     S.gateLoading = false; render(); return;
+   }
+
+   S._officialId = official.id;
+   S.official = {
+     full_name: official.full_name || 'Official',
+     role: official.role || '',
+     province: official.province || '',
+     district: official.district || '',
+     email: S._otpEmail
+   };
    S.f.official_name = official.full_name || '';
    S.f.official_role = official.role || '';
    S.f.official_email = S._otpEmail;
    if (official.province) S.f.province = official.province;
    if (official.district) S.f.district = official.district;
-   
-   try { localStorage.setItem('ddd_official_email', S._otpEmail); } catch(e) {}
-   
-   // Notify admin (non-blocking)
+
+   initDashFilters();
    notifyLogin(S.official);
-   
+
    S.authState = 'ready';
    S.gateError = '';
    S.gateLoading = false;
@@ -621,17 +654,18 @@ async function handleGateSubmit() {
  await verifyEmail(S._gateEmailValue || '');
 }
 
-function logout() {
+async function logout() {
  if (_inactivityTimer) { clearTimeout(_inactivityTimer); _inactivityTimer = null; }
- try { localStorage.removeItem('ddd_official_email'); } catch(e) {}
+ await sb.auth.signOut();
  S.authState = 'gate';
  S.official = { full_name:'', role:'', province:'', district:'', email:'' };
+ S._officialId = null;
  S.gateError = '';
  S.gateLoading = false;
  S._gateEmailValue = '';
  S._otpValue = '';
  S._otpEmail = '';
- S._pendingOfficial = null;
+ S.decisions = []; S.actions = []; S.outcomes = [];
  S.view = 'log';
  S.f.formStep = -1;
  S.submitted = false;
@@ -705,6 +739,7 @@ async function saveOutcome() {
  try {
    const outcome = {
      id: 'OUT_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+     official_id: S._officialId,
      action_id: m.actionId,
      description: m.description.trim(),
      metric: m.metric.trim() || null,
@@ -1357,6 +1392,7 @@ async function submitForm() {
  // Insert decision
  const dec = {
  id: decId,
+ official_id: S._officialId,
  intervention_id: S.interventions[0]?.id || null,
  ddd_tool: S.f.ddd_reports.join(', '),
  data_viewed: (S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type) + ' — ' + S.f.schools,
@@ -1374,6 +1410,7 @@ async function submitForm() {
  // Insert action
  const act = {
  id: actId,
+ official_id: S._officialId,
  decision_id: decId,
  intervention_id: dec.intervention_id,
  action_taken: S.f.action_type === 'Other' ? S.f.action_other : S.f.action_type,
@@ -1418,10 +1455,100 @@ function resetForm() {
 // ═══════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════
+// ── DASHBOARD SCOPE HELPER ──
+function initDashFilters() {
+  const scope = getClientScope();
+  S.dashFilter = {
+    province: (scope === 'district' || scope === 'own') ? (S.official.province || 'All') : 'All',
+    district: scope === 'own' ? (S.official.district || 'All') : 'All',
+    circuit: 'All',
+    school: 'All'
+  };
+}
+
+function getClientScope() {
+  const role = S.official.role || '';
+  if (['Director General','Deputy Minister','Member'].includes(role)) return 'national';
+  if (['Provincial Manager','Chief Education Specialist','Deputy Chief Education Specialist','Deputy Director General','Director','Chief Director'].includes(role)) return 'province';
+  if (['Circuit Manager','Subject Advisor','Cluster Lead','District Director','Senior Education Specialist'].includes(role)) return 'district';
+  return 'own';
+}
+
+function applyDashFilters(decs) {
+  const f = S.dashFilter;
+  return decs.filter(d => {
+    const det = d.details || {};
+    if (f.province !== 'All' && (det.province || '') !== f.province) return false;
+    if (f.district !== 'All' && (det.district || '') !== f.district) return false;
+    if (f.circuit !== 'All' && (det.circuit || '') !== f.circuit) return false;
+    if (f.school !== 'All') {
+      const schools = (det.schools || '').split(',').map(s => s.trim());
+      if (!schools.includes(f.school)) return false;
+    }
+    return true;
+  });
+}
+
+function renderFilterBar(decs) {
+  const scope = getClientScope();
+  const f = S.dashFilter;
+
+  // Extract unique values from loaded data
+  const provinces = [...new Set(decs.map(d => (d.details||{}).province).filter(Boolean))].sort();
+  const districts = [...new Set(decs.filter(d => f.province === 'All' || (d.details||{}).province === f.province).map(d => (d.details||{}).district).filter(Boolean))].sort();
+  const circuits = [...new Set(decs.filter(d => (f.province === 'All' || (d.details||{}).province === f.province) && (f.district === 'All' || (d.details||{}).district === f.district)).map(d => (d.details||{}).circuit).filter(Boolean))].sort();
+  const schools = [];
+  decs.forEach(d => {
+    const det = d.details || {};
+    if (f.province !== 'All' && det.province !== f.province) return;
+    if (f.district !== 'All' && det.district !== f.district) return;
+    if (f.circuit !== 'All' && det.circuit !== f.circuit) return;
+    (det.schools || '').split(',').map(s => s.trim()).filter(Boolean).forEach(s => { if (!schools.includes(s)) schools.push(s); });
+  });
+  schools.sort();
+
+  const provLocked = scope === 'district' || scope === 'own';
+  const distLocked = scope === 'own';
+  const hasFilters = f.province !== 'All' || f.district !== 'All' || f.circuit !== 'All' || f.school !== 'All';
+  const filtered = applyDashFilters(decs);
+
+  function sel(options, current, field, disabled) {
+    return '<select ' + (disabled ? 'disabled ' : '') + 'onchange="S.dashFilter.' + field + '=this.value;' +
+      (field === 'province' ? "S.dashFilter.district='All';S.dashFilter.circuit='All';S.dashFilter.school='All';" : '') +
+      (field === 'district' ? "S.dashFilter.circuit='All';S.dashFilter.school='All';" : '') +
+      (field === 'circuit' ? "S.dashFilter.school='All';" : '') +
+      'render()">' +
+      '<option value="All"' + (current === 'All' ? ' selected' : '') + '>All</option>' +
+      options.map(function(o) { return '<option value="' + esc(o) + '"' + (current === o ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') +
+      '</select>';
+  }
+
+  return '<div class="dash-filters">' +
+    '<div class="dash-filters-row">' +
+      '<div class="dash-filter-grp"><label>Province</label>' + sel(provinces, f.province, 'province', provLocked) + '</div>' +
+      '<div class="dash-filter-grp"><label>District</label>' + sel(districts, f.district, 'district', distLocked) + '</div>' +
+      '<div class="dash-filter-grp"><label>Circuit</label>' + sel(circuits, f.circuit, 'circuit', false) + '</div>' +
+      '<div class="dash-filter-grp"><label>School</label>' + sel(schools, f.school, 'school', false) + '</div>' +
+    '</div>' +
+    '<div class="dash-filters-info">' +
+      '<span class="dash-filters-count">Showing ' + filtered.length + ' of ' + decs.length + ' activities</span>' +
+      (hasFilters ? '<button class="dash-filters-clear" onclick="S.dashFilter={province:S.official.province||\'All\',district:S.official.district||\'All\',circuit:\'All\',school:\'All\'};render()">Clear filters</button>' : '') +
+    '</div>' +
+  '</div>';
+}
+
 function renderDashboard() {
- const decs = S.decisions;
- const acts = S.actions;
- const outs = S.outcomes;
+ const allDecs = S.decisions;
+ const allActs = S.actions;
+ const allOuts = S.outcomes;
+
+ // Apply client-side filters
+ const decs = applyDashFilters(allDecs);
+ const decIds = new Set(decs.map(d => d.id));
+ const acts = allActs.filter(a => decIds.has(a.decision_id));
+ const actIds = new Set(acts.map(a => a.id));
+ const outs = allOuts.filter(o => actIds.has(o.action_id));
+
  const now = new Date();
  const isDemo = decs[0]?.id?.startsWith('DEMO_');
 
@@ -1652,6 +1779,8 @@ function renderDashboard() {
  // ═══════════════════════════════════
  return `<div class="dash-wrap">
  ${isDemo ? '<div class="demo-banner"><strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
+
+ ${renderFilterBar(allDecs)}
 
  <div class="dash-subnav-hint">Tap a section below to explore your data</div>
  <div class="dash-subnav">
