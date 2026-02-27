@@ -124,12 +124,13 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-section-hdr h3{font-size:14px;font-weight:700;color:var(--navy)}
 .dash-section-body{padding:14px 16px}
 .dash-section-desc{font-size:12px;color:var(--grey-dk);line-height:1.6;margin-bottom:12px}
-.dash-subnav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0 12px;position:sticky;top:0;z-index:10;background:#F5F6FA;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.dash-subnav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 6px;position:sticky;top:0;z-index:50;background:#fff;margin:0 -16px;scrollbar-width:none;box-shadow:0 2px 8px rgba(0,0,0,.1);border-bottom:1px solid #e0e0e0}
 .dash-subnav::-webkit-scrollbar{display:none}
-.dash-subnav button{flex-shrink:0;font-size:11px;font-weight:600;padding:6px 12px;border-radius:16px;border:1.5px solid #d0d4db;background:#fff;color:var(--grey-dk);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
-.dash-subnav button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-.dash-subnav button:hover{border-color:var(--teal)}
+.dash-subnav button{flex-shrink:0;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;border:2px solid #d0d4db;background:#fff;color:var(--grey-dk);cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.dash-subnav button.active{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 2px 8px rgba(11,142,141,.3)}
+.dash-subnav button:not(.active):hover{border-color:var(--teal);color:var(--teal);background:var(--teal-lt);transform:translateY(-1px)}
 .dash-subnav .sn-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px;padding:0 4px}
+.dash-subnav-hint{text-align:center;font-size:10px;color:var(--grey);padding:6px 16px 0;margin:0 -16px;background:#fff}
 
 /* Barrier bars */
 .bar-chart{display:flex;flex-direction:column;gap:8px}
@@ -396,7 +397,7 @@ const S = {
  saving:false, submitted:false, expandedSchool:null,
  tkTab:'navigator', selReport:null, selIntv:null, showPolicy:null,
  dStep:0, dChallenge:null, sortBy:'effectiveness', filterCat:'All',
- dashScope:'My Activities', dashPeriod:'All Time', dashTab:'overview',
+ dashScope:'My Activities', dashPeriod:'All Time', dashTab:'insights',
  ddd_last_checked:(()=>{try{return localStorage.getItem('ddd_last_checked')||''}catch(e){return''}})(),
  dIn:{school:'',district:'',grade:'',subject:'',passRate:'',learnersAffected:'',detail:''},
  openSections:{1:false,2:false,3:false,4:false},
@@ -730,7 +731,7 @@ function render() {
 
  const o = S.official;
  app.innerHTML = `
- <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Logged in as <strong style="color:#fff">${esc(o.full_name)}</strong>${o.district?' · '+esc(o.district):''}</div> </div> <button class="hdr-logout" onclick="logout()" title="Sign out">Sign out</button> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'&&S.f.formStep===-1&&!S.submitted?'active':''}" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'&&(S.f.formStep!==-1||S.submitted)?'active':''}" onclick="S.view='log';S.submitted=false;if(S.f.formStep===-1)S.f.formStep=0;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and the impact of your work</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
+ <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Logged in as <strong style="color:#fff">${esc(o.full_name)}</strong>${o.district?' · '+esc(o.district):''}</div> </div> <button class="hdr-logout" onclick="logout()" title="Sign out">Sign out</button> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'&&S.f.formStep===-1&&!S.submitted?'active':''}" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'&&(S.f.formStep!==-1||S.submitted)?'active':''}" onclick="S.view='log';S.submitted=false;if(S.f.formStep===-1)S.f.formStep=0;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';S.dashTab=S.dashTab||'insights';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and the impact of your work</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
  <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
  if(S.showPolicy) renderPolicyModal();
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
@@ -1502,9 +1503,9 @@ function renderDashboard() {
 
  // Pipeline insight
  if (chainsTotal >= 2) {
-   if (pipelineOutcomePct < 30) narratives.push({icon:'⚠️',color:'var(--orange)',text:`Only <strong>${pipelineOutcomePct}%</strong> of your ${chainsTotal} logged activities have recorded outcomes. This means ${chainsTotal - chainsWithOutcome} intervention${chainsTotal-chainsWithOutcome!==1?'s have':' has'} no evidence of impact yet.`,action:'Go to the Update tab to record outcomes for completed actions.'});
-   else if (pipelineOutcomePct >= 70) narratives.push({icon:'✅',color:'var(--green)',text:`Strong execution — <strong>${pipelineOutcomePct}%</strong> of your interventions have documented outcomes. This gives you solid evidence for reporting.`,action:''});
-   else narratives.push({icon:'📊',color:'var(--blue)',text:`<strong>${pipelineActionPct}%</strong> of decisions led to actions, but only <strong>${pipelineOutcomePct}%</strong> have outcomes recorded. Closing this gap strengthens your MERL evidence.`,action:'Update your completed actions with outcomes.'});
+   if (pipelineOutcomePct < 30) narratives.push({color:'var(--orange)',text:`Only <strong>${pipelineOutcomePct}%</strong> of your ${chainsTotal} logged activities have recorded outcomes. This means ${chainsTotal - chainsWithOutcome} intervention${chainsTotal-chainsWithOutcome!==1?'s have':' has'} no evidence of impact yet.`,action:'Go to the Update tab to record outcomes for completed actions.'});
+   else if (pipelineOutcomePct >= 70) narratives.push({color:'var(--green)',text:`Strong execution — <strong>${pipelineOutcomePct}%</strong> of your interventions have documented outcomes. This gives you solid evidence for reporting.`,action:''});
+   else narratives.push({color:'var(--blue)',text:`<strong>${pipelineActionPct}%</strong> of decisions led to actions, but only <strong>${pipelineOutcomePct}%</strong> have outcomes recorded. Closing this gap strengthens your MERL evidence.`,action:'Update your completed actions with outcomes.'});
  }
 
  // Geographic insight
@@ -1514,7 +1515,7 @@ function renderDashboard() {
    return daysSince > 30;
  });
  if (silentDistricts.length > 0 && districts.length > 1) {
-   narratives.push({icon:'📍',color:'var(--red)',text:`<strong>${silentDistricts.length}</strong> district${silentDistricts.length!==1?'s have':' has'} had no activity in 30+ days: ${silentDistricts.slice(0,3).map(d=>d.district||d.province).join(', ')}${silentDistricts.length>3?' and '+(silentDistricts.length-3)+' more':''}.`,action:'Consider scheduling support visits to these districts.'});
+   narratives.push({color:'var(--red)',text:`<strong>${silentDistricts.length}</strong> district${silentDistricts.length!==1?'s have':' has'} had no activity in 30+ days: ${silentDistricts.slice(0,3).map(d=>d.district||d.province).join(', ')}${silentDistricts.length>3?' and '+(silentDistricts.length-3)+' more':''}.`,action:'Consider scheduling support visits to these districts.'});
  }
 
  // Subject insight
@@ -1528,9 +1529,9 @@ function renderDashboard() {
    });
    const mostBarrierSub = Object.entries(subWithBarriers).sort((a,b)=>b[1]-a[1])[0];
    if (mostBarrierSub && mostBarrierSub[0] !== topSub[0]) {
-     narratives.push({icon:'📚',color:'var(--teal)',text:`<strong>${topSub[0]}</strong> is your most targeted subject (${topSub[1]} activities), but <strong>${mostBarrierSub[0]}</strong> has the most barrier reports (${mostBarrierSub[1]}). It may need more focused support.`,action:''});
+     narratives.push({color:'var(--teal)',text:`<strong>${topSub[0]}</strong> is your most targeted subject (${topSub[1]} activities), but <strong>${mostBarrierSub[0]}</strong> has the most barrier reports (${mostBarrierSub[1]}). It may need more focused support.`,action:''});
    } else {
-     narratives.push({icon:'📚',color:'var(--teal)',text:`<strong>${topSub[0]}</strong> is your most targeted subject with <strong>${topSub[1]}</strong> activities${topSubjects.length>1?', followed by '+topSubjects[1][0]+' ('+topSubjects[1][1]+')':''}.`,action:''});
+     narratives.push({color:'var(--teal)',text:`<strong>${topSub[0]}</strong> is your most targeted subject with <strong>${topSub[1]}</strong> activities${topSubjects.length>1?', followed by '+topSubjects[1][0]+' ('+topSubjects[1][1]+')':''}.`,action:''});
    }
  }
 
@@ -1542,9 +1543,9 @@ function renderDashboard() {
    const dddWithOutcome = dddDecs.filter(d=>{const dActs=acts.filter(a=>a.decision_id===d.id);return dActs.some(a=>outs.some(o=>o.action_id===a.id))}).length;
    const noDddWithOutcome = noDddDecs.filter(d=>{const dActs=acts.filter(a=>a.decision_id===d.id);return dActs.some(a=>outs.some(o=>o.action_id===a.id))}).length;
    if (dddPct < 50) {
-     narratives.push({icon:'📉',color:'var(--orange)',text:`Only <strong>${dddPct}%</strong> of activities used DDD data. Data-informed interventions produce stronger evidence. ${dddDecs.length&&dddWithOutcome?'Of those that did use DDD, '+Math.round((dddWithOutcome/dddDecs.length)*100)+'% have recorded outcomes.':''}`,action:'Open the DDD Dashboard before your next school visit.'});
+     narratives.push({color:'var(--orange)',text:`Only <strong>${dddPct}%</strong> of activities used DDD data. Data-informed interventions produce stronger evidence. ${dddDecs.length&&dddWithOutcome?'Of those that did use DDD, '+Math.round((dddWithOutcome/dddDecs.length)*100)+'% have recorded outcomes.':''}`,action:'Open the DDD Dashboard before your next school visit.'});
    } else if (dddPct >= 75) {
-     narratives.push({icon:'🎯',color:'var(--green)',text:`Excellent — <strong>${dddPct}%</strong> of your activities are data-informed. ${dataQualityPct>=60?'And '+dataQualityPct+'% include specific numbers from DDD reports.':'Try including more specific numbers (pass rates, learner counts) in your entries.'}`,action:''});
+     narratives.push({color:'var(--green)',text:`Excellent — <strong>${dddPct}%</strong> of your activities are data-informed. ${dataQualityPct>=60?'And '+dataQualityPct+'% include specific numbers from DDD reports.':'Try including more specific numbers (pass rates, learner counts) in your entries.'}`,action:''});
    }
  }
 
@@ -1554,17 +1555,17 @@ function renderDashboard() {
    const distinctDistricts = new Set();
    decs.forEach(d=>{const det=d.details||{};const allB=[...(det.ctx_staffing||[]),...(det.ctx_resources||[]),...(det.ctx_learners||[])];if(allB.includes(topBarrier[0])&&det.district)distinctDistricts.add(det.district)});
    if (distinctDistricts.size > 1) {
-     narratives.push({icon:'🚧',color:'#E53935',text:`<strong>"${topBarrier[0]}"</strong> is your most reported barrier (${topBarrier[1]} times across ${distinctDistricts.size} districts). This is a systemic issue worth escalating.`,action:''});
+     narratives.push({color:'#E53935',text:`<strong>"${topBarrier[0]}"</strong> is your most reported barrier (${topBarrier[1]} times across ${distinctDistricts.size} districts). This is a systemic issue worth escalating.`,action:''});
    }
  }
 
  // ── HELPER: funnel bar ──
- function funnelBar(label, count, total, color, icon) {
+ function funnelBar(label, count, total, color) {
    const pct = total ? Math.round((count/total)*100) : 0;
    const width = total ? Math.max(Math.round((count/total)*100), 8) : 8;
    return `<div style="margin-bottom:10px">
      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
-       <div style="font-size:12px;font-weight:600;color:var(--navy)">${icon} ${label}</div>
+       <div style="font-size:12px;font-weight:600;color:var(--navy)">${label}</div>
        <div style="font-size:12px"><strong style="font-size:18px;color:${color}">${count}</strong> <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span></div>
      </div>
      <div style="height:28px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
@@ -1589,13 +1590,14 @@ function renderDashboard() {
  return `<div class="dash-wrap">
  ${isDemo ? '<div class="demo-banner"><strong>Demo data shown</strong> — log your first activity and this will be replaced with your real data</div>' : ''}
 
+ <div class="dash-subnav-hint">Tap a section below to explore your data</div>
  <div class="dash-subnav">
-   <button class="${tab==='insights'?'active':''}" onclick="S.dashTab='insights';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Insights</button>
-   <button class="${tab==='coverage'?'active':''}" onclick="S.dashTab='coverage';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Coverage</button>
-   <button class="${tab==='trends'?'active':''}" onclick="S.dashTab='trends';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Trends</button>
-   <button class="${tab==='impact'?'active':''}" onclick="S.dashTab='impact';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Impact${outs.length?'<span class="sn-badge" style="background:var(--green-lt);color:var(--green-dk)">'+outs.length+'</span>':''}</button>
-   <button class="${tab==='update'?'active':''}" onclick="S.dashTab='update';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Update${(()=>{const n=acts.filter(a=>a.status!=='Completed'||!outs.some(o=>o.action_id===a.id)).length;return n?'<span class="sn-badge" style="background:var(--blue-lt);color:var(--blue)">'+n+'</span>':'';})()}</button>
-   <button class="${tab==='schools'?'active':''}" onclick="S.dashTab='schools';render();document.querySelector('.dash-wrap').scrollIntoView({behavior:'smooth'})">Schools${schoolSet.size?'<span class="sn-badge" style="background:var(--grey-lt);color:var(--grey)">'+schoolSet.size+'</span>':''}</button>
+   <button class="${tab==='insights'?'active':''}" onclick="S.dashTab='insights';render()">Insights</button>
+   <button class="${tab==='coverage'?'active':''}" onclick="S.dashTab='coverage';render()">Coverage</button>
+   <button class="${tab==='trends'?'active':''}" onclick="S.dashTab='trends';render()">Trends</button>
+   <button class="${tab==='impact'?'active':''}" onclick="S.dashTab='impact';render()">Impact${outs.length?'<span class="sn-badge" style="background:var(--green-lt);color:var(--green-dk)">'+outs.length+'</span>':''}</button>
+   <button class="${tab==='update'?'active':''}" onclick="S.dashTab='update';render()">Update Activities${(()=>{const n=acts.filter(a=>a.status!=='Completed'||!outs.some(o=>o.action_id===a.id)).length;return n?'<span class="sn-badge" style="background:var(--blue-lt);color:var(--blue)">'+n+'</span>':'';})()}</button>
+   <button class="${tab==='schools'?'active':''}" onclick="S.dashTab='schools';render()">Schools${schoolSet.size?'<span class="sn-badge" style="background:var(--grey-lt);color:var(--grey)">'+schoolSet.size+'</span>':''}</button>
  </div>
 
 ${tab==='insights'?`
@@ -1609,9 +1611,8 @@ ${tab==='insights'?`
 
  <!-- ═══ SMART NARRATIVES ═══ -->
  ${narratives.length ? `<div style="margin-bottom:16px">${narratives.slice(0,4).map(n=>`
-   <div style="background:#fff;border-radius:8px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);border-left:4px solid ${n.color};display:flex;gap:10px;align-items:flex-start">
-     <div style="font-size:18px;flex-shrink:0;line-height:1">${n.icon}</div>
-     <div style="flex:1">
+   <div style="background:#fff;border-radius:8px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);border-left:4px solid ${n.color}">
+     <div>
        <div style="font-size:12px;color:var(--navy);line-height:1.6">${n.text}</div>
        ${n.action?`<div style="font-size:11px;color:${n.color};font-weight:600;margin-top:4px">${n.action}</div>`:''}
      </div>
@@ -1622,9 +1623,9 @@ ${tab==='insights'?`
    <div class="dash-section-hdr"><h3>Intervention Pipeline</h3><span style="font-size:11px;color:var(--grey)">Decision → Action → Outcome</span></div>
    <div class="dash-section-body">
      <div class="dash-section-desc">How many of your interventions are completing the full cycle? A strong programme converts decisions into actions and actions into measurable outcomes.</div>
-     ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)', '💡')}
-     ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)', '⚡')}
-     ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)', '🎯')}
+     ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)')}
+     ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)')}
+     ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)')}
      <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:8px">
        <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
          <div><div style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
@@ -1873,10 +1874,9 @@ ${tab==='impact'?`
    </div>
  </div>
  ` : `<div style="padding:30px;text-align:center">
-   <div style="font-size:32px;margin-bottom:8px">📊</div>
    <div style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px">No outcomes recorded yet</div>
    <div style="font-size:12px;color:var(--grey);line-height:1.6;max-width:400px;margin:0 auto">Update your completed activities and record what changed. Outcomes are the most powerful part of your data — they show the impact of your work.</div>
-   <button class="btn btn-teal" onclick="S.dashTab='update';render()" style="margin-top:12px">Go to Update →</button>
+   <button class="btn btn-teal" onclick="S.dashTab='update';render()" style="margin-top:12px">Go to Update Activities →</button>
  </div>`}
 `:''}
 
@@ -1892,38 +1892,87 @@ function renderDashboardUpdate(decs,acts,outs){
  const needsUpdate = incomplete.filter(a => a.status === 'In Progress' || a.status === 'Planned');
  const completedNoOutcome = acts.filter(a => a.status === 'Completed' && !outs.some(o => o.action_id === a.id));
  const allItems = [...needsUpdate, ...completedNoOutcome];
- if (!allItems.length) return '<div style="padding:20px;text-align:center;color:var(--grey);font-size:12px">All your activities are complete with outcomes recorded. Nice work! 🎉</div>';
+ if (!allItems.length) return `<div style="padding:30px 20px;text-align:center">
+   <div style="width:48px;height:48px;border-radius:50%;background:var(--green);margin:0 auto 12px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:22px;font-weight:700">&#10003;</span></div>
+   <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px">All up to date</div>
+   <div style="font-size:14px;color:var(--grey);line-height:1.6">All your activities are complete with outcomes recorded. Nice work!</div>
+ </div>`;
  return `<div class="dash-section" style="border-left:3px solid var(--blue)">
-   <div class="dash-section-hdr"><h3>Update Your Activities</h3><span style="font-size:11px;color:var(--grey)">${allItems.length} item${allItems.length!==1?'s':''}</span></div>
-   <div class="dash-section-body" style="padding:12px 18px">
-     <div class="dash-section-desc">Review your ongoing activities below. Change their status or record what happened.</div>
-     ${allItems.map(a => {
+   <div class="dash-section-hdr"><h3 style="font-size:16px">Update Your Activities</h3><span style="font-size:13px;color:var(--grey)">${allItems.length} need${allItems.length!==1?'':'s'} attention</span></div>
+   <div class="dash-section-body" style="padding:14px 16px">
+     <div style="background:var(--blue-lt);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--navy);line-height:1.7">
+       <strong>What to do here:</strong> For each activity below, update how far along it is. Once something is done, tap <strong>&ldquo;Record what changed&rdquo;</strong> to capture the result.
+     </div>
+     ${allItems.map((a,idx) => {
        const parentDec = decs.find(d => d.id === a.decision_id);
        const det = parentDec ? parentDec.details || {} : {};
        const hasOutcome = outs.some(o => o.action_id === a.id);
+       const outcomeObj = outs.find(o => o.action_id === a.id);
        const schoolStr = det.schools || '';
        const schoolArr = schoolStr.split(',').map(s=>s.trim()).filter(Boolean);
        const schoolCount = schoolArr.length;
-       const uid = 'sch_' + a.id;
-       return `<div style="background:#FAFBFC;border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;margin-bottom:6px">
-         <div style="margin-bottom:10px">
-           <div style="font-size:12px;font-weight:600;color:var(--navy);line-height:1.4">${esc(a.action_taken)}</div>
-           <div style="font-size:11px;color:var(--grey);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-             ${schoolCount>0?`<span onclick="var el=document.getElementById('${uid}');el.style.display=el.style.display==='none'?'block':'none';this.querySelector('.arr').textContent=el.style.display==='none'?'\\u25B6':'\\u25BC'" style="cursor:pointer;color:var(--teal);font-weight:600"><span class="arr" style="font-size:9px;margin-right:3px">\\u25B6</span>${schoolCount} school${schoolCount!==1?'s':''}</span>`:''}
-             ${det.district?`<span>${esc(det.district)}</span>`:''}
-             ${a.target_date?`<span>Target: ${fmtDate(a.target_date)}</span>`:''}
-           </div>
-           ${schoolCount>0?`<div id="${uid}" style="display:none;margin-top:6px;max-height:180px;overflow-y:auto;border:1px solid #e8e8e8;border-radius:6px;background:#fff"><table style="width:100%;border-collapse:collapse;font-size:11px"><tbody>${schoolArr.map((s,i)=>`<tr style="border-bottom:1px solid #f0f0f0${i%2===1?';background:#FAFBFC':''}"><td style="padding:5px 10px;color:var(--navy)">${esc(s)}</td></tr>`).join('')}</tbody></table></div>`:''}
+       const decDone = !!parentDec;
+       const actDone = a.status === 'Completed';
+       const actStarted = a.status === 'In Progress';
+       const outDone = hasOutcome;
+       const decColor = decDone ? 'var(--navy)' : '#ccc';
+       const actColor = actDone ? 'var(--green)' : actStarted ? 'var(--blue)' : '#ccc';
+       const lineDecAct = (actDone || actStarted) ? 'var(--teal)' : '#ddd';
+       const lineActOut = outDone ? 'var(--green)' : '#ddd';
+       return `<div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+
+         <!-- ACTIVITY NUMBER & TITLE -->
+         <div style="margin-bottom:12px">
+           <div style="font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Activity ${idx+1} of ${allItems.length}</div>
+           <div style="font-size:15px;font-weight:700;color:var(--navy);line-height:1.4">${esc(a.action_taken)}</div>
+           ${a.notes?'<div style="font-size:13px;color:var(--grey-dk);margin-top:6px;line-height:1.5">'+esc(a.notes)+'</div>':''}
          </div>
-         <div style="margin-bottom:10px">
-           <div style="font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Status</div>
-           <div style="display:flex;gap:6px;flex-wrap:wrap">
-             <button onclick="updateActionStatus('`+a.id+`','Planned')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${a.status==='Planned'?'#fff':'var(--grey-dk)'};background:${a.status==='Planned'?'var(--grey)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">Planned</button>
-             <button onclick="updateActionStatus('`+a.id+`','In Progress')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${a.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${a.status==='In Progress'?'var(--blue)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">In Progress</button>
-             <button onclick="updateActionStatus('`+a.id+`','Completed')" style="font-size:11px;padding:5px 10px;border:2px solid ${a.status==='Completed'?'var(--green)':'#d0d0d0'};color:${a.status==='Completed'?'#fff':'var(--grey-dk)'};background:${a.status==='Completed'?'var(--green)':'#fff'};border-radius:6px;cursor:pointer;font-weight:600;transition:all .15s">Completed</button>
+
+         <!-- SCHOOL & DISTRICT INFO -->
+         <div style="background:#F7F9FC;border-radius:8px;padding:10px 14px;margin-bottom:14px">
+           ${det.district?'<div style="font-size:13px;color:var(--navy);margin-bottom:4px"><strong>District:</strong> '+esc(det.district)+'</div>':''}
+           ${schoolCount>0?'<div style="font-size:13px;color:var(--navy);margin-bottom:2px"><strong>'+schoolCount+' school'+(schoolCount!==1?'s':'')+':</strong></div><div style="font-size:12px;color:var(--grey-dk);line-height:1.6;'+(schoolCount>5?'max-height:120px;overflow-y:auto':'')+'">'+schoolArr.map(s=>esc(s)).join(', ')+'</div>':''}
+           ${parentDec&&parentDec.date?'<div style="font-size:12px;color:var(--grey);margin-top:6px">Logged on '+fmtDate(parentDec.date)+'</div>':''}
+         </div>
+
+         <!-- PROGRESS TIMELINE -->
+         <div style="margin-bottom:14px">
+           <div style="font-size:12px;font-weight:700;color:var(--grey);margin-bottom:10px">PROGRESS</div>
+           <div style="display:flex;align-items:flex-start">
+             <div style="flex:1;text-align:center">
+               <div style="width:32px;height:32px;border-radius:50%;background:${decColor};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:14px;font-weight:700">${decDone?'&#10003;':'1'}</span></div>
+               <div style="font-size:12px;font-weight:700;color:${decDone?'var(--navy)':'var(--grey)'}">Decided</div>
+               ${parentDec&&parentDec.date?'<div style="font-size:11px;color:var(--grey);margin-top:2px">'+fmtDate(parentDec.date)+'</div>':''}
+             </div>
+             <div style="flex:0 0 auto;display:flex;align-items:center;padding-top:14px"><div style="width:28px;height:3px;background:${lineDecAct};border-radius:2px"></div></div>
+             <div style="flex:1;text-align:center">
+               <div style="width:32px;height:32px;border-radius:50%;background:${actColor};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:14px;font-weight:700">${actDone?'&#10003;':'2'}</span></div>
+               <div style="font-size:12px;font-weight:700;color:${actDone?'var(--green)':actStarted?'var(--blue)':'var(--grey)'}">In progress</div>
+               ${a.target_date?'<div style="font-size:11px;color:var(--grey);margin-top:2px">Due '+fmtDate(a.target_date)+'</div>':''}
+             </div>
+             <div style="flex:0 0 auto;display:flex;align-items:center;padding-top:14px"><div style="width:28px;height:3px;background:${lineActOut};border-radius:2px"></div></div>
+             <div style="flex:1;text-align:center">
+               <div style="width:32px;height:32px;border-radius:50%;${outDone?'background:var(--green)':'border:2px dashed #ccc;background:transparent'};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:${outDone?'#fff':'#ccc'};font-size:14px;font-weight:700">${outDone?'&#10003;':'3'}</span></div>
+               <div style="font-size:12px;font-weight:700;color:${outDone?'var(--green)':'var(--grey)'}">Result</div>
+               ${outDone?'<div style="font-size:11px;color:var(--green);margin-top:2px">Recorded</div>':'<div style="font-size:11px;color:var(--orange);margin-top:2px">Not yet</div>'}
+             </div>
            </div>
          </div>
-         ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="font-size:11px;padding:5px 10px;border:none;background:var(--teal);color:#fff;border-radius:6px;cursor:pointer;font-weight:600;width:100%;text-align:center">Record Outcome</button>`:'<div style="font-size:12px;color:var(--green-dk);font-weight:600">✓ Outcome recorded</div>'}
+
+         <!-- STATUS BUTTONS -->
+         <div style="margin-bottom:14px;border-top:1px solid #f0f0f0;padding-top:14px">
+           <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">How far along is this?</div>
+           <div style="display:flex;gap:8px;flex-wrap:wrap">
+             <button onclick="updateActionStatus('`+a.id+`','Planned')" style="flex:1;min-width:90px;font-size:13px;padding:12px 14px;border:2px solid ${a.status==='Planned'?'var(--grey)':'#d0d0d0'};color:${a.status==='Planned'?'#fff':'var(--grey-dk)'};background:${a.status==='Planned'?'var(--grey)':'#fff'};border-radius:8px;cursor:pointer;font-weight:600;transition:all .15s;font-family:inherit">Not started</button>
+             <button onclick="updateActionStatus('`+a.id+`','In Progress')" style="flex:1;min-width:90px;font-size:13px;padding:12px 14px;border:2px solid ${a.status==='In Progress'?'var(--blue)':'#d0d0d0'};color:${a.status==='In Progress'?'#fff':'var(--grey-dk)'};background:${a.status==='In Progress'?'var(--blue)':'#fff'};border-radius:8px;cursor:pointer;font-weight:600;transition:all .15s;font-family:inherit">Busy with it</button>
+             <button onclick="updateActionStatus('`+a.id+`','Completed')" style="flex:1;min-width:90px;font-size:13px;padding:12px 14px;border:2px solid ${a.status==='Completed'?'var(--green)':'#d0d0d0'};color:${a.status==='Completed'?'#fff':'var(--grey-dk)'};background:${a.status==='Completed'?'var(--green)':'#fff'};border-radius:8px;cursor:pointer;font-weight:600;transition:all .15s;font-family:inherit">Done</button>
+           </div>
+         </div>
+
+         <!-- RECORD OUTCOME -->
+         ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="width:100%;font-size:14px;padding:14px 16px;border:none;background:var(--teal);color:#fff;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit;text-align:center;box-shadow:0 2px 6px rgba(11,142,141,.3)">Record what changed</button>
+         <div style="font-size:12px;color:var(--grey);text-align:center;margin-top:6px">What was the result of this activity? Tap above to capture it.</div>`
+         :'<div style="background:var(--green-lt);border-radius:8px;padding:12px 14px;text-align:center"><div style="font-size:14px;color:var(--green-dk);font-weight:700">&#10003; Outcome recorded</div>'+(outcomeObj?'<div style="font-size:12px;color:var(--grey-dk);margin-top:4px;line-height:1.5">'+esc((outcomeObj.description||'').slice(0,100))+((outcomeObj.description||'').length>100?'&hellip;':'')+'</div>':'')+'</div>'}
        </div>`;
      }).join('')}
    </div>
@@ -2237,37 +2286,41 @@ function renderOutcomeModal(){
  el.id='outcome-modal-overlay';
  el.innerHTML=`<div class="modal-bg" onclick="closeOutcomeModal()"><div class="modal-box" onclick="event.stopPropagation()" style="max-width:500px">
    <div style="padding:16px 20px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff">
-     <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">RECORD OUTCOME</div>
-     <div style="font-size:14px;font-weight:700">${esc(m.actionText)}</div>
-     ${m.schools?'<div style="font-size:11px;color:#B8DCDC;margin-top:2px">'+esc(m.schools)+'</div>':''}
+     <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">RECORD WHAT CHANGED</div>
+     <div style="font-size:15px;font-weight:700">${esc(m.actionText)}</div>
+     ${m.schools?'<div style="font-size:12px;color:#B8DCDC;margin-top:4px">'+esc(m.schools)+'</div>':''}
    </div>
    <div style="padding:20px">
-     <div style="margin-bottom:14px">
-       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">What happened? What was the result?<span style="color:var(--red)">*</span></label>
-       <textarea id="om-desc" rows="4" placeholder="e.g. Grade 10 Maths pass rate improved from 41% to 64%. Of the 35 targeted learners, 23 moved above the pass threshold." style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px" oninput="S.outcomeModal.description=this.value">${esc(m.description)}</textarea>
+     <div style="background:#F7F9FC;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--grey-dk);line-height:1.6">
+       Describe what happened as a result of this activity. Even a short note helps build your evidence.
      </div>
-     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-       <div>
-         <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Metric / indicator</label>
-         <input type="text" id="om-metric" placeholder="e.g. Pass rate improvement" value="${esc(m.metric)}" oninput="S.outcomeModal.metric=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
-       </div>
-       <div>
-         <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Value / result</label>
-         <input type="text" id="om-value" placeholder="e.g. 41% → 64% (+23pp)" value="${esc(m.value)}" oninput="S.outcomeModal.value=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
-       </div>
+     <div style="margin-bottom:16px">
+       <label style="font-size:14px;font-weight:600;color:#323130;display:block;margin-bottom:6px">What happened? What was the result?<span style="color:var(--red)"> *</span></label>
+       <textarea id="om-desc" rows="4" placeholder="e.g. Grade 10 Maths pass rate improved from 41% to 64%. Of the 35 targeted learners, 23 moved above the pass threshold." style="width:100%;padding:10px 12px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px;font-family:inherit;resize:vertical;min-height:90px" oninput="S.outcomeModal.description=this.value">${esc(m.description)}</textarea>
      </div>
-     <div style="margin-bottom:14px">
-       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Evidence / source</label>
-       <input type="text" id="om-evidence" placeholder="e.g. DDD Term 4 results" value="${esc(m.evidence)}" oninput="S.outcomeModal.evidence=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+     <div style="margin-bottom:16px">
+       <label style="font-size:14px;font-weight:600;color:#323130;display:block;margin-bottom:6px">What did you measure?</label>
+       <div style="font-size:12px;color:var(--grey);margin-bottom:6px">e.g. Pass rate, attendance, number of learners</div>
+       <input type="text" id="om-metric" placeholder="e.g. Pass rate" value="${esc(m.metric)}" oninput="S.outcomeModal.metric=this.value" style="width:100%;padding:10px 12px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px">
      </div>
-     <div style="margin-bottom:14px">
-       <label style="font-size:12px;font-weight:600;color:#323130;display:block;margin-bottom:4px">Date of outcome</label>
-       <input type="date" id="om-date" value="${m.date||''}" max="${today()}" onchange="S.outcomeModal.date=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px">
+     <div style="margin-bottom:16px">
+       <label style="font-size:14px;font-weight:600;color:#323130;display:block;margin-bottom:6px">What was the number or result?</label>
+       <div style="font-size:12px;color:var(--grey);margin-bottom:6px">e.g. Went from 41% to 64%, or 23 learners improved</div>
+       <input type="text" id="om-value" placeholder="e.g. 41% to 64%" value="${esc(m.value)}" oninput="S.outcomeModal.value=this.value" style="width:100%;padding:10px 12px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px">
      </div>
-     ${m.error?'<div style="color:var(--red);font-size:12px;margin-bottom:10px">'+esc(m.error)+'</div>':''}
-     <div style="display:flex;gap:8px">
-       <button onclick="saveOutcome()" style="flex:1;padding:10px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer" ${m.saving?'disabled':''}>${m.saving?'Saving...':'Save Outcome'}</button>
-       <button onclick="closeOutcomeModal()" style="padding:10px 16px;background:#f3f2f1;color:var(--grey-dk);border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+     <div style="margin-bottom:16px">
+       <label style="font-size:14px;font-weight:600;color:#323130;display:block;margin-bottom:6px">Where did this information come from?</label>
+       <div style="font-size:12px;color:var(--grey);margin-bottom:6px">e.g. DDD Term 4 results, school records, SA-SAMS</div>
+       <input type="text" id="om-evidence" placeholder="e.g. DDD Term 4 results" value="${esc(m.evidence)}" oninput="S.outcomeModal.evidence=this.value" style="width:100%;padding:10px 12px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px">
+     </div>
+     <div style="margin-bottom:16px">
+       <label style="font-size:14px;font-weight:600;color:#323130;display:block;margin-bottom:6px">When did you see this result?</label>
+       <input type="date" id="om-date" value="${m.date||''}" max="${today()}" onchange="S.outcomeModal.date=this.value" style="width:100%;padding:10px 12px;border:1.5px solid #c8c6c4;border-radius:6px;font-size:14px">
+     </div>
+     ${m.error?'<div style="color:var(--red);font-size:13px;margin-bottom:12px;font-weight:600">'+esc(m.error)+'</div>':''}
+     <div style="display:flex;gap:10px">
+       <button onclick="saveOutcome()" style="flex:1;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit" ${m.saving?'disabled':''}>${m.saving?'Saving...':'Save'}</button>
+       <button onclick="closeOutcomeModal()" style="padding:14px 20px;background:#f3f2f1;color:var(--grey-dk);border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Cancel</button>
      </div>
    </div>
  </div></div>`;
