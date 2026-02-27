@@ -2704,25 +2704,37 @@ function renderPolicyModal(){
 // UTILITIES 
 
 function openPipelineDrill(kind, evt){
-  if(evt && evt.stopPropagation) evt.stopPropagation();
-  // Guard against opening when nothing to show
-  const decs = applyDashFilters(S.decisions || []);
-  const decIds = new Set(decs.map(d => d.id));
-  const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
-  const actIds = new Set(acts.map(a => a.id));
-  const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
+  try{
+    if(evt && evt.stopPropagation) evt.stopPropagation();
 
-  const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
-  if(!counts[kind]){ toast('No ' + (kind||'records') + ' to show for the current filters.'); return; }
+    // Guard against opening when nothing to show
+    const decs = applyDashFilters(S.decisions || []);
+    const decIds = new Set(decs.map(d => d.id));
+    const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
+    const actIds = new Set(acts.map(a => a.id));
+    const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
 
-  S.pipelineDrill = { kind: kind };
-  render();
+    const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
+    if(!counts[kind]){
+      toast('No ' + (kind||'records') + ' to show for the current filters.');
+      return;
+    }
+
+    S.pipelineDrill = { kind: kind };
+    render();
+  }catch(err){
+    console.error(err);
+    toast('Sorry, details could not open. Please refresh the page and try again.');
+  }
 }
+window.openPipelineDrill = openPipelineDrill;
+
 
 function closePipelineDrill(){
   S.pipelineDrill = null;
   render();
 }
+window.closePipelineDrill = closePipelineDrill;
 
 function renderPipelineDrillModal(){
   const m = S.pipelineDrill; if(!m) return;
