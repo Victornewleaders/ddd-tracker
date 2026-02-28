@@ -2000,11 +2000,11 @@ ${tab==='insights'?`
      </div>
    </div>`).join('')}</div>` : ''}
 
- <!-- ═══ INTERVENTION PIPELINE FUNNEL ═══ -->
+ <!-- ═══ INTERVENTIONS IN YOUR ENTITY ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--navy)">
-   <div class="dash-section-hdr"><h3>Close-out tracker</h3><span style="font-size:11px;color:var(--grey)">Planned intervention → Intervention activity → Outcome of the intervention</span></div>
+   <div class="dash-section-hdr"><h3>Interventions in your entity</h3><span style="font-size:11px;color:var(--grey)">Planned → Activity started → Outcome recorded</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">See how your interventions are progressing. Each planned intervention should lead to an activity, and each activity should have an outcome recorded. Click <strong>View</strong> to see the details.</div>
+     <div class="dash-section-desc">See how your interventions are progressing. Each planned intervention should lead to an activity, and each activity should have a recorded outcome. Click <strong>View</strong> to see details.</div>
      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
      <table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #D5D9E2;border-radius:10px;overflow:hidden;font-size:14px;min-width:480px">
        <thead>
@@ -2017,37 +2017,37 @@ ${tab==='insights'?`
          </tr>
        </thead>
        <tbody>
-         <tr style="background:#fff;border-bottom:1px solid #ECEFF1">
-           <td style="padding:12px 14px;font-weight:600;color:var(--navy)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--navy);margin-right:8px;vertical-align:middle"></span>Planned interventions logged</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy)">${chainsTotal}</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:700;color:var(--navy)">100%</td>
-           <td style="padding:12px 14px"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--navy);width:100%;border-radius:6px"></div></div></td>
-           <td style="text-align:center;padding:12px 14px">${chainsTotal > 0 ? `<button type="button" onclick="window.openPipelineDrill('decisions', event)" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">View</button>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
+         <tr style="background:#fff">
+           <td style="padding:12px 14px;font-weight:600;color:var(--navy);border-bottom:1px solid #ECEFF1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--navy);margin-right:8px;vertical-align:middle"></span>Planned interventions</td>
+           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy);border-bottom:1px solid #ECEFF1">${chainsTotal}</td>
+           <td style="text-align:center;padding:12px 14px;font-weight:700;color:var(--navy);border-bottom:1px solid #ECEFF1">100%</td>
+           <td style="padding:12px 14px;border-bottom:1px solid #ECEFF1"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--navy);width:100%;border-radius:6px"></div></div></td>
+           <td style="text-align:center;padding:12px 14px;border-bottom:1px solid #ECEFF1">${chainsTotal > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('decisions',event);return false;" style="display:inline-block;background:var(--navy);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
          </tr>
-         <tr style="background:#fff;border-bottom:1px solid #ECEFF1">
-           <td style="padding:12px 14px;font-weight:600;color:var(--navy)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--blue);margin-right:8px;vertical-align:middle"></span>Intervention activities started</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy)">${chainsWithAction}</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:700;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</td>
-           <td style="padding:12px 14px"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--blue);width:${chainsTotal?Math.round(chainsWithAction/chainsTotal*100):0}%;border-radius:6px;transition:width .5s"></div></div></td>
-           <td style="text-align:center;padding:12px 14px">${chainsWithAction > 0 ? `<button type="button" onclick="window.openPipelineDrill('actions', event)" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">View</button>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
+         <tr style="background:#fff">
+           <td style="padding:12px 14px;font-weight:600;color:var(--navy);border-bottom:1px solid #ECEFF1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--blue);margin-right:8px;vertical-align:middle"></span>Activities started</td>
+           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy);border-bottom:1px solid #ECEFF1">${chainsWithAction}</td>
+           <td style="text-align:center;padding:12px 14px;font-weight:700;border-bottom:1px solid #ECEFF1;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</td>
+           <td style="padding:12px 14px;border-bottom:1px solid #ECEFF1"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--blue);width:${chainsTotal?Math.round(chainsWithAction/chainsTotal*100):0}%;border-radius:6px;transition:width .5s"></div></div></td>
+           <td style="text-align:center;padding:12px 14px;border-bottom:1px solid #ECEFF1">${chainsWithAction > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('actions',event);return false;" style="display:inline-block;background:var(--blue);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
          </tr>
          <tr style="background:#fff">
            <td style="padding:12px 14px;font-weight:600;color:var(--navy)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin-right:8px;vertical-align:middle"></span>Outcomes recorded</td>
            <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy)">${chainsWithOutcome}</td>
            <td style="text-align:center;padding:12px 14px;font-weight:700;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</td>
            <td style="padding:12px 14px"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--green);width:${chainsTotal?Math.round(chainsWithOutcome/chainsTotal*100):0}%;border-radius:6px;transition:width .5s"></div></div></td>
-           <td style="text-align:center;padding:12px 14px">${chainsWithOutcome > 0 ? `<button type="button" onclick="window.openPipelineDrill('outcomes', event)" style="background:var(--green);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">View</button>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
+           <td style="text-align:center;padding:12px 14px">${chainsWithOutcome > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('outcomes',event);return false;" style="display:inline-block;background:var(--green);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
          </tr>
        </tbody>
      </table>
      </div>
-     <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:10px;text-align:center">
-       <div style="display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:4px">
-         <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Started</div></div>
+     <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:10px">
+      <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:4px;align-items:center">
+         <div><div style="font-size:20px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Started</div></div>
          <div style="font-size:16px;color:#ccc">→</div>
-         <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Outcomes</div></div>
+         <div><div style="font-size:20px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Outcomes</div></div>
          <div style="font-size:16px;color:#ccc">→</div>
-         <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Closed out</div></div>
+         <div><div style="font-size:20px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Completed</div></div>
        </div>
      </div>
    </div>
@@ -2754,7 +2754,7 @@ function renderPolicyModal(){
 // UTILITIES 
 
 function openPipelineDrill(kind, evt){
-  if(evt && evt.stopPropagation) evt.stopPropagation();
+  if(evt){ evt.stopPropagation(); evt.preventDefault(); }
   // Guard against opening when nothing to show
   const decs = applyDashFilters(S.decisions || []);
   const decIds = new Set(decs.map(d => d.id));
@@ -2766,17 +2766,19 @@ function openPipelineDrill(kind, evt){
   if(!counts[kind]){ toast('No ' + (kind||'records') + ' to show for the current filters.'); return; }
 
   S.pipelineDrill = { kind: kind };
-  render();
+  // Show modal directly — do NOT call render() to avoid full DOM rebuild which kills the click
+  renderPipelineDrillModal();
 }
 
 // Ensure drill function is callable from inline handlers across browsers/WebViews
 window.openPipelineDrill = openPipelineDrill;
 
-// Pipeline drill buttons use direct onclick – no capture-phase wiring needed
+// Pipeline drill: View buttons use direct onclick — no capture-phase wiring needed
 
 function closePipelineDrill(){
   S.pipelineDrill = null;
-  render();
+  const el = document.getElementById('pipeline-drill-overlay');
+  if(el) el.remove();
 }
 
 function renderPipelineDrillModal(){
@@ -2798,7 +2800,7 @@ function renderPipelineDrillModal(){
   let rows = [];
 
   if(kind === 'decisions'){
-    title = 'Planned interventions logged';
+    title = 'Planned interventions';
     subtitle = 'Click an item below to open it in the Activity Log.';
     rows = decs.map(d => {
       const det = d.details || {};
@@ -2812,7 +2814,7 @@ function renderPipelineDrillModal(){
       };
     });
   } else if(kind === 'actions'){
-    title = 'Intervention activities started';
+    title = 'Activities started';
     subtitle = 'Click an item below to open it in the Activity Log.';
     rows = actsAll.map(a => {
       const d = decById[a.decision_id] || {};
@@ -2860,9 +2862,9 @@ function renderPipelineDrillModal(){
 
         <div style="padding:16px 20px">
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Planned interventions (${decs.length})</button>
-            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Intervention activities (${actsAll.length})</button>
-            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes of interventions (${outsAll.length})</button>
+            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Planned (${decs.length})</button>
+            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Activities (${actsAll.length})</button>
+            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes (${outsAll.length})</button>
           </div>
 
           <div style="background:#F7F9FC;border:1px solid #ECEFF1;border-radius:10px;overflow:hidden">
