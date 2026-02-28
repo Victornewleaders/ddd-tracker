@@ -1099,7 +1099,7 @@ document.addEventListener('click',function(e){
 function renderFormStep1(){
   return `<div class="section fade-in"><div class="sec-hdr" style="border-color:var(--teal)"><div><h2>1. Where & When</h2><p>Location, date, and who is capturing this</p></div></div><div class="sec-body">
     <div class="field-row"><div class="field"><label>Term<span class="req">*</span></label><select onchange="S.f.term=this.value">${['Term 1 2026','Term 2 2026','Term 3 2026','Term 4 2026'].map(t=>`<option ${S.f.term===t?'selected':''}>${t}</option>`).join('')}</select></div><div class="field"><label>Date<span class="req">*</span></label><input type="date" value="${S.f.activity_date}" max="${today()}" onchange="S.f.activity_date=this.value"></div></div>
-    <div class="field-row"><div class="field"><label>Province<span class="req">*</span></label><select ${isProvinceLocked()?'disabled':''} onchange="S.f.province=this.value;S.f.district='';S.f.circuit='';S.f.schools='';S.f._schoolQ='';S.f._schoolDDOpen=false;render()"><option value="">Select province</option>${(isProvinceLocked()? [getLockedProvince()] : Object.keys(DISTRICTS)).map(p=>`<option ${S.f.province===p?'selected':''}>${p}</option>`).join('')}</select></div><div class="field"><label>District<span class="req">*</span></label><select onchange="S.f.district=this.value;S.f.circuit='';S.f.schools='';S.f._schoolQ='';S.f._schoolDDOpen=false;render()"><option value="">Select district</option>${(DISTRICTS[S.f.province]||[]).map(d=>`<option ${S.f.district===d?'selected':''}>${d}</option>`).join('')}</select></div></div>
+    <div class="field-row"><div class="field"><label>Province<span class="req">*</span></label><select onchange="S.f.province=this.value;S.f.district='';S.f.circuit='';S.f.schools='';S.f._schoolQ='';S.f._schoolDDOpen=false;render()"><option value="">Select province</option>${Object.keys(DISTRICTS).map(p=>`<option ${S.f.province===p?'selected':''}>${p}</option>`).join('')}</select></div><div class="field"><label>District<span class="req">*</span></label><select onchange="S.f.district=this.value;S.f.circuit='';S.f.schools='';S.f._schoolQ='';S.f._schoolDDOpen=false;render()"><option value="">Select district</option>${(DISTRICTS[S.f.province]||[]).map(d=>`<option ${S.f.district===d?'selected':''}>${d}</option>`).join('')}</select></div></div>
     <div class="field-row"><div class="field"><label>Circuit <span style="font-weight:400;color:var(--grey)">(optional)</span></label><select onchange="S.f.circuit=this.value;S.f.schools='';S.f._schoolQ='';render()"><option value="">Select circuit</option>${(CIRCUITS_MAP[S.f.district]||[]).map(c=>`<option ${S.f.circuit===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
     <div class="field"><label>School(s)<span class="req">*</span></label><div class="hint">Select one or more schools${S.f.circuit?' in '+esc(S.f.circuit):S.f.district?' in '+esc(S.f.district):''}</div>${schoolPickerHTML()}</div>
     <div class="field-row"><div class="field"><label>Your name<span class="req">*</span></label><input type="text" placeholder="e.g. Ms F Moshoeshoe" value="${esc(S.f.official_name)}" oninput="S.f.official_name=this.value"></div><div class="field"><label>Email address<span class="req">*</span></label><input type="email" placeholder="e.g. name@education.gov.za" value="${esc(S.f.official_email)}" oninput="S.f.official_email=this.value"></div></div>
@@ -1504,25 +1504,8 @@ function getClientScope() {
   return 'own';
 }
 
-// ── ACCESS CONTROL: lock user to their assigned province (if set) ──
-function getLockedProvince() {
-  const p = (S.official && S.official.province) ? String(S.official.province) : '';
-  if (!p || p === 'All' || p === 'National') return '';
-  return p;
-}
-function isProvinceLocked() {
-  // Only allow switching provinces for true national users
-  return !!getLockedProvince() && getClientScope() !== 'national';
-}
-
-
 function applyDashFilters(decs) {
   const f = S.dashFilter;
-  const lockedProv = getLockedProvince();
-  if (isProvinceLocked() && lockedProv) { f.province = lockedProv; }
-
-  // Enforce locked province selection
-  if (isProvinceLocked() && lockedProv && f.province !== lockedProv) { f.province = lockedProv; f.district='All'; f.circuit='All'; f.school='All'; }
   return decs.filter(d => {
     const det = d.details || {};
     if (f.province !== 'All' && (det.province || '') !== f.province) return false;
@@ -1541,8 +1524,7 @@ function renderFilterBar(decs) {
   const f = S.dashFilter;
 
   // Province list from master data
-  const lockedProv = getLockedProvince();
-  const provinces = (lockedProv ? [lockedProv] : Object.keys(GEO_HIER).sort());
+  const provinces = Object.keys(GEO_HIER).sort();
 
   // Districts: from master data, scoped by selected province
   let districts = [];
@@ -1579,7 +1561,7 @@ function renderFilterBar(decs) {
     schools.sort();
   }
 
-  const provLocked = isProvinceLocked() || scope === 'district' || scope === 'own';
+  const provLocked = scope === 'district' || scope === 'own';
   const distLocked = scope === 'own';
   const hasFilters = f.province !== 'All' || f.district !== 'All' || f.circuit !== 'All' || f.school !== 'All';
   const filtered = applyDashFilters(decs);
@@ -1838,7 +1820,7 @@ function renderDashboard() {
 
    const clickable = !!drillKey && count > 0;
    const tapAttrs = clickable
-     ? `role="button" tabindex="0" aria-label="View ${drillKey} details" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:background .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15);touch-action:manipulation"`
+     ? `role="button" tabindex="0" aria-label="View ${drillKey} details" data-pipeline-drill="${drillKey}" onclick="openPipelineDrill(\'${drillKey}\', event)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPipelineDrill(\'${drillKey}\', event)}" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:background .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15);touch-action:manipulation"`
      : `style="background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;margin-bottom:8px"`;
 
    return `<div ${tapAttrs}>
@@ -2737,6 +2719,38 @@ function openPipelineDrill(kind, evt){
   S.pipelineDrill = { kind: kind };
   render();
 }
+
+// Ensure drill function is callable from inline handlers across browsers/WebViews
+window.openPipelineDrill = openPipelineDrill;
+
+// Make the whole pipeline row reliably tappable/clickable (capture phase to avoid interference)
+(function wirePipelineTap(){
+  if(window.__pipelineTapWired) return;
+  window.__pipelineTapWired = true;
+
+  function handleActivate(e){
+    const el = (e.target && e.target.closest) ? e.target.closest('[data-pipeline-drill]') : null;
+    if(!el) return;
+    const key = el.getAttribute('data-pipeline-drill');
+    if(!key) return;
+    if(typeof window.openPipelineDrill === 'function'){
+      e.preventDefault?.();
+      window.openPipelineDrill(key, e);
+    }
+  }
+
+  document.addEventListener('pointerup', handleActivate, true);
+  document.addEventListener('click', handleActivate, true); // fallback for older browsers
+  document.addEventListener('keydown', function(e){
+    const el = (e.target && e.target.closest) ? e.target.closest('[data-pipeline-drill]') : null;
+    if(!el) return;
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      const key = el.getAttribute('data-pipeline-drill');
+      if(typeof window.openPipelineDrill === 'function') window.openPipelineDrill(key, e);
+    }
+  }, true);
+})();
 
 function closePipelineDrill(){
   S.pipelineDrill = null;
