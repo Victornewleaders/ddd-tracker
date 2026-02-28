@@ -172,6 +172,7 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .dash-section-hdr h3{font-size:14px;font-weight:700;color:var(--navy)}
 .dash-section-body{padding:14px 16px}
 .dash-section-desc{font-size:12px;color:var(--grey-dk);line-height:1.6;margin-bottom:12px}
+[role="button"]:active{background:#F0F8F8 !important;transform:scale(.99)}
 .dash-subnav{display:flex;flex-wrap:wrap;gap:6px;overflow-x:visible;padding:8px 16px 6px;position:sticky;top:0;z-index:50;background:#fff;margin:0 -16px;box-shadow:0 2px 8px rgba(0,0,0,.1);border-bottom:1px solid #e0e0e0}
 .dash-subnav::-webkit-scrollbar{display:none}
 .dash-subnav button{flex:1 1 auto;min-width:0;font-size:12px;font-weight:700;padding:8px 12px;border-radius:8px;border:2px solid #d0d4db;background:#fff;color:var(--grey-dk);cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;text-align:center}
@@ -399,7 +400,7 @@ const SCHOOLS_MAP = {"Alfred Nzo East":{"Ane Circuit 1":[["Ad Tshayingca Seconda
 const ACTIVITY_TYPES = ["School support visit","Workshop / training session","Mentoring session","Monitoring / follow-up visit","Data review meeting","Lesson observation","Saturday / extra classes","Holiday revision programme","Parent engagement meeting","District / circuit review meeting","Rapid Response session","Other"];
 const THEMES = ["Underperforming Schools","DBE Mentorship","District Support","GET / Intermediate Phase","Other"];
 const DECISIONS = ["Target specific learners","Identify at-risk / progressed learners","Look at learners near the bottom or just below pass mark","Check if SBA marks and exam marks don't match","Send in subject support","Change the teaching approach","Move resources where they're needed","Set up extra classes","Set targets for learner marks","Start tracking attendance","Sign support agreements with learners","Meet with parents/guardians","Refer up to management","Fix data errors","Support progressed learners (policy requirement)","Check and improve assessment tasks","Other"];
-const ACTIONS = ["Educator coaching / mentoring","Lesson modelling / demonstration","Subject improvement plan developed","Learner profiling & grouping","Academic support contract signed","Progressed learner support plan developed","Remedial scheduling","Extra lessons / revision classes","Past papers & worksheet packs distributed","Exam technique workshop conducted","Language / literacy support sessions","SBA target-setting with learners","SBA moderation / quality assurance","Attendance monitoring plan activated","Resource / material provision","Differentiated teaching approach","Educator reassignment to subject","Curriculum pacing support","Assessment task review & moderation","Parent meeting arranged","Term review meeting scheduled","Referral to SMT / DMT / PED","Data correction in SA-SAMS","School accountability discussion","Peer learning (school-to-school)","Performance monitoring report compiled","Other"];
+const ACTIONS = ["Educator coaching / mentoring","Lesson modelling / demonstration","Subject improvement plan developed","Learner grouping by performance","Academic support contract signed","Progressed learner support plan developed","Remedial scheduling","Extra lessons / revision classes","Past papers & worksheet packs distributed","Exam technique workshop conducted","Language / literacy support sessions","SBA target-setting with learners","SBA moderation / quality assurance","Attendance monitoring plan activated","Resource / material provision","Adjusted teaching for different levels","Educator reassignment to subject","Curriculum pacing support","Assessment task review & moderation","Parent meeting arranged","Term review meeting scheduled","Referral to SMT / DMT / PED","Data correction in SA-SAMS","School accountability discussion","Peer learning (school-to-school)","Performance monitoring report compiled","Other"];
 
 // Promotion Criteria by Phase
 const PROMO_CRITERIA = {
@@ -443,8 +444,8 @@ const DDD_DASHBOARD_URL = 'https://app.powerbi.com/view?r=eyJrIjoiOGNjNGRhNjctOG
 
 // TOOLKIT DATA 
 const TK_REPORTS = [
- {id:"lcr",name:"Learner Chart Report",icon:"LCR",color:"#0B8E8D",desc:"Profile every learner by attendance, marks, promotion status, over-age status, and subject-level achievement — with downloadable learner-level data",bestFor:["Identify at-risk learners by name","Attendance and absence profiling","Over-age learner tracking","Subject-level distinctions, near-distinctions, and near-failures","Filtering by promotion status, colour-coded marks, or performance bands"],path:"DDD Dashboard → Reports tab → Select Phase, Grade & Subject → Click 'Learner Chart'",dataPoints:["Summary: Gender split, Term Promotion %, Over-Age %, Failing 2+ Subjects %","Circuit/school breakdown table: Learner Count, %Female, %Male, Term Promotion, Over-Age, Failing 2+ per sub-entity","Learners Not Promoted: % not achieving in Home Language, FAL, Numeracy, and 2+ subjects","Subject Achievement Insights: Distinctions (80-100%), Near Distinctions (75-79%), Near Failures (less than 5% from pass) per subject","Downloadable learner-level data: Days Absent, Avg Report Mark, Failures, Distinctions, colour-coded subject marks (green/yellow/red)"],realInsight:"At School A, 704 learners (26%) score below 40%. Downloading the Learner Chart and sorting by 'Days Absent' reveals 30 learners with 16+ days absent AND below 40% — the highest-priority group for intervention. Filtering by colour on subject columns instantly shows which subjects are pulling learners down.",policyLink:"SA Schools Act"},
- {id:"fpc",name:"FET Promotion Criteria Profiles",icon:"FPC",color:"#E8952E",desc:"See exactly which promotion criteria learners are meeting or missing",bestFor:["Profile at-risk FET learners","Identify 'one criteria away' learners","Subject-specific gap analysis"],path:"DDD Dashboard → Select School → FET Promotion Criteria Profiles",dataPoints:["Achievement category","Criteria profile","2nd & 5th highest subject","Home Language level"],realInsight:"441 learners at School A (16%) missed just ONE promotion criteria. Of these, 333 need just 30%+ in one more subject — the lowest lift interventions with highest impact."},
+ {id:"lcr",name:"Learner Chart Report",icon:"LCR",color:"#0B8E8D",desc:"See every learner's attendance, marks, promotion status, over-age status, and subject-level achievement — with downloadable learner-level data",bestFor:["Identify at-risk learners by name","Attendance and absence tracking","Over-age learner tracking","Subject-level distinctions, near-distinctions, and near-failures","Filtering by promotion status, colour-coded marks, or performance bands"],path:"DDD Dashboard → Reports tab → Select Phase, Grade & Subject → Click 'Learner Chart'",dataPoints:["Summary: Gender split, Term Promotion %, Over-Age %, Failing 2+ Subjects %","Circuit/school breakdown table: Learner Count, %Female, %Male, Term Promotion, Over-Age, Failing 2+ per sub-entity","Learners Not Promoted: % not achieving in Home Language, FAL, Numeracy, and 2+ subjects","Subject Achievement Insights: Distinctions (80-100%), Near Distinctions (75-79%), Near Failures (less than 5% from pass) per subject","Downloadable learner-level data: Days Absent, Avg Report Mark, Failures, Distinctions, colour-coded subject marks (green/yellow/red)"],realInsight:"At School A, 704 learners (26%) score below 40%. Downloading the Learner Chart and sorting by 'Days Absent' reveals 30 learners with 16+ days absent AND below 40% — the highest-priority group for intervention. Filtering by colour on subject columns instantly shows which subjects are pulling learners down.",policyLink:"SA Schools Act"},
+ {id:"fpc",name:"FET Promotion Criteria Profiles",icon:"FPC",color:"#E8952E",desc:"See exactly which promotion criteria learners are meeting or missing",bestFor:["Profile at-risk FET learners","Identify 'one criteria away' learners","Subject-specific gap analysis"],path:"DDD Dashboard → Select School → FET Promotion Criteria Profiles",dataPoints:["Achievement category","Criteria profile","2nd & 5th highest subject","Home Language level"],realInsight:"441 learners at School A (16%) missed just ONE promotion criteria. Of these, 333 need just 30%+ in one more subject — the easiest group to help pass."},
  {id:"t4p",name:"Term 4 Promotion Predictions",icon:"T4P",color:"#1565C0",desc:"Early warning predictions showing which learners are likely to be promoted by year-end",bestFor:["Early warning identification","Predict year-end outcomes","Compare to previous year","Plan proactive interventions"],path:"DDD Dashboard → Select School → Term 4 Promotion Predictions",dataPoints:["Predicted promoted status (TRUE/FALSE)","Previous year comparison","Scatter plot by school"],realInsight:"919 learners at School A are predicted NOT to be promoted. Cross-referencing with FET Profiles shows 441 of these are 'one criteria away' — targeted support could shift outcomes for 16% of the school."},
  {id:"g6p",name:"Grade 6 Performance Insights",icon:"G6",color:"#7AB648",desc:"Identify primary schools at risk of underperformance per Circular D3 criteria",bestFor:["Circular D3 compliance","LOLT & Maths monitoring","Primary school early warning","Year-on-year comparison"],path:"DDD Dashboard → Select School → Grade 6 Performance Insights",dataPoints:["% achieving 50%+ in LOLT","% achieving 50%+ in Maths","True/False underperformance flag","4 terms prior comparison"],realInsight:"Circular D3 defines underperforming primary schools as those where <60% of Grade 6 learners achieve Level 4+ in both LOLT and Mathematics. This report flags schools meeting this criteria for targeted intervention.",policyLink:"Circular D3"},
  {id:"sar",name:"School Achievement Report",icon:"SAR",color:"#0F7B7D",desc:"School-level achievement trends across subjects, grades, and terms",bestFor:["Subject trend analysis","SBA-Exam gap detection","Term-on-term comparison","Grade-level monitoring"],path:"DDD Dashboard → Select School → School Achievement Report",dataPoints:["Subject pass rates","Achievement level distribution","Term trends","SBA vs Exam alignment"],realInsight:"Use this to identify subjects with declining pass rates or large SBA-Exam gaps. A 20%+ gap often indicates assessment misalignment — a key intervention trigger."},
@@ -453,10 +454,10 @@ const TK_REPORTS = [
 
 const TK_INTERVENTIONS = [
  {id:1,name:"Attendance Monitoring Plan",category:"Attendance",difficulty:"Quick Win",timeToImpact:"2-4 weeks",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Learner Attendance & Term to Date Walkthrough",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify chronically absent learners via DDD Learner Chart, establish daily tracking, and trigger parent engagement at threshold days.",steps:["DDD Dashboard → Reports tab → Select Phase → Learner Chart → Download Data → Sort by 'Days Absent' descending","Flag learners with 10+ days absent","Set up daily register monitoring by class teacher","Trigger parent meeting at 15+ days","Weekly report to SMT on attendance recovery"]},
- {id:2,name:"Targeted Learner Support",category:"Academic Support",difficulty:"Core",timeToImpact:"1 term",dddReports:["fpc","lcr"],policyRef:"Promotion Policy",webinar:{name:"Learner Profiling Using FET Promotion Criteria Profiles",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Profile learners using FET Promotion Criteria data, group by achievement category, then provide differentiated support — focusing maximum effort on learners who missed one criteria (highest return on effort).",steps:["Download FET Promotion Criteria data from DDD Dashboard","Profile and group learners: 'Level Up' | 'At Risk' | 'Missed One' | 'Missed Multiple'","Assign intervention intensity per group — most support to 'Missed One' (highest ROI)","Deploy targeted support: extra lessons, tailored materials, differentiated teaching","Track movement between groups termly to measure progress"]},
+ {id:2,name:"Targeted Learner Support",category:"Academic Support",difficulty:"Core",timeToImpact:"1 term",dddReports:["fpc","lcr"],policyRef:"Promotion Policy",webinar:{name:"Learner Profiling Using FET Promotion Criteria Profiles",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Use FET Promotion Criteria data to sort learners into groups by achievement level, then give the right support to each group — focusing most effort on learners who just missed one criteria (biggest chance of improvement).",steps:["Download FET Promotion Criteria data from DDD Dashboard","Sort and group learners: 'Level Up' | 'At Risk' | 'Missed One' | 'Missed Multiple'","Give the most support to the 'Missed One' group (best chance of improvement)","Provide targeted support: extra lessons, tailored materials, adjusted teaching","Track movement between groups each term to measure progress"]},
  {id:3,name:"Saturday / Extra Classes Programme",category:"Academic Support",difficulty:"Core",timeToImpact:"1-2 terms",dddReports:["t4p","fpc","lcr"],policyRef:"CAPS",webinar:{name:"Using Term 4 Promotion Predictions for Targeted Support",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Data-driven extra classes targeting predicted non-promoted learners in specific subjects identified via DDD predictions.",steps:["Use Term 4 Predictions to identify FALSE-predicted learners","Cross-reference with FET Profiles for subject gaps","Schedule subject-specific Saturday sessions (08:00-12:00)","Track attendance at each session","Monitor prediction shifts after Term 2 data submission"]},
  {id:4,name:"SBA-Exam Alignment Audit",category:"Assessment Quality",difficulty:"Advanced",timeToImpact:"1 term",dddReports:["sar"],policyRef:"CAPS Assessment",webinar:{name:"School Achievement Report Deep Dive",path:"DDD Dashboard → DDD Learning Hub → On-Demand Training Courses"},description:"Identify schools with 20%+ SBA-Exam gap using School Achievement Report, then moderate assessment tasks.",steps:["Pull School Achievement Report → compare SBA vs Exam marks","Flag subjects with 20%+ gap","Subject advisors to moderate SBA tasks before administration","Conduct lesson observations for assessment alignment","Re-check gap after next formal assessment"]},
- {id:5,name:"Underperforming School Rapid Response",category:"School Support",difficulty:"Advanced",timeToImpact:"1-2 terms",dddReports:["g6p","sar","lcr"],policyRef:"Circular D3",webinar:{name:"Identifying and Supporting Underperforming Schools with DDD",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Comprehensive support for schools meeting Circular D3 underperformance criteria or Section 58B.",steps:["Use Grade 6 Performance Insights → identify 'True' underperforming schools","Or use School Achievement → identify secondary schools with <70% NSC pass rate","Deploy circuit manager + subject advisor team","Co-develop Subject Improvement Plan with school","Fortnightly monitoring visits for one term"]},
+ {id:5,name:"Underperforming School Rapid Response",category:"School Support",difficulty:"Advanced",timeToImpact:"1-2 terms",dddReports:["g6p","sar","lcr"],policyRef:"Circular D3",webinar:{name:"Identifying and Supporting Underperforming Schools with DDD",path:"DDD Dashboard → DDD Learning Hub → Book a Webinar"},description:"Comprehensive support for schools meeting Circular D3 underperformance criteria or Section 58B.",steps:["Use Grade 6 Performance Insights → identify 'True' underperforming schools","Or use School Achievement → identify secondary schools with <70% NSC pass rate","Send in circuit manager + subject advisor team","Co-develop Subject Improvement Plan with school","Fortnightly monitoring visits for one term"]},
  {id:6,name:"Parent Engagement Campaign",category:"Community",difficulty:"Quick Win",timeToImpact:"Ongoing",dddReports:["lcr","ttd"],policyRef:"SA Schools Act",webinar:{name:"Using Learner Chart Data for Parent Conversations",path:"DDD Dashboard → DDD Learning Hub → Tip-Sheets and Videos"},description:"Engage parents of learners with poor attendance or declining marks using DDD evidence in conversations.",steps:["DDD Dashboard → Reports tab → Learner Chart → Download Data → Filter for learners with declining marks or high absence","Prepare individual learner evidence sheets","Schedule parent meetings (individual or group)","Share DDD data visually — show attendance and marks side by side","Agree on home-support commitments with follow-up date"]}
 ];
 
@@ -802,9 +803,9 @@ async function loadAll() {
 function injectDemo() {
  const demo_decs = [
  {id:'DEMO_D0',ddd_tool:'FET Promotion Profiles, Learner Chart Report',data_viewed:'Grade 10 Maths results — Lejweleputswa',insight:'School B Grade 10 Maths pass rate dropped from 58% to 41% between Term 1 and Term 3 2025. Learner Chart Report showed 35 learners clustered at 25-29% — just below passing threshold.',decision_made:'Target specific learners',contextual_factors:'Teaching outside specialisation | Only 1 qualified Maths educator for 4 Grade 10 classes',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2025-10-14',logged_by:'F Moshoeshoe',
- details:{province:'Free State',district:'Lejweleputswa',schools:'School B',term:'Term 4 2025',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Mathematics'],grades:['10'],description:'DDD data review identified School B Grade 10 Maths as critical. 35 learners clustered just below pass mark. Decided to deploy targeted after-school support with subject advisor and profiled learner grouping.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Learner Chart Report'],decision_type:'Target specific learners',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 qualified Maths educator for 4 Grade 10 classes. 2 educators teaching Maths outside their specialisation.',learners_reached:35,follow_up:false,follow_up_desc:''}},
- {id:'DEMO_D1',ddd_tool:'School Dashboard, Learner Chart Report',data_viewed:'Maths pass rates for Grade 9 — JTG district',insight:'12 schools below 40% in Maths, concentrated in 3 circuits',decision_made:'Deploy subject support',contextual_factors:'Vacant post(s), Teaching outside specialisation',made_by:'Mr V Teise (Circuit Manager)',date:'2026-01-28',logged_by:'V Teise',
- details:{province:'Northern Cape',district:'John Taolo Gaetsewe',schools:'School C, School D, School E',term:'Term 1 2026',activity_type:'School support visit',intervention_theme:'District Support',subjects:['Mathematics'],grades:['9'],description:'Targeted support visit to 3 underperforming schools in JTG. Reviewed Maths pass rates and agreed on intervention plan.',ddd_used:'yes-direct',ddd_reports:['School Dashboard','Learner Chart Report'],decision_type:'Deploy subject support',ctx_staffing:['Vacant post(s)','Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['High absenteeism'],ctx_notes:'No permanent Maths educator at School E since Term 3 2025',learners_reached:340,follow_up:true,follow_up_desc:'Return visit in 2 weeks to check if Subject Improvement Plan has been implemented'}},
+ details:{province:'Free State',district:'Lejweleputswa',schools:'School B',term:'Term 4 2025',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Mathematics'],grades:['10'],description:'DDD data review identified School B Grade 10 Maths as critical. 35 learners clustered just below pass mark. Decided to set up targeted after-school support with subject advisor and learner groups by performance level.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Learner Chart Report'],decision_type:'Target specific learners',ctx_staffing:['Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 qualified Maths educator for 4 Grade 10 classes. 2 educators teaching Maths outside their specialisation.',learners_reached:35,follow_up:false,follow_up_desc:''}},
+ {id:'DEMO_D1',ddd_tool:'School Dashboard, Learner Chart Report',data_viewed:'Maths pass rates for Grade 9 — JTG district',insight:'12 schools below 40% in Maths, concentrated in 3 circuits',decision_made:'Send subject support',contextual_factors:'Vacant post(s), Teaching outside specialisation',made_by:'Mr V Teise (Circuit Manager)',date:'2026-01-28',logged_by:'V Teise',
+ details:{province:'Northern Cape',district:'John Taolo Gaetsewe',schools:'School C, School D, School E',term:'Term 1 2026',activity_type:'School support visit',intervention_theme:'District Support',subjects:['Mathematics'],grades:['9'],description:'Targeted support visit to 3 underperforming schools in JTG. Reviewed Maths pass rates and agreed on intervention plan.',ddd_used:'yes-direct',ddd_reports:['School Dashboard','Learner Chart Report'],decision_type:'Send subject support',ctx_staffing:['Vacant post(s)','Teaching outside specialisation'],ctx_resources:['Textbook shortage'],ctx_learners:['High absenteeism'],ctx_notes:'No permanent Maths educator at School E since Term 3 2025',learners_reached:340,follow_up:true,follow_up_desc:'Return visit in 2 weeks to check if Subject Improvement Plan has been implemented'}},
  {id:'DEMO_D2',ddd_tool:'FET Promotion Profiles',data_viewed:'Grade 12 promotion predictions — Lejweleputswa',insight:'15% of Grade 12 learners predicted to fail Physical Sciences',decision_made:'Schedule extra classes',contextual_factors:'Infrastructure issues, Overcrowded classrooms',made_by:'Ms F Moshoeshoe (Cluster Lead)',date:'2026-02-03',logged_by:'F Moshoeshoe',
  details:{province:'Free State',district:'Lejweleputswa',schools:'School F, School B, School M',term:'Term 1 2026',activity_type:'Data review meeting',intervention_theme:'Underperforming Schools',subjects:['Physical Sciences','Mathematics'],grades:['12'],description:'District data review meeting to identify at-risk Grade 12 learners and plan Saturday classes.',ddd_used:'yes-direct',ddd_reports:['FET Promotion Profiles','Term 4 Promotion Predictions'],decision_type:'Schedule extra classes',ctx_staffing:['All posts filled'],ctx_resources:['Infrastructure issues'],ctx_learners:['Overcrowded classrooms'],ctx_notes:'Only 1 lab for 4 Grade 12 Science classes at School B',learners_reached:520,follow_up:true,follow_up_desc:'Monitor Saturday class attendance after first 3 sessions'}},
  {id:'DEMO_D3',ddd_tool:'Senior Phase Promotion Profiles',data_viewed:'Grade 7 English FAL results — Mopani East',insight:'62% of learners below level 4 in English FAL across 5 schools',decision_made:'Redesign lesson approach',contextual_factors:'Language barriers',made_by:'Mr K Makatu (Provincial Manager)',date:'2026-02-10',logged_by:'K Makatu',
@@ -816,7 +817,7 @@ function injectDemo() {
  ];
 
  const demo_acts = [
- {id:'DEMO_A0',decision_id:'DEMO_D0',action_taken:'Learner profiling & grouping + Extra lessons / revision classes',responsible:'Ms F Moshoeshoe & Mr T Mokoena (Subject Advisor)',status:'Completed',target_date:'2025-11-30',notes:'35 at-risk learners grouped by gap analysis. 3x weekly after-school Maths sessions (Tue/Thu/Sat) for 6 weeks. Focused on algebra, functions, and exam technique. Subject advisor co-taught with educators.',logged_by:'F Moshoeshoe',supporting_doc_url:'https://docs.google.com/spreadsheets/d/demo-learner-profiles-gr10',supporting_doc_name:'Grade 10 Maths Learner Profiles & Attendance'},
+ {id:'DEMO_A0',decision_id:'DEMO_D0',action_taken:'Learner grouping by performance + Extra lessons / revision classes',responsible:'Ms F Moshoeshoe & Mr T Mokoena (Subject Advisor)',status:'Completed',target_date:'2025-11-30',notes:'35 at-risk learners grouped by gap analysis. 3x weekly after-school Maths sessions (Tue/Thu/Sat) for 6 weeks. Focused on algebra, functions, and exam technique. Subject advisor co-taught with educators.',logged_by:'F Moshoeshoe',supporting_doc_url:'https://docs.google.com/spreadsheets/d/demo-learner-profiles-gr10',supporting_doc_name:'Grade 10 Maths Learner Profiles & Attendance'},
  {id:'DEMO_A1',decision_id:'DEMO_D1',action_taken:'Subject improvement plan developed',responsible:'Mr V Teise',status:'In Progress',target_date:'2026-02-14',notes:'Follow-up: Return visit in 2 weeks to check if Subject Improvement Plan has been implemented',logged_by:'V Teise',supporting_doc_url:'https://docs.google.com/document/d/demo-sip-jtg',supporting_doc_name:'Maths SIP — JTG Schools'},
  {id:'DEMO_A2',decision_id:'DEMO_D2',action_taken:'Extra lessons / revision classes',responsible:'Ms F Moshoeshoe',status:'In Progress',target_date:'2026-03-01',notes:'Saturday classes starting 22 Feb, 08:00-12:00',logged_by:'F Moshoeshoe',supporting_doc_url:'',supporting_doc_name:''},
  {id:'DEMO_A3',decision_id:'DEMO_D3',action_taken:'Educator coaching / mentoring',responsible:'Mr K Makatu',status:'Completed',target_date:'2026-02-10',notes:'12 educators trained in reading comprehension strategies',logged_by:'K Makatu',supporting_doc_url:'https://drive.google.com/file/d/demo-register',supporting_doc_name:'Workshop attendance register'},
@@ -825,7 +826,7 @@ function injectDemo() {
  ];
 
  const demo_outs = [
- {id:'DEMO_O0',action_id:'DEMO_A0',intervention_id:null,description:'Grade 10 Maths pass rate at School B improved from 41% (Term 3) to 64% (Term 4). Of the 35 targeted learners, 23 moved above the pass threshold — a 66% success rate. Average mark for the cohort improved by 12 percentage points.',metric:'Pass rate improvement',value:'41% → 64% (+23 percentage points)',evidence:'SA-SAMS Term 4 2025 results, verified against DDD FET Promotion Profiles report. Attendance register confirms 89% attendance across the 18 after-school sessions.',date:'2026-01-20',logged_by:'F Moshoeshoe'},
+ {id:'DEMO_O0',action_id:'DEMO_A0',intervention_id:null,description:'Grade 10 Maths pass rate at School B improved from 41% (Term 3) to 64% (Term 4). Of the 35 targeted learners, 23 moved above the pass threshold — a 66% success rate. Average mark for the group improved by 12 percentage points.',metric:'Pass rate improvement',value:'41% → 64% (+23 percentage points)',evidence:'SA-SAMS Term 4 2025 results, verified against DDD FET Promotion Profiles report. Attendance register confirms 89% attendance across the 18 after-school sessions.',date:'2026-01-20',logged_by:'F Moshoeshoe'},
  {id:'DEMO_O1',action_id:'DEMO_A3',intervention_id:null,description:'8 of 12 educators now using scaffolded reading approach in lessons. Learner participation visibly improved in follow-up observation.',metric:'Educator adoption rate',value:'67% (8/12)',evidence:'Follow-up lesson observations — 24 Feb 2026',date:'2026-02-24',logged_by:'K Makatu'}
  ];
 
@@ -1491,7 +1492,7 @@ function getClientScope() {
   const prov = S.official.province || '';
 
   // National scope: explicit national province or national-level roles
-  if (prov === 'National' || prov === 'All' || ['Director General','Deputy Minister','Member','Interventions & MERL Manager'].includes(role)) return 'national';
+  if (prov === 'National' || prov === 'All' || ['Director General','Deputy Minister','Member','Interventions & Monitoring Manager'].includes(role)) return 'national';
 
   // Provincial scope
   if (['Provincial Manager','Chief Education Specialist','Deputy Chief Education Specialist','Deputy Director General','Director','Chief Director','Gauteng Provincial Project Manager','North West Junior PM'].includes(role) || role.includes('Provincial')) return 'province';
@@ -1758,7 +1759,7 @@ function renderDashboard() {
  if (chainsTotal >= 2) {
    if (pipelineOutcomePct < 30) narratives.push({color:'var(--orange)',text:`Only <strong>${pipelineOutcomePct}%</strong> of your ${chainsTotal} logged activities have recorded outcomes. This means ${chainsTotal - chainsWithOutcome} intervention${chainsTotal-chainsWithOutcome!==1?'s have':' has'} no evidence of impact yet.`,action:'Go to the Update tab to record outcomes for completed actions.'});
    else if (pipelineOutcomePct >= 70) narratives.push({color:'var(--green)',text:`Strong execution — <strong>${pipelineOutcomePct}%</strong> of your interventions have documented outcomes. This gives you solid evidence for reporting.`,action:''});
-   else narratives.push({color:'var(--blue)',text:`<strong>${pipelineActionPct}%</strong> of decisions led to actions, but only <strong>${pipelineOutcomePct}%</strong> have outcomes recorded. Closing this gap strengthens your MERL evidence.`,action:'Update your completed actions with outcomes.'});
+   else narratives.push({color:'var(--blue)',text:`<strong>${pipelineActionPct}%</strong> of decisions led to actions, but only <strong>${pipelineOutcomePct}%</strong> have outcomes recorded. Recording results strengthens your evidence.`,action:'Update your completed actions with outcomes.'});
  }
 
  // Geographic insight
@@ -1808,7 +1809,7 @@ function renderDashboard() {
    const distinctDistricts = new Set();
    decs.forEach(d=>{const det=d.details||{};const allB=[...(det.ctx_staffing||[]),...(det.ctx_resources||[]),...(det.ctx_learners||[])];if(allB.includes(topBarrier[0])&&det.district)distinctDistricts.add(det.district)});
    if (distinctDistricts.size > 1) {
-     narratives.push({color:'#E53935',text:`<strong>"${topBarrier[0]}"</strong> is your most reported barrier (${topBarrier[1]} times across ${distinctDistricts.size} districts). This is a systemic issue worth escalating.`,action:''});
+     narratives.push({color:'#E53935',text:`<strong>"${topBarrier[0]}"</strong> is your most reported barrier (${topBarrier[1]} times across ${distinctDistricts.size} districts). This is a widespread problem worth raising to higher levels.`,action:''});
    }
  }
 
@@ -1819,7 +1820,7 @@ function renderDashboard() {
 
    const clickable = !!drillKey && count > 0;
    const tapAttrs = clickable
-     ? `role="button" tabindex="0" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" ontouchstart="this.style.background='#F0F8F8'" ontouchend="this.style.background='#fff'" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:all .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15)"`
+     ? `role="button" tabindex="0" aria-label="View ${drillKey} details" onclick="openPipelineDrill('${drillKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPipelineDrill('${drillKey}')}" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:background .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15);touch-action:manipulation"`
      : `style="background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;margin-bottom:8px"`;
 
    return `<div ${tapAttrs}>
@@ -1971,7 +1972,7 @@ ${tab==='insights'?`
    <div class="stat-card"><div class="stat-num">${totalActivities}</div><div class="stat-label">Activities</div></div>
    <div class="stat-card green"><div class="stat-num">${schoolSet.size}</div><div class="stat-label">Schools</div></div>
    <div class="stat-card orange"><div class="stat-num">${totalLearners > 999 ? (totalLearners/1000).toFixed(1)+'k' : totalLearners}</div><div class="stat-label">Learners</div></div>
-   <div class="stat-card${dddPct>=60?' green':dddPct>=40?'':' red'}"><div class="stat-num">${dddPct}%</div><div class="stat-label">DDD Informed</div></div>
+   <div class="stat-card${dddPct>=60?' green':dddPct>=40?'':' red'}"><div class="stat-num">${dddPct}%</div><div class="stat-label">Used DDD Data</div></div>
  </div>
 
  <!-- ═══ SMART NARRATIVES ═══ -->
@@ -1985,9 +1986,9 @@ ${tab==='insights'?`
 
  <!-- ═══ INTERVENTION PIPELINE FUNNEL ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--navy)">
-   <div class="dash-section-hdr"><h3>Intervention Pipeline</h3><span style="font-size:11px;color:var(--grey)">Decision → Action → Outcome</span></div>
+   <div class="dash-section-hdr"><h3>Your Progress Tracker</h3><span style="font-size:11px;color:var(--grey)">Decision → Action → Outcome</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">How many of your interventions are completing the full cycle? A strong programme converts decisions into actions and actions into measurable outcomes.</div>
+     <div class="dash-section-desc">How many of your actions are going the full way? A strong programme turns decisions into actions and actions into results you can see.</div>
      ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)', 'decisions')}
      ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)', 'actions')}
      ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)', 'outcomes')}
@@ -1995,9 +1996,9 @@ ${tab==='insights'?`
       <div class="pipeline-metrics" style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
          <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
          <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Outcome</div></div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Result</div></div>
          <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Completion Rate</div></div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Fully Done</div></div>
        </div>
      </div>
    </div>
@@ -2005,9 +2006,9 @@ ${tab==='insights'?`
 
  <!-- ═══ DATA QUALITY SCORE ═══ -->
  <div class="dash-section">
-   <div class="dash-section-hdr"><h3>Data Quality Score</h3></div>
+   <div class="dash-section-hdr"><h3>How Strong Is Your Evidence?</h3></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">How evidence-based are your logged entries? Entries with specific numbers from DDD (pass rates, learner counts, attendance) are stronger evidence.</div>
+     <div class="dash-section-desc">How strong are the details you've captured? Entries with specific numbers from DDD (pass rates, learner counts, attendance) are stronger evidence.</div>
      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
        <div style="position:relative;width:90px;height:90px;flex-shrink:0">
          <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)">
@@ -2044,7 +2045,7 @@ ${tab==='insights'?`
 ${tab==='coverage'?`
  <!-- ═══ GEOGRAPHIC COVERAGE ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--blue)">
-   <div class="dash-section-hdr"><h3>Geographic Coverage</h3><span style="font-size:11px;color:var(--grey)">${districts.length} district${districts.length!==1?'s':''} across ${activeProvinces.length} province${activeProvinces.length!==1?'s':''}</span></div>
+   <div class="dash-section-hdr"><h3>Where You're Working</h3><span style="font-size:11px;color:var(--grey)">${districts.length} district${districts.length!==1?'s':''} across ${activeProvinces.length} province${activeProvinces.length!==1?'s':''}</span></div>
    <div class="dash-section-body">
      <div class="dash-section-desc">Where your interventions are concentrated and where there may be gaps. Districts with no recent activity may need attention.</div>
      ${districts.length ? `<div style="overflow-x:auto"><table class="cov-table" style="width:100%;border-collapse:collapse;font-size:11px">
@@ -2184,9 +2185,9 @@ ${tab==='trends'?`
 
  <!-- ═══ BARRIERS ANALYSIS ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--red)">
-   <div class="dash-section-hdr"><h3>Barriers & Systemic Issues</h3><span style="font-size:11px;color:var(--grey)">${barriers.length} barrier type${barriers.length!==1?'s':''}</span></div>
+   <div class="dash-section-hdr"><h3>Challenges Reported</h3><span style="font-size:11px;color:var(--grey)">${barriers.length} challenge type${barriers.length!==1?'s':''}</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">Contextual barriers reported across all activities. Patterns here indicate systemic issues that may need escalation beyond individual school support.</div>
+     <div class="dash-section-desc">Challenges reported across all activities. Patterns here show common problems that may need to be raised to higher levels.</div>
      ${barriers.length ? `<div style="display:grid;gap:8px">${barriers.slice(0,10).map(([b,count])=>{
        const maxB = barriers[0][1];
        const pct = Math.round((count/maxB)*100);
@@ -2234,7 +2235,7 @@ ${tab==='impact'?`
    </div>
    <div style="background:#fff;border-radius:8px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:3px solid var(--blue)">
      <div class="ss-num" style="font-size:28px;font-weight:800;color:var(--navy)">${pipelineOutcomePct}%</div>
-     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Pipeline Rate</div>
+     <div class="ss-label" style="font-size:10px;font-weight:600;color:var(--grey);text-transform:uppercase">Follow-Through</div>
    </div>
  </div>
 
@@ -2262,7 +2263,7 @@ ${tab==='impact'?`
             const n=arr.length;
             const prev=arr.slice(0,2).join(', ');
             return n>0 ? `
-            <div onclick="openSchoolsListModal('${esc(imp.metric||'Outcome').replace(/'/g,"\\'")}', '${encodeURIComponent(imp.schools||'')}')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:6px;background:#fff;border:1.5px solid var(--green);border-radius:8px;cursor:pointer;transition:all .15s;min-height:44px;-webkit-tap-highlight-color:rgba(122,182,72,.15)" ontouchstart="this.style.background='var(--green-lt)'" ontouchend="this.style.background='#fff'">
+            <div onclick="openSchoolsListModal('${esc(imp.metric||'Outcome').replace(/'/g,"\\'")}', '${encodeURIComponent(imp.schools||'')}')" ontouchstart="this.style.background='var(--green-lt)';this.dataset.touchMoved=''" ontouchmove="this.dataset.touchMoved='1'" ontouchend="this.style.background='#fff';if(!this.dataset.touchMoved){event.preventDefault();openSchoolsListModal('${esc(imp.metric||'Outcome').replace(/'/g,"\\'")}', '${encodeURIComponent(imp.schools||'')}')}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:6px;background:#fff;border:1.5px solid var(--green);border-radius:8px;cursor:pointer;transition:background .15s;min-height:44px;-webkit-tap-highlight-color:rgba(122,182,72,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none">
               <span style="font-size:16px">🏫</span>
               <div style="flex:1;min-width:0">
                 <div style="font-size:12px;font-weight:700;color:var(--navy)">${n} school${n!==1?'s':''}</div>
@@ -2342,7 +2343,7 @@ function renderDashboardUpdate(decs,acts,outs){
          <div style="background:#F7F9FC;border-radius:8px;padding:10px 14px;margin-bottom:14px">
            ${det.district?'<div style="font-size:13px;color:var(--navy);margin-bottom:4px"><strong>District:</strong> '+esc(det.district)+'</div>':''}
            ${schoolCount>0?`
-           <div onclick="openSchoolsListModal('${esc(a.action_taken).replace(/'/g,"\\'")}', '${encodeURIComponent(schoolStr)}')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:6px;background:#fff;border:2px solid var(--teal);border-radius:10px;cursor:pointer;transition:all .15s;min-height:52px;-webkit-tap-highlight-color:rgba(11,142,141,.15)" ontouchstart="this.style.background='var(--teal-lt)'" ontouchend="this.style.background='#fff'">
+           <div onclick="openSchoolsListModal('${esc(a.action_taken).replace(/'/g,"\\'")}', '${encodeURIComponent(schoolStr)}')" ontouchstart="this.style.background='var(--teal-lt)';this.dataset.touchMoved=''" ontouchmove="this.dataset.touchMoved='1'" ontouchend="this.style.background='#fff';if(!this.dataset.touchMoved){event.preventDefault();openSchoolsListModal('${esc(a.action_taken).replace(/'/g,"\\'")}', '${encodeURIComponent(schoolStr)}')}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:6px;background:#fff;border:2px solid var(--teal);border-radius:10px;cursor:pointer;transition:background .15s;min-height:52px;-webkit-tap-highlight-color:rgba(11,142,141,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none">
              <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                <span style="font-size:18px;color:var(--teal)">🏫</span>
              </div>
@@ -2668,7 +2669,7 @@ function tkPeers(){
  <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px">
    <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Peer Comparisons</h3></div>
    <div style="padding:20px 16px;text-align:center">
-     <div style="font-size:12px;color:#607D8B;line-height:1.7;max-width:400px;margin:0 auto">This tracker is not directly linked to DDD data. To compare your circuit or district against others, open the <strong>DDD Dashboard</strong> and use the comparison reports. As more officials capture evidence here, aggregated insights will appear in this section.</div>
+     <div style="font-size:12px;color:#607D8B;line-height:1.7;max-width:400px;margin:0 auto">This tracker is not directly linked to DDD data. To compare your circuit or district against others, open the <strong>DDD Dashboard</strong> and use the comparison reports. As more officials capture evidence here, shared learnings will appear in this section.</div>
    </div>
  </div>
 
@@ -2704,37 +2705,25 @@ function renderPolicyModal(){
 // UTILITIES 
 
 function openPipelineDrill(kind, evt){
-  try{
-    if(evt && evt.stopPropagation) evt.stopPropagation();
+  if(evt && evt.stopPropagation) evt.stopPropagation();
+  // Guard against opening when nothing to show
+  const decs = applyDashFilters(S.decisions || []);
+  const decIds = new Set(decs.map(d => d.id));
+  const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
+  const actIds = new Set(acts.map(a => a.id));
+  const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
 
-    // Guard against opening when nothing to show
-    const decs = applyDashFilters(S.decisions || []);
-    const decIds = new Set(decs.map(d => d.id));
-    const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
-    const actIds = new Set(acts.map(a => a.id));
-    const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
+  const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
+  if(!counts[kind]){ toast('No ' + (kind||'records') + ' to show for the current filters.'); return; }
 
-    const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
-    if(!counts[kind]){
-      toast('No ' + (kind||'records') + ' to show for the current filters.');
-      return;
-    }
-
-    S.pipelineDrill = { kind: kind };
-    render();
-  }catch(err){
-    console.error(err);
-    toast('Sorry, details could not open. Please refresh the page and try again.');
-  }
+  S.pipelineDrill = { kind: kind };
+  render();
 }
-window.openPipelineDrill = openPipelineDrill;
-
 
 function closePipelineDrill(){
   S.pipelineDrill = null;
   render();
 }
-window.closePipelineDrill = closePipelineDrill;
 
 function renderPipelineDrillModal(){
   const m = S.pipelineDrill; if(!m) return;
