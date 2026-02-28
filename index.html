@@ -851,9 +851,6 @@ function render() {
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
  if(S.outcomeModal) renderOutcomeModal();
  else { const stale=document.getElementById('outcome-modal-overlay'); if(stale)stale.remove(); }
-
- if(S.pipelineDrill) renderPipelineDrillModal();
- else { const stale2=document.getElementById('pipeline-drill-overlay'); if(stale2)stale2.remove(); }
 }
 
 function renderEmailGate() {
@@ -2002,47 +1999,66 @@ ${tab==='insights'?`
 
  <!-- ═══ INTERVENTIONS IN YOUR ENTITY ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--navy)">
-   <div class="dash-section-hdr"><h3>Interventions in your entity</h3><span style="font-size:11px;color:var(--grey)">Planned → Activity started → Outcome recorded</span></div>
+   <div class="dash-section-hdr"><h3>Interventions in your entity</h3><span style="font-size:11px;color:var(--grey)">Planned → Activity → Outcome</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">See how your interventions are progressing. Each planned intervention should lead to an activity, and each activity should have a recorded outcome. Click <strong>View</strong> to see details.</div>
+     <div class="dash-section-desc">This table shows all your interventions and how far each one has progressed. Green means an outcome has been recorded. Blue means an activity has started. Grey means only a plan exists so far.</div>
+
+     <!-- Summary row -->
+     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+       <div style="flex:1;min-width:120px;background:#fff;border:2px solid var(--navy);border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:var(--navy)">${chainsTotal}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Planned</div>
+       </div>
+       <div style="flex:1;min-width:120px;background:#fff;border:2px solid var(--blue);border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:var(--blue)">${chainsWithAction}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Activities started</div>
+       </div>
+       <div style="flex:1;min-width:120px;background:#fff;border:2px solid var(--green);border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:var(--green)">${chainsWithOutcome}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Outcomes recorded</div>
+       </div>
+     </div>
+
+     <!-- Full interventions list — no clicks needed -->
      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-     <table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #D5D9E2;border-radius:10px;overflow:hidden;font-size:14px;min-width:480px">
+     <table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #D5D9E2;border-radius:10px;overflow:hidden;font-size:13px;min-width:520px">
        <thead>
          <tr style="background:#F5F6FA">
-           <th style="text-align:left;padding:10px 14px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2">Stage</th>
-           <th style="text-align:center;padding:10px 14px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:70px">Count</th>
-           <th style="text-align:center;padding:10px 14px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:60px">Rate</th>
-           <th style="text-align:center;padding:10px 14px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:90px">Progress</th>
-           <th style="text-align:center;padding:10px 14px;border-bottom:2px solid #D5D9E2;width:60px"></th>
+           <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2">What was planned</th>
+           <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:120px">District</th>
+           <th style="text-align:center;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:110px">Progress</th>
+           <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:90px">Date</th>
          </tr>
        </thead>
        <tbody>
-         <tr style="background:#fff">
-           <td style="padding:12px 14px;font-weight:600;color:var(--navy);border-bottom:1px solid #ECEFF1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--navy);margin-right:8px;vertical-align:middle"></span>Planned interventions</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy);border-bottom:1px solid #ECEFF1">${chainsTotal}</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:700;color:var(--navy);border-bottom:1px solid #ECEFF1">100%</td>
-           <td style="padding:12px 14px;border-bottom:1px solid #ECEFF1"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--navy);width:100%;border-radius:6px"></div></div></td>
-           <td style="text-align:center;padding:12px 14px;border-bottom:1px solid #ECEFF1">${chainsTotal > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('decisions',event);return false;" style="display:inline-block;background:var(--navy);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
-         </tr>
-         <tr style="background:#fff">
-           <td style="padding:12px 14px;font-weight:600;color:var(--navy);border-bottom:1px solid #ECEFF1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--blue);margin-right:8px;vertical-align:middle"></span>Activities started</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy);border-bottom:1px solid #ECEFF1">${chainsWithAction}</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:700;border-bottom:1px solid #ECEFF1;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</td>
-           <td style="padding:12px 14px;border-bottom:1px solid #ECEFF1"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--blue);width:${chainsTotal?Math.round(chainsWithAction/chainsTotal*100):0}%;border-radius:6px;transition:width .5s"></div></div></td>
-           <td style="text-align:center;padding:12px 14px;border-bottom:1px solid #ECEFF1">${chainsWithAction > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('actions',event);return false;" style="display:inline-block;background:var(--blue);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
-         </tr>
-         <tr style="background:#fff">
-           <td style="padding:12px 14px;font-weight:600;color:var(--navy)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin-right:8px;vertical-align:middle"></span>Outcomes recorded</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:800;font-size:18px;color:var(--navy)">${chainsWithOutcome}</td>
-           <td style="text-align:center;padding:12px 14px;font-weight:700;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</td>
-           <td style="padding:12px 14px"><div style="background:#eee;border-radius:6px;height:14px;overflow:hidden"><div style="height:100%;background:var(--green);width:${chainsTotal?Math.round(chainsWithOutcome/chainsTotal*100):0}%;border-radius:6px;transition:width .5s"></div></div></td>
-           <td style="text-align:center;padding:12px 14px">${chainsWithOutcome > 0 ? `<a href="javascript:void(0)" onclick="window.openPipelineDrill('outcomes',event);return false;" style="display:inline-block;background:var(--green);color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer">View</a>` : `<span style="color:#bbb;font-size:12px">—</span>`}</td>
-         </tr>
+         ${decs.length ? decs.map(d => {
+           const det = d.details || {};
+           const hasAct = acts.some(a => a.decision_id === d.id);
+           const dActs = acts.filter(a => a.decision_id === d.id);
+           const hasOut = dActs.some(a => outs.some(o => o.action_id === a.id));
+           const latestAct = dActs[0];
+           const statusColor = hasOut ? 'var(--green)' : hasAct ? 'var(--blue)' : '#aaa';
+           const statusLabel = hasOut ? 'Outcome recorded' : hasAct ? (latestAct?.status === 'Completed' ? 'Activity completed' : 'Activity started') : 'Planned only';
+           const schools = (det.schools||'').split(',').map(s=>s.trim()).filter(Boolean);
+           return `<tr style="background:#fff;border-bottom:1px solid #ECEFF1">
+             <td style="padding:10px 12px;border-bottom:1px solid #ECEFF1">
+               <div style="font-weight:600;color:var(--navy);line-height:1.4">${esc(d.decision_made || d.insight || d.data_viewed || '(Plan)')}</div>
+               ${schools.length ? '<div style="font-size:11px;color:var(--grey);margin-top:3px">' + schools.length + ' school' + (schools.length>1?'s':'') + ': ' + esc(schools.slice(0,3).join(', ')) + (schools.length>3?' +' +(schools.length-3)+' more':'') + '</div>' : ''}
+               ${latestAct ? '<div style="font-size:11px;color:var(--blue);margin-top:3px;font-style:italic">' + esc(latestAct.action_taken||'') + '</div>' : ''}
+             </td>
+             <td style="padding:10px 12px;font-size:12px;color:var(--grey-dk);border-bottom:1px solid #ECEFF1">${esc(det.district||'')}</td>
+             <td style="text-align:center;padding:10px 12px;border-bottom:1px solid #ECEFF1">
+               <span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;background:${statusColor};white-space:nowrap">${statusLabel}</span>
+             </td>
+             <td style="padding:10px 12px;font-size:12px;color:var(--grey);border-bottom:1px solid #ECEFF1">${esc(d.date||'')}</td>
+           </tr>`}).join('') : '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--grey)">No interventions logged yet. Use <strong>Log Activity</strong> to record your first one.</td></tr>'}
        </tbody>
      </table>
      </div>
+
+     <!-- Conversion summary -->
      <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:10px">
-      <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:4px;align-items:center">
+       <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:4px;align-items:center">
          <div><div style="font-size:20px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Started</div></div>
          <div style="font-size:16px;color:#ccc">→</div>
          <div><div style="font-size:20px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Outcomes</div></div>
@@ -2753,169 +2769,19 @@ function renderPolicyModal(){
 
 // UTILITIES 
 
-function openPipelineDrill(kind, evt){
-  if(evt){ evt.stopPropagation(); evt.preventDefault(); }
-  // Guard against opening when nothing to show
-  const decs = applyDashFilters(S.decisions || []);
-  const decIds = new Set(decs.map(d => d.id));
-  const acts = (S.actions||[]).filter(a => decIds.has(a.decision_id));
-  const actIds = new Set(acts.map(a => a.id));
-  const outs = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
-
-  const counts = { decisions: decs.length, actions: acts.length, outcomes: outs.length };
-  if(!counts[kind]){ toast('No ' + (kind||'records') + ' to show for the current filters.'); return; }
-
-  S.pipelineDrill = { kind: kind };
-  // Show modal directly — do NOT call render() to avoid full DOM rebuild which kills the click
-  renderPipelineDrillModal();
-}
-
-// Ensure drill function is callable from inline handlers across browsers/WebViews
+// Pipeline drill functions — replaced by inline table, kept as no-ops for safety
+function openPipelineDrill(){} 
 window.openPipelineDrill = openPipelineDrill;
-
-// Pipeline drill: View buttons use direct onclick — no capture-phase wiring needed
-
-function closePipelineDrill(){
-  S.pipelineDrill = null;
-  const el = document.getElementById('pipeline-drill-overlay');
-  if(el) el.remove();
-}
-
-function renderPipelineDrillModal(){
-  const m = S.pipelineDrill; if(!m) return;
-  const existing = document.getElementById('pipeline-drill-overlay');
-  if(existing) existing.remove();
-
-  const kind = m.kind;
-  const decs = applyDashFilters(S.decisions || []);
-  const decById = Object.fromEntries(decs.map(d => [d.id, d]));
-  const decIds = new Set(decs.map(d => d.id));
-  const actsAll = (S.actions||[]).filter(a => decIds.has(a.decision_id));
-  const actById = Object.fromEntries(actsAll.map(a => [a.id, a]));
-  const actIds = new Set(actsAll.map(a => a.id));
-  const outsAll = (S.outcomes||[]).filter(o => actIds.has(o.action_id));
-
-  let title = 'Details';
-  let subtitle = '';
-  let rows = [];
-
-  if(kind === 'decisions'){
-    title = 'Planned interventions';
-    subtitle = 'Click an item below to open it in the Activity Log.';
-    rows = decs.map(d => {
-      const det = d.details || {};
-      return {
-        id: d.id,
-        primary: d.decision_made || d.insight || d.data_viewed || '(Plan)',
-        district: det.district || '',
-        schools: det.schools || '',
-        meta: [ det.district||'', d.date||'' ].filter(Boolean).join(' • '),
-        link: d.id
-      };
-    });
-  } else if(kind === 'actions'){
-    title = 'Activities started';
-    subtitle = 'Click an item below to open it in the Activity Log.';
-    rows = actsAll.map(a => {
-      const d = decById[a.decision_id] || {};
-      const det = d.details || {};
-      return {
-        id: a.id,
-        primary: a.action_taken || '(Action)',
-        district: det.district || '',
-        schools: det.schools || '',
-        meta: [ det.district||'', a.status||'', a.target_date||'' ].filter(Boolean).join(' • '),
-        link: a.decision_id
-      };
-    });
-  } else if(kind === 'outcomes'){
-    title = 'Outcomes recorded';
-    subtitle = 'Click an item below to open it in the Activity Log.';
-    rows = outsAll.map(o => {
-      const a = actById[o.action_id] || {};
-      const d = decById[a.decision_id] || {};
-      const det = d.details || {};
-      return {
-        id: o.id,
-        primary: o.description || '(Result)',
-        district: det.district || '',
-        schools: det.schools || '',
-        meta: [ det.district||'', o.metric||'', o.value||'', o.date||'' ].filter(Boolean).join(' • '),
-        link: a.decision_id
-      };
-    });
-  }
-
-  const el = document.createElement('div');
-  el.id = 'pipeline-drill-overlay';
-  el.innerHTML = `
-    <div class="modal-bg" onclick="closePipelineDrill()">
-      <div class="modal-box" onclick="event.stopPropagation()" style="max-width:720px">
-        <div style="padding:16px 20px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B8DCDC;margin-bottom:4px">VIEW DETAILS</div>
-            <div style="font-size:16px;font-weight:800">${esc(title)}</div>
-            ${subtitle?`<div style="font-size:12px;color:#B8DCDC;margin-top:4px">${esc(subtitle)}</div>`:''}
-          </div>
-          <button class="btn secondary pill" style="padding:8px 10px" onclick="closePipelineDrill()">Close</button>
-        </div>
-
-        <div style="padding:16px 20px">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Planned (${decs.length})</button>
-            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Activities (${actsAll.length})</button>
-            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes (${outsAll.length})</button>
-          </div>
-
-          <div style="background:#F7F9FC;border:1px solid #ECEFF1;border-radius:10px;overflow:hidden">
-            ${rows.length? rows.map(r => `
-              <div style="padding:12px 12px;border-bottom:1px solid #ECEFF1;cursor:pointer" onclick="openPipelineChain('${esc(r.link||r.id)}')">
-                <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.35">${esc(r.primary)}</div>
-                ${r.meta?`<div style="font-size:12px;color:var(--grey);margin-top:4px;line-height:1.35">${esc(r.meta)}</div>`:''}
-                ${(()=>{ 
-                    const arr = parseSchoolsList(r.schools||'');
-                    if(!arr.length) return '';
-                    const n = arr.length;
-                    const prev = arr.slice(0,2).join(', ');
-                    const enc = encodeURIComponent(r.schools||'');
-                    return `<div style="font-size:12px;color:var(--grey);margin-top:6px;line-height:1.35;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
-                      <div><span style="font-weight:600;color:var(--grey-dk)">Schools:</span> ${n} selected${prev?` &middot; ${esc(prev)}${n>2?' + '+(n-2)+' more':''}`:''}</div>
-                      <button type="button" class="btn secondary pill" onclick="openSchoolsListModal('Schools', '${enc}', event)" style="padding:4px 8px;font-size:11px;line-height:1.2">Show list</button>
-                    </div>`;
-                  })()}
-              </div>
-            `).join('') : `<div style="padding:14px;color:var(--grey);font-size:13px">No items match your current filters.</div>`}
-          </div>
-
-          <div style="margin-top:12px;font-size:12px;color:var(--grey);line-height:1.5">
-            Tip: Use the dashboard filters (Province/District/Circuit/School) to narrow this list.
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(el);
-
-  // Escape: close on ESC
-  const handler = (e)=>{ if(e.key==='Escape'){ document.removeEventListener('keydown',handler); closePipelineDrill(); } };
-  document.addEventListener('keydown', handler);
-}
-
-// Jump to the Log view and open the relevant decision "chain"
+function closePipelineDrill(){ const el=document.getElementById('pipeline-drill-overlay'); if(el)el.remove(); }
+function renderPipelineDrillModal(){}
 function openPipelineChain(id){
-  // If the click came from an action/outcome row, id is already decision_id; if it came from a decision row, it's decision id.
-  const decisionId = id;
-  closePipelineDrill();
   S.view = 'log';
-  // Expand the chain in the log view (if supported); otherwise prefill a search hint.
   S.expandedChains = S.expandedChains || {};
-  S.expandedChains[decisionId] = true;
-  // Set a gentle hint so the user sees it immediately
+  S.expandedChains[id] = true;
   toast('Opening the selected item in Activity Log…');
   render();
-  // Attempt to scroll to item after render
   setTimeout(()=>{
-    const el = document.querySelector('[data-chain-id="'+decisionId+'"]') || document.getElementById(decisionId);
+    const el = document.querySelector('[data-chain-id="'+id+'"]') || document.getElementById(id);
     if(el && el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
   }, 150);
 }
