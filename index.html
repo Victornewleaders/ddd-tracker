@@ -773,7 +773,7 @@ async function saveOutcome() {
    if (act) act.status = 'Completed';
    
    S.outcomeModal = null;
-   showToast('Outcome recorded successfully');
+   showToast('Outcome of the intervention recorded successfully');
    await loadAll();
  } catch(e) {
    m.saving = false;
@@ -1254,7 +1254,7 @@ function renderFormStep3(){
     ${S.f.ddd_used==='no'?`<div style="background:#f8f9fa;border-radius:8px;padding:12px 14px;margin:8px 0"><div style="font-size:12px;color:var(--grey-dk);line-height:1.6">No problem \u2014 not every activity needs DDD data. But next time, try opening the dashboard first. Even a quick look can show you which learners or schools need your help most.</div><a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);font-size:12px;font-weight:600;text-decoration:none;margin-top:6px">Save the DDD Dashboard link for next time \u2192</a></div>`:''}
     ${pc?`<div style="background:var(--blue-lt);border-radius:8px;padding:10px 14px;margin:8px 0;border-left:3px solid var(--blue)"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px">Promotion criteria \u2014 ${phase} Phase (${pc.phases})</div><div style="font-size:9px;color:var(--grey)">${pc.ref}</div></div><div style="margin-top:4px;font-size:11px;color:#37474F;line-height:1.6">${pc.criteria.join(' \u00b7 ')}</div><div style="font-size:10px;color:var(--grey);margin-top:4px">${pc.sba} \u00b7 ${pc.retention}${pc.condonation?' \u00b7 '+pc.condonation:''}</div></div>`:''}
     <div class="field"><label>What made you decide to act? <span style="font-weight:400;color:var(--grey)">(optional)</span></label><div class="hint">What did you see in the data that made you step in?</div><select onchange="S.f.intervention_trigger=this.value;if(this.value!=='Other')S.f.intervention_trigger_other='';render()"><option value="">Select...</option>${INTERVENTION_TRIGGERS.map(t=>'<option '+(S.f.intervention_trigger===t?'selected':'')+'>'+t+'</option>').join('')}</select>${S.f.intervention_trigger==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe what made you act..." value="'+esc(S.f.intervention_trigger_other)+'" oninput="S.f.intervention_trigger_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div>
-    <div class="field-row"><div class="field"><label>Decision made</label><div class="hint">What did you decide to do based on the data? This is the strategic call you made.</div><select onchange="S.f.decision_type=this.value;if(this.value!=='Other')S.f.decision_other='';render()"><option value="">Select...</option>${DECISIONS.map(d=>'<option '+(S.f.decision_type===d?'selected':'')+'>'+d+'</option>').join('')}</select>${S.f.decision_type==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe the decision..." value="'+esc(S.f.decision_other)+'" oninput="S.f.decision_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div><div class="field"><label>Action taken<span class="req">*</span></label><div class="hint">What did you actually do on the ground to carry out that decision?</div><select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>'<option '+(S.f.action_type===a?'selected':'')+'>'+a+'</option>').join('')}</select></div></div>
+    <div class="field-row"><div class="field"><label>Planned intervention</label><div class="hint">What planned intervention did you choose based on the data? This is the plan you made.</div><select onchange="S.f.decision_type=this.value;if(this.value!=='Other')S.f.decision_other='';render()"><option value="">Select...</option>${DECISIONS.map(d=>'<option '+(S.f.decision_type===d?'selected':'')+'>'+d+'</option>').join('')}</select>${S.f.decision_type==='Other'?'<div style="margin-top:6px"><input type="text" placeholder="Please describe the planned intervention..." value="'+esc(S.f.decision_other)+'" oninput="S.f.decision_other=this.value" style="width:100%;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;font-size:13px;font-family:inherit"></div>':''}</div><div class="field"><label>Action taken<span class="req">*</span></label><div class="hint">What did you actually do on the ground to carry out that decision?</div><select onchange="S.f.action_type=this.value;render()"><option value="">Select...</option>${ACTIONS.map(a=>'<option '+(S.f.action_type===a?'selected':'')+'>'+a+'</option>').join('')}</select></div></div>
     ${S.f.action_type==='Other'?`<div class="field"><label>Describe action</label><textarea rows="2" placeholder="Describe..." oninput="S.f.action_other=this.value">${esc(S.f.action_other)}</textarea></div>`:''}
     
     <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-outline" onclick="S.f.formStep=1;render()">&larr; Back</button><button class="btn btn-teal" onclick="S.f.formStep=3;render()">Next &rarr;</button></div>
@@ -1288,7 +1288,7 @@ function renderFormReview(){
   return`<div class="section fade-in"><div class="sec-hdr" style="border-color:var(--navy)"><div><h2>5. Review & Submit</h2><p>Check your entry before submitting</p></div></div><div class="sec-body">
     <div class="review-card"><div class="review-card-hdr" style="color:var(--teal)">Location & Date</div>${rvRow('Term',f.term)}${rvRow('Province',f.province)}${rvRow('District',f.district)}${rvRow('Circuit',f.circuit)}${rvRow('Date',f.activity_date)}${rvRow('School(s)',f.schools)}${rvRow('Official',f.official_name)}${rvRow('Email',f.official_email)}${rvRow('Designation',f.official_role)}${rvRow('Specialisation',f.official_specialisation)}</div>
     <div class="review-card"><div class="review-card-hdr" style="color:var(--green)">Activity Details</div>${rvRow('Theme',f.intervention_theme==='Other'&&f.intervention_theme_other?'Other: '+f.intervention_theme_other:f.intervention_theme)}${rvRow('Activity',f.activity_type==='Other'&&f.activity_type_other?'Other: '+f.activity_type_other:f.activity_type)}${rvRow('Grades',f.grades.length?f.grades.map(g=>'Gr '+g).join(', '):'')}${rvRow('Subjects',f.subjects.map(s=>s==='Other'&&f.subjects_other?'Other: '+f.subjects_other:s).join(', '))}${rvRow('SIP Focus',f.sip_focus_areas.length?f.sip_focus_areas.join('; '):'')}${rvRow('Description',f.description)}</div>
-    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Report Accessed',f.ddd_access_date||'')}${rvRow('Logged into Dashboard',f.ddd_dashboard_confirmed==='yes'?'Yes':f.ddd_dashboard_confirmed==='no'?'No':'')}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Decision',f.decision_type==='Other'&&f.decision_other?'Other: '+f.decision_other:f.decision_type)}${rvRow('Action',f.action_type==='Other'&&f.action_other?'Other: '+f.action_other:f.action_type)}</div>
+    <div class="review-card"><div class="review-card-hdr" style="color:var(--blue)">DDD Connection</div>${rvRow('DDD Used',dddLbl(f.ddd_used))}${rvRow('Reports',f.ddd_reports.join(', '))}${rvRow('Report Accessed',f.ddd_access_date||'')}${rvRow('Logged into Dashboard',f.ddd_dashboard_confirmed==='yes'?'Yes':f.ddd_dashboard_confirmed==='no'?'No':'')}${rvRow('Data Issue',{'subject-performance':'Subject / pass rate','learner-attendance':'Learner attendance','educator-attendance':'Educator attendance','sba-exam-gap':'SBA-Exam gap','curriculum-coverage':'Curriculum coverage','promotion-criteria':'Promotion criteria','other-issue':'Other'}[f.insight_type]||'')}${f.insight_educator_absent?rvRow('Educators Affected',f.insight_educator_absent):''}${f.insight_attendance_days?rvRow('Days Absent',f.insight_attendance_days+'+'):''}${f.insight_sba_exam_gap?rvRow('SBA-Exam Gap',f.insight_sba_exam_gap+'%'):''}${f.insight_curriculum_pct?rvRow('Curriculum Covered',f.insight_curriculum_pct+'%'):''}${rvRow('Detail',f.insight_detail)}${buildInsightStatement()?`<div style="padding:8px 14px;background:var(--green-lt);border-radius:0 0 6px 6px"><div style="font-size:10px;font-weight:700;color:var(--green-dk);margin-bottom:2px">WHAT YOU FOUND</div><div style="font-size:12px;color:var(--navy);font-weight:600;line-height:1.5">${buildInsightStatement()}</div></div>`:''}${rvRow('What Made You Act',f.intervention_trigger==='Other'&&f.intervention_trigger_other?'Other: '+f.intervention_trigger_other:f.intervention_trigger)}${rvRow('Planned intervention',f.decision_type==='Other'&&f.decision_other?'Other: '+f.decision_other:f.decision_type)}${rvRow('Intervention activity',f.action_type==='Other'&&f.action_other?'Other: '+f.action_other:f.action_type)}</div>
     <div class="review-card"><div class="review-card-hdr" style="color:var(--orange)">Context & Follow-up</div>${rvRow('Support Needed',f.support_needed.length?f.support_needed.join('; '):'')}${rvRow('Support Level',supLbl(f.support_level))}${rvRow('Context',[...f.ctx_staffing,...f.ctx_resources,...f.ctx_learners].filter(c=>c!=='All posts filled'&&c!=='Adequate'&&c!=='No major concerns').join(', '))}${f.ctx_notes?rvRow('Notes',f.ctx_notes):''}${rvRow('Learners Reached',f.learners_reached)}${rvRow('Follow-up',f.follow_up?'Yes':'No')}${f.follow_up?rvRow('Follow-up Detail',f.follow_up_desc):''}${f.doc_file_name?rvRow('Attached',''+f.doc_file_name):''}${f.doc_url?rvRow('Link',f.doc_name||f.doc_url):''}</div>
     <div style="display:flex;justify-content:space-between;margin-top:12px"><button class="btn btn-outline" onclick="S.f.formStep=3;render()">&larr; Back</button><button class="btn btn-teal" onclick="submitForm()" ${S.saving?'disabled':''} style="min-width:160px">${S.saving?'<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></span> Submitting...':'Submit'}</button></div>
   </div></div>`;
@@ -1358,7 +1358,7 @@ function renderSuccess() {
    <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--teal);font-size:12px;font-weight:600;text-decoration:none;margin-top:6px">Save the DDD Dashboard link \u2192</a>
  </div>`}
  <div style="margin-top:12px;padding:14px;background:var(--off);border-radius:8px;text-align:left"> <div style="font-size:11px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">What you logged</div> <div style="font-size:12px;color:var(--navy);line-height:1.6"> <strong>${esc(S.f.activity_type==='Other'&&S.f.activity_type_other?'Other: '+S.f.activity_type_other:S.f.activity_type)}</strong> at <strong>${esc(S.f.schools)}</strong><br> ${S.f.district}, ${S.f.province} \u00b7 ${S.f.activity_date}<br> ${S.f.subjects.length ? 'Subjects: ' + S.f.subjects.map(s=>s==='Other'&&S.f.subjects_other?'Other: '+S.f.subjects_other:s).join(', ') + '<br>' : ''}
- ${S.f.action_type ? 'Action: ' + esc(S.f.action_type) : ''}
+ ${S.f.action_type ? 'Intervention activity: ' + esc(S.f.action_type) : ''}
  ${S.f.learners_reached ? ' \u00b7 ~' + S.f.learners_reached + ' learners' : ''}
  </div> </div> <div style="display:flex;gap:10px;justify-content:center;margin-top:20px"> <button class="btn btn-teal" onclick="resetForm()">Log Another</button> <button class="btn btn-outline" onclick="S.view='dashboard';render()">View Dashboard</button> </div> </div></div></div>`;
 }
@@ -1819,27 +1819,43 @@ function renderDashboard() {
    const width = total ? Math.max(Math.round((count/total)*100), 8) : 8;
 
    const clickable = !!drillKey && count > 0;
-   const tapAttrs = clickable
-     ? `role="button" tabindex="0" aria-label="View ${drillKey} details" data-pipeline-drill="${drillKey}" onclick="openPipelineDrill(\'${drillKey}\', event)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPipelineDrill(\'${drillKey}\', event)}" style="cursor:pointer;background:#fff;border:1.5px solid ${color};border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:background .15s;-webkit-tap-highlight-color:rgba(11,142,141,.15);touch-action:manipulation"`
-     : `style="background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 14px;margin-bottom:8px"`;
 
-   return `<div ${tapAttrs}>
-     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-       <div style="display:flex;align-items:center;gap:8px">
-         <div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0"></div>
-         <div style="font-size:13px;font-weight:700;color:var(--navy)">${label}</div>
+   const commonInner = `
+     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+       <div style="display:flex;align-items:center;gap:10px">
+         <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;margin-top:4px"></span>
+         <div style="font-weight:800;color:var(--navy);font-size:16px">${label}</div>
        </div>
-       <div style="display:flex;align-items:center;gap:6px">
-         <strong style="font-size:22px;color:${color}">${count}</strong>
-         <span style="color:var(--grey);font-size:11px">${total>0?'('+pct+'%)':''}</span>
-         ${clickable ? '<span style="font-size:16px;color:'+color+'">▸</span>' : ''}
+       <div style="display:flex;align-items:baseline;gap:6px;white-space:nowrap">
+         <div style="font-size:26px;font-weight:900;color:var(--navy)">${count}</div>
+         <div style="font-size:13px;color:var(--grey)">(${pct}%)</div>
+         ${clickable ? `<span aria-hidden="true" style="margin-left:6px;color:var(--navy);font-weight:900">›</span>` : ``}
        </div>
      </div>
-     <div style="height:24px;background:#ECEFF1;border-radius:6px;overflow:hidden;position:relative">
-       <div style="height:100%;width:${width}%;background:${color};border-radius:6px;transition:width .5s"></div>
+
+     <div style="margin-top:10px;background:#eee;border-radius:8px;height:18px;overflow:hidden">
+       <div style="height:100%;background:${color};width:${width}%;border-radius:8px;transition:width .5s"></div>
      </div>
-     ${clickable ? '<div style="font-size:11px;color:'+color+';margin-top:6px;font-weight:600;text-align:right">Tap to see details ▸</div>' : ''}
-   </div>`;
+
+     ${clickable ? `<div style="font-size:12px;color:${color};margin-top:8px;font-weight:800;text-align:right">Tap to see details ▸</div>` : ``}
+   `;
+
+   if(clickable){
+     // Use a real <button> for maximum cross-device tap reliability (phone + laptop + WebView)
+     return `
+       <button type="button"
+         data-pipeline-drill="${drillKey}"
+         aria-label="Open ${label} details"
+         style="width:100%;text-align:left;background:#fff;border:2px solid ${color};border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(11,142,141,.15)"
+         >
+         ${commonInner}
+       </button>`;
+   }
+
+   return `
+     <div style="background:#fff;border:1.5px solid #e0e0e0;border-radius:12px;padding:12px 14px;margin-bottom:10px">
+       ${commonInner}
+     </div>`;
  }
 
  // ── HELPER: month label ──
@@ -1986,19 +2002,19 @@ ${tab==='insights'?`
 
  <!-- ═══ INTERVENTION PIPELINE FUNNEL ═══ -->
  <div class="dash-section" style="border-left:4px solid var(--navy)">
-   <div class="dash-section-hdr"><h3>Your Progress Tracker</h3><span style="font-size:11px;color:var(--grey)">Decision → Action → Outcome</span></div>
+   <div class="dash-section-hdr"><h3>Close-out tracker</h3><span style="font-size:11px;color:var(--grey)">Planned intervention → Intervention activity → Outcome of the intervention</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">How many of your actions are going the full way? A strong programme turns decisions into actions and actions into results you can see.</div>
-     ${funnelBar('Decisions Logged', chainsTotal, chainsTotal, 'var(--navy)', 'decisions')}
-     ${funnelBar('Actions Taken', chainsWithAction, chainsTotal, 'var(--blue)', 'actions')}
-     ${funnelBar('Outcomes Recorded', chainsWithOutcome, chainsTotal, 'var(--green)', 'outcomes')}
+     <div class="dash-section-desc">Track what is still in progress and what is closed. Good support work closes intervention activities with a clear outcome.</div>
+     ${funnelBar('Planned interventions logged', chainsTotal, chainsTotal, 'var(--navy)', 'decisions')}
+     ${funnelBar('Intervention activities started', chainsWithAction, chainsTotal, 'var(--blue)', 'actions')}
+     ${funnelBar('Outcomes recorded', chainsWithOutcome, chainsTotal, 'var(--green)', 'outcomes')}
      <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:8px">
       <div class="pipeline-metrics" style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">
-         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Action</div></div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Planned intervention→Intervention activity</div></div>
          <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Decision→Result</div></div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${pipelineOutcomePct>=50?'var(--green)':pipelineOutcomePct>=25?'var(--orange)':'var(--red)'}">${pipelineOutcomePct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Intervention activity→Outcome of the intervention</div></div>
          <div class="pipeline-arrow" style="font-size:18px;color:#ccc;line-height:2.5">→</div>
-         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Fully Done</div></div>
+         <div class="pipeline-metric"><div class="pm-num" style="font-size:22px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div class="pm-label" style="font-size:9px;color:var(--grey);text-transform:uppercase">Closed out</div></div>
        </div>
      </div>
    </div>
@@ -2366,19 +2382,19 @@ function renderDashboardUpdate(decs,acts,outs){
            <div style="display:flex;align-items:flex-start">
              <div style="flex:1;text-align:center">
                <div style="width:32px;height:32px;border-radius:50%;background:${decColor};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:14px;font-weight:700">${decDone?'&#10003;':'1'}</span></div>
-               <div style="font-size:12px;font-weight:700;color:${decDone?'var(--navy)':'var(--grey)'}">Decided</div>
+               <div style="font-size:12px;font-weight:700;color:${decDone?'var(--navy)':'var(--grey)'}">Planned</div>
                ${parentDec&&parentDec.date?'<div style="font-size:11px;color:var(--grey);margin-top:2px">'+fmtDate(parentDec.date)+'</div>':''}
              </div>
              <div style="flex:0 0 auto;display:flex;align-items:center;padding-top:14px"><div style="width:28px;height:3px;background:${lineDecAct};border-radius:2px"></div></div>
              <div style="flex:1;text-align:center">
                <div style="width:32px;height:32px;border-radius:50%;background:${actColor};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:14px;font-weight:700">${actDone?'&#10003;':'2'}</span></div>
-               <div style="font-size:12px;font-weight:700;color:${actDone?'var(--green)':actStarted?'var(--blue)':'var(--grey)'}">In progress</div>
+               <div style="font-size:12px;font-weight:700;color:${actDone?'var(--green)':actStarted?'var(--blue)':'var(--grey)'}">Action underway</div>
                ${a.target_date?'<div style="font-size:11px;color:var(--grey);margin-top:2px">Due '+fmtDate(a.target_date)+'</div>':''}
              </div>
              <div style="flex:0 0 auto;display:flex;align-items:center;padding-top:14px"><div style="width:28px;height:3px;background:${lineActOut};border-radius:2px"></div></div>
              <div style="flex:1;text-align:center">
                <div style="width:32px;height:32px;border-radius:50%;${outDone?'background:var(--green)':'border:2px dashed #ccc;background:transparent'};margin:0 auto 6px;display:flex;align-items:center;justify-content:center"><span style="color:${outDone?'#fff':'#ccc'};font-size:14px;font-weight:700">${outDone?'&#10003;':'3'}</span></div>
-               <div style="font-size:12px;font-weight:700;color:${outDone?'var(--green)':'var(--grey)'}">Result</div>
+               <div style="font-size:12px;font-weight:700;color:${outDone?'var(--green)':'var(--grey)'}">Closed</div>
                ${outDone?'<div style="font-size:11px;color:var(--green);margin-top:2px">Recorded</div>':'<div style="font-size:11px;color:var(--orange);margin-top:2px">Not yet</div>'}
              </div>
            </div>
@@ -2396,7 +2412,7 @@ function renderDashboardUpdate(decs,acts,outs){
 
          <!-- RECORD OUTCOME -->
          ${!hasOutcome?`<button onclick="openOutcomeModal('`+a.id+`')" style="width:100%;font-size:14px;padding:14px 16px;border:none;background:var(--teal);color:#fff;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit;text-align:center;box-shadow:0 2px 6px rgba(11,142,141,.3)">Record what changed</button>
-         <div style="font-size:12px;color:var(--grey);text-align:center;margin-top:6px">What was the result of this activity? Tap above to capture it.</div>`
+         <div style="font-size:12px;color:var(--grey);text-align:center;margin-top:6px">What was the outcome of the intervention? Tap above to capture it.</div>`
          :'<div style="background:var(--green-lt);border-radius:8px;padding:12px 14px;text-align:center"><div style="font-size:14px;color:var(--green-dk);font-weight:700">&#10003; Outcome recorded</div>'+(outcomeObj?'<div style="font-size:12px;color:var(--grey-dk);margin-top:4px;line-height:1.5">'+esc((outcomeObj.description||'').slice(0,100))+((outcomeObj.description||'').length>100?'&hellip;':'')+'</div>':'')+'</div>'}
        </div>`;
      }).join('')}
@@ -2478,7 +2494,7 @@ function renderDashboardSchools(decs,acts,outs,now){
              const det=d.details||{};
              const dActs=acts.filter(a=>a.decision_id===d.id);
              const dOuts=outs.filter(o=>dActs.some(a=>a.id===o.action_id));
-             const actStatus=dOuts.length?'Complete':dActs.some(a=>a.status==='In Progress')?'In Progress':dActs.length?'Planned':'Decision Only';
+             const actStatus=dOuts.length?'Complete':dActs.some(a=>a.status==='In Progress')?'In Progress':dActs.length?'Planned':'Planned intervention only';
              const actStatusColor=actStatus==='Complete'?'var(--green)':actStatus==='In Progress'?'var(--blue)':'var(--grey)';
              return `<div style="padding:8px 10px;background:#fff;border-radius:6px;margin-bottom:4px;border-left:3px solid ${actStatusColor}">
                <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -2489,8 +2505,8 @@ function renderDashboardSchools(decs,acts,outs,now){
                  </div>
                  <span style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;background:${actStatusColor}15;color:${actStatusColor};white-space:nowrap;margin-left:6px">${actStatus}</span>
                </div>
-               ${dActs.length?`<div style="margin-top:4px;font-size:10px;color:var(--grey-dk)">Action: ${esc(dActs[0].action_taken)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div>`:''}
-               ${dOuts.length?`<div style="margin-top:3px;font-size:10px;color:var(--green-dk);font-weight:600">Outcome: ${esc(dOuts[0].value||dOuts[0].description||'').slice(0,80)}</div>`:''}
+               ${dActs.length?`<div style="margin-top:4px;font-size:10px;color:var(--grey-dk)">Intervention activity: ${esc(dActs[0].action_taken)}${det.learners_reached?' · ~'+det.learners_reached+' learners':''}</div>`:''}
+               ${dOuts.length?`<div style="margin-top:3px;font-size:10px;color:var(--green-dk);font-weight:600">Outcome of intervention: ${esc(dOuts[0].value||dOuts[0].description||'').slice(0,80)}</div>`:''}
              </div>`;
            }).join('') : '<div style="font-size:11px;color:var(--grey);font-style:italic">No detailed visit records</div>'}
            ${issueTypes.length?`<div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 6px">Data Issues Identified</div>
@@ -2776,13 +2792,13 @@ function renderPipelineDrillModal(){
   let rows = [];
 
   if(kind === 'decisions'){
-    title = 'Decisions Logged';
+    title = 'Planned interventions logged';
     subtitle = 'Tap an item to open it in the Activity Log.';
     rows = decs.map(d => {
       const det = d.details || {};
       return {
         id: d.id,
-        primary: d.decision_made || d.insight || d.data_viewed || '(Decision)',
+        primary: d.decision_made || d.insight || d.data_viewed || '(Plan)',
         district: det.district || '',
         schools: det.schools || '',
         meta: [ det.district||'', d.date||'' ].filter(Boolean).join(' • '),
@@ -2790,7 +2806,7 @@ function renderPipelineDrillModal(){
       };
     });
   } else if(kind === 'actions'){
-    title = 'Actions Taken';
+    title = 'Intervention activities started';
     subtitle = 'Tap an item to open it in the Activity Log.';
     rows = actsAll.map(a => {
       const d = decById[a.decision_id] || {};
@@ -2805,7 +2821,7 @@ function renderPipelineDrillModal(){
       };
     });
   } else if(kind === 'outcomes'){
-    title = 'Outcomes Recorded';
+    title = 'Outcomes recorded';
     subtitle = 'Tap an item to open it in the Activity Log.';
     rows = outsAll.map(o => {
       const a = actById[o.action_id] || {};
@@ -2813,7 +2829,7 @@ function renderPipelineDrillModal(){
       const det = d.details || {};
       return {
         id: o.id,
-        primary: o.description || '(Outcome)',
+        primary: o.description || '(Result)',
         district: det.district || '',
         schools: det.schools || '',
         meta: [ det.district||'', o.metric||'', o.value||'', o.date||'' ].filter(Boolean).join(' • '),
@@ -2838,9 +2854,9 @@ function renderPipelineDrillModal(){
 
         <div style="padding:16px 20px">
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Decisions (${decs.length})</button>
-            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Actions (${actsAll.length})</button>
-            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes (${outsAll.length})</button>
+            <button class="btn ${kind==='decisions'?'primary':'secondary'}" aria-selected="${kind==='decisions'}" onclick="openPipelineDrill('decisions')" style="padding:8px 10px;border:${kind==='decisions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='decisions'?'✓ ':''}Planned interventions (${decs.length})</button>
+            <button class="btn ${kind==='actions'?'primary':'secondary'}" aria-selected="${kind==='actions'}" onclick="openPipelineDrill('actions')" style="padding:8px 10px;border:${kind==='actions'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='actions'?'✓ ':''}Intervention activities (${actsAll.length})</button>
+            <button class="btn ${kind==='outcomes'?'primary':'secondary'}" aria-selected="${kind==='outcomes'}" onclick="openPipelineDrill('outcomes')" style="padding:8px 10px;border:${kind==='outcomes'?'2px solid rgba(255,255,255,.65)':'1px solid rgba(0,0,0,.08)'}">${kind==='outcomes'?'✓ ':''}Outcomes of interventions (${outsAll.length})</button>
           </div>
 
           <div style="background:#F7F9FC;border:1px solid #ECEFF1;border-radius:10px;overflow:hidden">
