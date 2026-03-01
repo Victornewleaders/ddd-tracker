@@ -377,12 +377,6 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-window.onerror = function(msg, url, line, col, err) {
-  var el = document.getElementById('__err');
-  if (!el) { el = document.createElement('div'); el.id='__err'; el.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#ff0000;color:#fff;padding:12px;font-size:12px;font-family:monospace;white-space:pre-wrap;max-height:40vh;overflow:auto'; document.body.prepend(el); }
-  el.textContent += 'ERROR line ' + line + ': ' + msg + '\n' + (err&&err.stack?err.stack:'') + '\n\n';
-  return false;
-};
 // Compatibility: some Android WebViews do not expose a global `event` in inline handlers.
 // Provide a safe fallback so buttons remain responsive.
 if (typeof window.event === 'undefined') {
@@ -851,11 +845,9 @@ function render() {
  if (S.error) { app.innerHTML = `<div class="loading"><div style="font-size:48px"></div><div style="color:var(--red)">${esc(S.error)}</div><button class="btn btn-teal btn-sm" onclick="S.loading=true;render();loadAll()">Retry</button></div>`; return; }
 
  const o = S.official;
- try {
  app.innerHTML = `
  <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Logged in as <strong style="color:#fff">${esc(o.full_name)}</strong>${o.district?' · '+esc(o.district):''}</div> </div> <button class="hdr-logout" onclick="logout()" title="Sign out">Sign out</button> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'&&S.f.formStep===-1&&!S.submitted?'active':''}" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'&&(S.f.formStep!==-1||S.submitted)?'active':''}" onclick="S.view='log';S.submitted=false;if(S.f.formStep===-1)S.f.formStep=0;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';S.dashTab=S.dashTab||'overview';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and progress of your interventions</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
  <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
- } catch(renderErr) { app.innerHTML = '<div style="padding:20px;background:#fee;color:#c00;font-family:monospace;font-size:12px;white-space:pre-wrap"><b>Render Error:</b>\n' + renderErr.message + '\n\n' + renderErr.stack + '</div>'; return; }
  if(S.showPolicy) renderPolicyModal();
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
  if(S.outcomeModal) renderOutcomeModal();
@@ -1608,7 +1600,6 @@ function renderFilterBar(decs) {
 }
 
 function renderDashboard() {
- try {
  const allDecs = S.decisions;
  const allActs = S.actions;
  const allOuts = S.outcomes;
@@ -1760,6 +1751,7 @@ function renderDashboard() {
  const maxMonthly = months.length ? Math.max(...months.map(m=>m[1])) : 1;
 
  // ── SMART NARRATIVES ──
+ const activeProvinces = Object.keys(provinceCounts);
  const narratives = [];
 
  // Pipeline insight — balanced: celebrate effort, gently note gaps
@@ -1769,7 +1761,6 @@ function renderDashboard() {
  }
 
  // Geographic insight
- const activeProvinces = Object.keys(provinceCounts);
  const silentDistricts = districts.filter(d => {
    const daysSince = d.lastDate ? Math.floor((now - new Date(d.lastDate))/(1000*60*60*24)) : 999;
    return daysSince > 30;
@@ -2285,7 +2276,6 @@ ${tab==='trends'?`
 ${tab==='schools'?renderDashboardSchools(decs,acts,outs,now):''}
 
 </div>`;
- } catch(e) { return '<div style="padding:20px;color:red;font-weight:bold">Dashboard Error: '+e.message+'<br><pre style="font-size:11px;white-space:pre-wrap;margin-top:10px">'+e.stack+'</pre></div>'; }
 }
 
 function renderDashboardSchools(decs,acts,outs,now){
