@@ -123,7 +123,7 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 /* ═══ MOBILE RESPONSIVE OVERRIDES ═══ */
 @media(max-width:500px){
   /* Sub-nav: 3×2 grid instead of horizontal scroll */
-  .dash-subnav{display:grid !important;grid-template-columns:1fr 1fr;gap:5px;overflow-x:visible;padding:8px 12px 6px}
+  .dash-subnav{display:grid !important;grid-template-columns:1fr 1fr 1fr;gap:5px;overflow-x:visible;padding:8px 12px 6px}
   .dash-subnav button{white-space:normal;font-size:11px;padding:8px 4px;line-height:1.25;text-align:center;min-height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
   .dash-subnav .sn-badge{margin-left:0;margin-top:1px}
   /* Coverage table: collapsible detail rows on mobile */
@@ -1755,9 +1755,8 @@ function renderDashboard() {
 
  // Pipeline insight — balanced: celebrate effort, gently note gaps
  if (chainsTotal >= 2) {
-   if (pipelineActionPct >= 70) narratives.push({color:'var(--green)',text:`Great momentum — <strong>${pipelineActionPct}%</strong> of your planned interventions have turned into action. That's ${chainsWithAction} active intervention${chainsWithAction!==1?'s':''}${schoolSet.size?' across '+schoolSet.size+' school'+(schoolSet.size!==1?'s':'')+'.':'.'} `,action:''});
-   else if (pipelineActionPct >= 40) narratives.push({color:'var(--blue)',text:`You've started <strong>${chainsWithAction}</strong> of ${chainsTotal} planned interventions. ${chainsTotal - chainsWithAction} still need action — check the Update Status tab when ready.`,action:''});
-   else narratives.push({color:'var(--orange)',text:`You have <strong>${chainsTotal}</strong> planned interventions, but only ${chainsWithAction} ${chainsWithAction===1?'has':'have'} started. Getting these moving will make a real difference.`,action:'Check your planned interventions in the Update Status tab.'});
+   if (chainsTotal >= 5) narratives.push({color:'var(--green)',text:`You have logged <strong>${chainsTotal} interventions</strong> across <strong>${schoolSet.size} school${schoolSet.size!==1?'s':''}</strong>${activeProvinces.length>1?' in '+activeProvinces.length+' provinces':''}. That level of activity makes a real difference.`,action:''});
+   else narratives.push({color:'var(--blue)',text:`You've logged <strong>${chainsTotal}</strong> intervention${chainsTotal!==1?'s':''} so far${schoolSet.size?' reaching '+schoolSet.size+' school'+(schoolSet.size!==1?'s':''):''}. Each one builds your evidence portfolio.`,action:''});
  }
 
  // Geographic insight
@@ -1768,6 +1767,11 @@ function renderDashboard() {
  });
  if (silentDistricts.length > 0 && districts.length > 1) {
    narratives.push({color:'var(--red)',text:`<strong>${silentDistricts.length}</strong> district${silentDistricts.length!==1?'s have':' has'} had no activity in 30+ days: ${silentDistricts.slice(0,3).map(d=>d.district||d.province).join(', ')}${silentDistricts.length>3?' and '+(silentDistricts.length-3)+' more':''}.`,action:'Consider scheduling support visits to these districts.'});
+ }
+
+ // Follow-up insight
+ if (followUps.length > 0) {
+   narratives.push({color:'var(--orange)',text:`You have <strong>${followUps.length}</strong> recommended follow-up${followUps.length!==1?'s':''} pending. Staying in touch with schools shows commitment and strengthens your support relationship.`,action:''});
  }
 
  // Subject insight
@@ -1956,7 +1960,7 @@ function closeSchoolsListModal(){
 
 // ── TAB STATE ──
  const tab = S.dashTab || 'overview';
- if (tab === 'impact' || tab === 'insights' || tab === 'coverage') { S.dashTab = 'overview'; return renderDashboard(); }
+ if (tab === 'impact' || tab === 'insights' || tab === 'coverage' || tab === 'update') { S.dashTab = 'overview'; return renderDashboard(); }
 
  // ═══════════════════════════════════
  // RENDER
@@ -1970,7 +1974,6 @@ function closeSchoolsListModal(){
  <div class="dash-subnav">
    <button class="${tab==='overview'?'active':''}" onclick="S.dashTab='overview';render()">Overview</button>
    <button class="${tab==='trends'?'active':''}" onclick="S.dashTab='trends';render()">Trends</button>
-   <button class="${tab==='update'?'active':''}" onclick="S.dashTab='update';render()" style="white-space:normal;line-height:1.2">Update Status${(()=>{const n=acts.filter(a=>a.status!=='Completed').length;return n?'<span class="sn-badge" style="background:var(--blue-lt);color:var(--blue)">'+n+'</span>':'';})()}</button>
    <button class="${tab==='schools'?'active':''}" onclick="S.dashTab='schools';render()">My Schools${schoolSet.size?'<span class="sn-badge" style="background:var(--grey-lt);color:var(--grey)">'+schoolSet.size+'</span>':''}</button>
  </div>
 
@@ -1996,69 +1999,57 @@ ${tab==='overview'?`
  <div class="dash-section" style="border-left:4px solid var(--navy)">
    <div class="dash-section-hdr"><h3>Your Interventions</h3><span style="font-size:11px;color:var(--grey)">${chainsTotal} logged</span></div>
    <div class="dash-section-body">
-     <div class="dash-section-desc">All your logged interventions and how far each one has progressed.</div>
+     <div class="dash-section-desc">All activities you have logged. Each entry represents an intervention you carried out or a recommended action for follow-up.</div>
 
      <!-- Summary row -->
      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-       <div style="flex:1;min-width:100px;background:#fff;border:2px solid var(--grey);border-radius:10px;padding:12px 14px;text-align:center">
-         <div style="font-size:24px;font-weight:900;color:var(--grey)">${chainsTotal - chainsWithAction}</div>
-         <div style="font-size:11px;color:var(--grey);font-weight:600">Not started</div>
+       <div style="flex:1;min-width:100px;background:#fff;border:2px solid var(--navy);border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:var(--navy)">${chainsTotal}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Logged</div>
        </div>
-       <div style="flex:1;min-width:100px;background:#fff;border:2px solid var(--blue);border-radius:10px;padding:12px 14px;text-align:center">
-         <div style="font-size:24px;font-weight:900;color:var(--blue)">${chainsWithAction - chainsWithOutcome}</div>
-         <div style="font-size:11px;color:var(--grey);font-weight:600">Busy with it</div>
+       <div style="flex:1;min-width:100px;background:#fff;border:2px solid var(--teal);border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:var(--teal)">${schoolSet.size}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Schools</div>
        </div>
-       <div style="flex:1;min-width:100px;background:#fff;border:2px solid var(--green);border-radius:10px;padding:12px 14px;text-align:center">
-         <div style="font-size:24px;font-weight:900;color:var(--green)">${acts.filter(a=>a.status==='Completed').length}</div>
-         <div style="font-size:11px;color:var(--grey);font-weight:600">Done</div>
+       <div style="flex:1;min-width:100px;background:#fff;border:2px solid ${followUps.length?'var(--orange)':'var(--green)'};border-radius:10px;padding:12px 14px;text-align:center">
+         <div style="font-size:24px;font-weight:900;color:${followUps.length?'var(--orange)':'var(--green)'}">${followUps.length}</div>
+         <div style="font-size:11px;color:var(--grey);font-weight:600">Follow-ups</div>
        </div>
      </div>
 
-     <!-- Full interventions list — no clicks needed -->
+     <!-- Full interventions list -->
      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-     <table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #D5D9E2;border-radius:10px;overflow:hidden;font-size:13px;min-width:520px">
+     <table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #D5D9E2;border-radius:10px;overflow:hidden;font-size:13px;min-width:480px">
        <thead>
          <tr style="background:#F5F6FA">
-           <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2">What was planned</th>
+           <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2">Activity</th>
            <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:120px">District</th>
-           <th style="text-align:center;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:110px">Progress</th>
+           <th style="text-align:center;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:90px">Follow-up</th>
            <th style="text-align:left;padding:10px 12px;font-weight:700;color:var(--navy);border-bottom:2px solid #D5D9E2;width:90px">Date</th>
          </tr>
        </thead>
        <tbody>
          ${decs.length ? decs.map(d => {
            const det = d.details || {};
-           const hasAct = acts.some(a => a.decision_id === d.id);
            const dActs = acts.filter(a => a.decision_id === d.id);
            const latestAct = dActs[0];
-           const isDone = latestAct?.status === 'Completed';
-           const isActive = hasAct && !isDone;
-           const statusColor = isDone ? 'var(--green)' : isActive ? 'var(--blue)' : '#aaa';
-           const statusLabel = isDone ? 'Done' : isActive ? 'Busy with it' : 'Not started';
+           const hasFollowUp = det.follow_up && det.follow_up_desc;
            const schools = (det.schools||'').split(',').map(s=>s.trim()).filter(Boolean);
            return `<tr style="background:#fff;border-bottom:1px solid #ECEFF1">
              <td style="padding:10px 12px;border-bottom:1px solid #ECEFF1">
-               <div style="font-weight:600;color:var(--navy);line-height:1.4">${esc(d.decision_made || d.insight || d.data_viewed || '(Plan)')}</div>
+               <div style="font-weight:600;color:var(--navy);line-height:1.4">${esc(d.decision_made || d.insight || d.data_viewed || '(Activity)')}</div>
                ${schools.length ? '<div style="font-size:11px;color:var(--grey);margin-top:3px">' + schools.length + ' school' + (schools.length>1?'s':'') + ': ' + esc(schools.slice(0,3).join(', ')) + (schools.length>3?' +' +(schools.length-3)+' more':'') + '</div>' : ''}
-               ${latestAct ? '<div style="font-size:11px;color:var(--blue);margin-top:3px;font-style:italic">' + esc(latestAct.action_taken||'') + '</div>' : ''}
+               ${latestAct ? '<div style="font-size:11px;color:var(--teal);margin-top:3px">' + esc(latestAct.action_taken||'') + '</div>' : ''}
+               ${hasFollowUp ? '<div style="font-size:11px;color:var(--orange);margin-top:3px;font-style:italic">↳ ' + esc(det.follow_up_desc) + '</div>' : ''}
              </td>
              <td style="padding:10px 12px;font-size:12px;color:var(--grey-dk);border-bottom:1px solid #ECEFF1">${esc(det.district||'')}</td>
              <td style="text-align:center;padding:10px 12px;border-bottom:1px solid #ECEFF1">
-               <span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;background:${statusColor};white-space:nowrap">${statusLabel}</span>
+               ${hasFollowUp ? '<span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--orange);background:rgba(232,149,46,.12);white-space:nowrap">Due</span>' : '<span style="font-size:11px;color:var(--grey)">—</span>'}
              </td>
              <td style="padding:10px 12px;font-size:12px;color:var(--grey);border-bottom:1px solid #ECEFF1">${esc(d.date||'')}</td>
            </tr>`}).join('') : '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--grey)">No interventions logged yet. Use <strong>Log Activity</strong> to record your first one.</td></tr>'}
        </tbody>
      </table>
-     </div>
-
-     <!-- Conversion summary -->
-     <div style="background:#F5F6FA;border-radius:8px;padding:10px 14px;margin-top:10px">
-       <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:4px;align-items:center">
-         <div><div style="font-size:20px;font-weight:800;color:${pipelineActionPct>=70?'var(--green)':pipelineActionPct>=40?'var(--orange)':'var(--red)'}">${pipelineActionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Started</div></div>
-         <div style="font-size:16px;color:#ccc">→</div>
-         <div><div style="font-size:20px;font-weight:800;color:${completionPct>=70?'var(--green)':completionPct>=40?'var(--orange)':'var(--red)'}">${completionPct}%</div><div style="font-size:9px;color:var(--grey);text-transform:uppercase">Completed</div></div>
-       </div>
      </div>
    </div>
  </div>
@@ -2281,74 +2272,10 @@ ${tab==='trends'?`
  </div>` : ''}
 `:''}
 
-${tab==='update'?renderDashboardUpdate(decs,acts,outs):''}
 
 ${tab==='schools'?renderDashboardSchools(decs,acts,outs,now):''}
 
 </div>`;
-}
-
-function renderDashboardUpdate(decs,acts,outs){
- const allItems = acts.slice(); // Show all interventions
- if (!allItems.length) return `<div style="padding:30px 20px;text-align:center">
-   <div style="width:48px;height:48px;border-radius:50%;background:var(--teal);margin:0 auto 12px;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:22px;font-weight:700">&#9998;</span></div>
-   <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px">No interventions to update</div>
-   <div style="font-size:14px;color:var(--grey);line-height:1.6">Once you log activities, you can update their status here.</div>
- </div>`;
- const notStarted = allItems.filter(a=>a.status==='Planned').length;
- const inProgress = allItems.filter(a=>a.status==='In Progress').length;
- const completed = allItems.filter(a=>a.status==='Completed').length;
- return `<div class="dash-section" style="border-left:3px solid var(--blue)">
-   <div class="dash-section-hdr"><h3 style="font-size:16px">Update Status of Intervention(s)</h3><span style="font-size:13px;color:var(--grey)">${allItems.length} intervention${allItems.length!==1?'s':''}</span></div>
-   <div class="dash-section-body" style="padding:14px 16px">
-
-     <!-- Quick summary pills -->
-     <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-       ${notStarted?'<span style="font-size:12px;font-weight:600;color:var(--grey);background:#f0f0f0;padding:4px 12px;border-radius:20px">'+notStarted+' not started</span>':''}
-       ${inProgress?'<span style="font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-lt);padding:4px 12px;border-radius:20px">'+inProgress+' busy</span>':''}
-       ${completed?'<span style="font-size:12px;font-weight:600;color:var(--green);background:var(--green-lt);padding:4px 12px;border-radius:20px">'+completed+' done</span>':''}
-     </div>
-
-     <div style="background:var(--blue-lt);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--navy);line-height:1.5">
-       Use the dropdown on each card to update the status of your interventions.
-     </div>
-
-     ${allItems.map((a,idx) => {
-       const parentDec = decs.find(d => d.id === a.decision_id);
-       const det = parentDec ? parentDec.details || {} : {};
-       const schoolStr = det.schools || '';
-       const schoolArr = schoolStr.split(',').map(s=>s.trim()).filter(Boolean);
-       const schoolCount = schoolArr.length;
-       const statusColor = a.status==='Completed'?'var(--green)':a.status==='In Progress'?'var(--blue)':'var(--grey)';
-       const statusLabel = a.status==='Completed'?'Done':a.status==='In Progress'?'Busy with it':'Not started';
-       const statusBg = a.status==='Completed'?'var(--green-lt)':a.status==='In Progress'?'var(--blue-lt)':'#f0f0f0';
-       return `<div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden${a.status==='Completed'?';opacity:.75':''}">
-
-         <!-- COMPACT CARD -->
-         <div style="padding:12px 14px">
-           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
-             <div style="flex:1;min-width:0">
-               <div style="font-size:14px;font-weight:700;color:var(--navy);line-height:1.35">${esc(a.action_taken)}</div>
-               <div style="display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:12px;color:var(--grey-dk)">
-                 ${det.district?'<span>'+esc(det.district)+'</span>':''}
-                 ${schoolCount>0?`<span onclick="openSchoolsListModal('${esc(a.action_taken).replace(/'/g,"\\\\'")}', '${encodeURIComponent(schoolStr)}')" style="color:var(--teal);cursor:pointer;font-weight:600;touch-action:manipulation">${schoolCount} school${schoolCount!==1?'s':''} ▸</span>`:''}
-                 ${parentDec&&parentDec.date?'<span>'+fmtDate(parentDec.date)+'</span>':''}
-               </div>
-             </div>
-             <span style="flex-shrink:0;font-size:11px;font-weight:700;color:${statusColor};background:${statusBg};padding:4px 10px;border-radius:20px;white-space:nowrap">${statusLabel}</span>
-           </div>
-
-           <!-- DROPDOWN -->
-           <select onchange="updateActionStatus('${a.id}',this.value)" style="width:100%;padding:10px 12px;font-size:14px;border:1.5px solid ${statusColor};border-radius:8px;background:#fff;color:var(--navy);font-family:inherit;font-weight:600;appearance:auto;-webkit-appearance:auto;cursor:pointer">
-             <option value="Planned" ${a.status==='Planned'?'selected':''}>Not started</option>
-             <option value="In Progress" ${a.status==='In Progress'?'selected':''}>Busy with it</option>
-             <option value="Completed" ${a.status==='Completed'?'selected':''}>Done</option>
-           </select>
-         </div>
-       </div>`;
-     }).join('')}
-   </div>
- </div>`;
 }
 
 function renderDashboardSchools(decs,acts,outs,now){
