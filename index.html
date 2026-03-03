@@ -2317,69 +2317,19 @@ function tkLibrary(){
 
 // PEER INSIGHTS 
 function tkPeers(){
- // Aggregate from what THIS official has actually captured
- const decs = S.decisions||[], acts = S.actions||[], outs = S.outcomes||[];
- const totalActs = acts.length;
- const totalOuts = outs.length;
-
- // Build intervention type counts from captured actions
- const actionCounts = {};
- acts.forEach(a => {
-   const t = a.action_taken || 'Other';
-   actionCounts[t] = (actionCounts[t]||0) + 1;
- });
- const sortedActions = Object.entries(actionCounts).sort((a,b)=>b[1]-a[1]);
-
- // Build outcome summary
- const outcomeList = outs.map(o => {
-   const act = acts.find(a=>a.id===o.action_id);
-   const dec = act ? decs.find(d=>d.id===act.decision_id) : null;
-   const det = dec ? dec.details||{} : {};
-   return { metric: o.metric||'', value: o.value||'', desc: o.description||'', schools: det.schools||'', district: det.district||'' };
- });
-
- const hasData = totalActs >= 1;
-
- return `<p style="font-size:12px;color:#607D8B;margin-bottom:12px;line-height:1.6">See what interventions are being used across the programme and what results are being reported. This section builds from <strong>real data captured by officials</strong> in this tracker.</p>
-
- ${!hasData ? `
- <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:24px 20px;text-align:center;margin-bottom:16px">
-   <div style="font-size:36px;margin-bottom:10px;opacity:.3">&#9998;</div>
-   <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px">Not enough data yet</div>
-   <div style="font-size:12px;color:#607D8B;line-height:1.6;max-width:360px;margin:0 auto">As you and other officials log activities and record outcomes, this section will show which interventions are being used most, what results they are producing, and how your approach compares. Start by logging your first activity.</div>
- </div>
- ` : `
- <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden">
-   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Your Interventions So Far</h3><p style="font-size:11px;color:#607D8B;margin:4px 0 0">${totalActs} action${totalActs!==1?'s':''} logged, ${totalOuts} outcome${totalOuts!==1?'s':''} recorded</p></div>
-   <div style="padding:16px">
-     ${sortedActions.length ? sortedActions.slice(0,6).map(([name,count])=>{
-       const pct = Math.round((count/Math.max(...sortedActions.map(s=>s[1])))*100);
-       const relOuts = outs.filter(o=>{const a=acts.find(ac=>ac.id===o.action_id);return a&&a.action_taken===name});
-       return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="font-weight:600;color:var(--navy)">${esc(name)}</span><span style="color:var(--grey)">${count} action${count!==1?'s':''}${relOuts.length?' · '+relOuts.length+' outcome'+(relOuts.length!==1?'s':''):''}</span></div><div style="height:6px;background:#ECEFF1;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--teal);border-radius:3px;transition:width .4s"></div></div>${relOuts.length?`<div style="font-size:10px;color:var(--green-dk);margin-top:2px;font-weight:600">${esc(relOuts[0].value||relOuts[0].description||'').slice(0,80)}</div>`:''}</div>`;
-     }).join('') : ''}
+ return `
+ <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:32px 20px;text-align:center;margin-bottom:16px">
+   <div style="font-size:40px;margin-bottom:12px">&#128101;</div>
+   <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px">Coming Soon</div>
+   <div style="font-size:12px;color:#607D8B;line-height:1.7;max-width:400px;margin:0 auto">As more officials across the programme log their activities and record outcomes, this section will show anonymised insights into what interventions others are using, what results they are seeing, and what is working across districts and provinces.</div>
+   <div style="margin-top:16px;padding:12px 16px;background:#F5F6FA;border-radius:8px;max-width:360px;margin-left:auto;margin-right:auto">
+     <div style="font-size:11px;font-weight:600;color:var(--teal);margin-bottom:4px">What to expect</div>
+     <div style="font-size:11px;color:#607D8B;line-height:1.6;text-align:left">
+       &#8226; Most-used intervention types across the programme<br>
+       &#8226; Anonymised results reported by other officials<br>
+       &#8226; Strategies gaining traction in similar districts
+     </div>
    </div>
- </div>
-
- ${outcomeList.length ? `
- <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden">
-   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Results Reported</h3></div>
-   <div style="padding:16px">
-     ${outcomeList.slice(0,5).map(o=>`<div style="padding:8px 10px;background:#F5F6F7;border-radius:6px;margin-bottom:6px;border-left:3px solid var(--green)"><div style="font-size:12px;font-weight:600;color:var(--navy)">${esc(o.metric||'Outcome')}: ${esc(o.value)}</div><div style="font-size:11px;color:#607D8B;margin-top:2px">${esc(o.desc).slice(0,120)}</div>${o.schools?`<div style="font-size:10px;color:var(--grey);margin-top:2px">${(()=>{const sa=o.schools.split(',').map(s=>s.trim()).filter(Boolean);return sa.length<=2?esc(sa.join(', ')):esc(sa[0])+' + '+(sa.length-1)+' more'})()}${o.district?' · '+esc(o.district):''}</div>`:''}</div>`).join('')}
-   </div>
- </div>` : ''}
- `}
-
- <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px">
-   <div style="padding:14px 16px;border-bottom:1px solid #f3f2f1"><h3 style="font-size:14px;font-weight:700;color:#1A2332;margin:0">Peer Comparisons</h3></div>
-   <div style="padding:20px 16px;text-align:center">
-     <div style="font-size:12px;color:#607D8B;line-height:1.7;max-width:400px;margin:0 auto">This tracker is not directly linked to DDD data. To compare your circuit or district against others, open the <strong>DDD Dashboard</strong> and use the comparison reports. As more officials capture evidence here, shared learnings will appear in this section.</div>
-   </div>
- </div>
-
- <div style="background:linear-gradient(135deg,#074445,#0F7B7D);border-radius:10px;padding:14px 16px;text-align:center">
-   <div style="font-size:11px;color:#B8DCDC;font-weight:600;margin-bottom:4px">Want to see how your schools compare?</div>
-   <div style="font-size:13px;color:#fff;font-weight:700;margin-bottom:6px">Open the DDD Dashboard for actual performance data and circuit comparisons</div>
-   <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(122,182,72,.9);color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;margin-top:6px">Open DDD Dashboard</a>
  </div>`;
 }
 
