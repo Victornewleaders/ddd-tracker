@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DDD Learner Improvement Interventions Tracker</title>
+<title>[TEST SITE] DDD Interventions Tracker — For Testing Only</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--teal:#0B8E8D;--teal-dk:#074445;--teal-lt:#E0F4F4;--teal-md:#4DB6AC;--green:#7AB648;--green-dk:#5FAD56;--green-lt:#E8F5E9;--orange:#E8952E;--orange-lt:#FFF3E0;--navy:#1A2332;--white:#FFF;--off:#F7F9FC;--grey:#607D8B;--grey-lt:#ECEFF1;--grey-dk:#37474F;--red:#E53935;--red-lt:#FFEBEE;--blue:#1565C0;--blue-lt:#E3F2FD}
@@ -401,9 +401,66 @@ nav.nav{display:flex;flex-direction:column;max-width:720px;margin:0 auto;padding
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal-box{background:#fff;border-radius:12px;max-width:400px;width:100%;max-height:85vh;overflow-y:auto;animation:modalIn .2s}
 @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+/* ===== TEST SITE BRANDING ===== */
+.test-topbar{position:fixed;top:0;left:0;right:0;z-index:99999;background:repeating-linear-gradient(45deg,#b71c1c,#b71c1c 10px,#d32f2f 10px,#d32f2f 20px);color:#fff;text-align:center;padding:10px 16px;font-weight:700;font-size:14px;letter-spacing:.5px;box-shadow:0 2px 8px rgba(0,0,0,.3);line-height:1.4}
+.test-topbar a{color:#FFD54F;text-decoration:underline;font-weight:700}
+.test-topbar a:hover{color:#fff}
+body.is-test-site{padding-top:54px}
+.test-watermark{pointer-events:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:100px;font-weight:900;color:rgba(211,47,47,.06);z-index:0;white-space:nowrap;letter-spacing:8px;user-select:none}
+.test-badge{display:inline-block;background:#d32f2f;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;letter-spacing:.5px;animation:test-pulse 2s infinite}
+@keyframes test-pulse{0%,100%{opacity:1}50%{opacity:.6}}
+/* Redirect modal */
+.test-redirect-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100000;align-items:center;justify-content:center}
+.test-redirect-overlay.show{display:flex}
+.test-redirect-box{background:#fff;border-radius:16px;max-width:440px;width:90%;padding:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:test-slideUp .3s ease}
+@keyframes test-slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.test-redirect-header{background:linear-gradient(135deg,#1a6b6a,#2e7d32);padding:24px;text-align:center;color:#fff}
+.test-redirect-header h2{margin:0 0 4px;font-size:20px}
+.test-redirect-header p{margin:0;opacity:.85;font-size:13px}
+.test-redirect-body{padding:24px;text-align:center}
+.test-redirect-body .icon-wrap{width:64px;height:64px;border-radius:50%;background:#FFF3E0;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px}
+.test-redirect-body p{color:#555;font-size:14px;line-height:1.5;margin:0 0 20px}
+.test-redirect-body .live-url{display:inline-block;background:#E8F5E9;color:#2E7D32;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13px;word-break:break-all;margin-bottom:20px}
+.test-redirect-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.test-redirect-actions a{background:linear-gradient(135deg,#1a6b6a,#2e7d32);color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;transition:opacity .2s}
+.test-redirect-actions a:hover{opacity:.9}
+.test-redirect-actions button{background:#f5f5f5;border:1px solid #ddd;color:#666;padding:12px 20px;border-radius:8px;font-size:14px;cursor:pointer}
+.test-redirect-actions button:hover{background:#eee}
+/* Test site header override */
+.hdr.test-hdr .hdr-bar{background:repeating-linear-gradient(45deg,#b71c1c,#b71c1c 8px,#d32f2f 8px,#d32f2f 16px) !important}
+.test-footer-banner{background:#FFF3E0;border:1px solid #FFE0B2;border-radius:8px;padding:12px 16px;margin:12px auto;max-width:600px;text-align:center;font-size:13px;color:#E65100;line-height:1.4}
+.test-footer-banner a{color:#1a6b6a;font-weight:600}
 </style>
 </head>
-<body>
+<body class="is-test-site">
+
+<!-- TEST SITE: Persistent top banner -->
+<div class="test-topbar">
+  ⚠️ TEST SITE — This is for testing only. Do not capture real data here.
+  <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank">Go to Live Site →</a>
+</div>
+
+<!-- TEST SITE: Watermark -->
+<div class="test-watermark">TEST SITE</div>
+
+<!-- TEST SITE: Redirect modal for Log Activity -->
+<div class="test-redirect-overlay" id="testRedirectModal">
+  <div class="test-redirect-box">
+    <div class="test-redirect-header">
+      <h2>📋 Log Activity on the Live Site</h2>
+      <p>This test site does not capture real data</p>
+    </div>
+    <div class="test-redirect-body">
+      <div class="icon-wrap">🔗</div>
+      <p>To log real intervention activities, please use the <strong>official DDD Interventions Tracker</strong>. Any data entered here is for testing purposes only and will not be saved to the live system.</p>
+      <div class="live-url">ddd-interventions.github.io/ddd-tracker</div>
+      <div class="test-redirect-actions">
+        <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank">Open Live Site</a>
+        <button onclick="closeTestRedirect()">Stay on Test Site</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="app"></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -871,6 +928,14 @@ function injectDemo() {
 function dismissDemo(){try{localStorage.setItem('ddd_demo_dismissed','1')}catch(e){}S.decisions=[];S.actions=[];S.outcomes=[];render();}
 
 // RENDER 
+// ===== TEST SITE: Redirect functions =====
+function showTestRedirect(){
+  document.getElementById('testRedirectModal').classList.add('show');
+}
+function closeTestRedirect(){
+  document.getElementById('testRedirectModal').classList.remove('show');
+}
+
 function render() {
  const app = document.getElementById('app');
  if (S.loading) { app.innerHTML = `<div class="loading"><div class="spinner"></div><div>Loading tracker...</div></div>`; return; }
@@ -880,8 +945,9 @@ function render() {
 
  const o = S.official;
  app.innerHTML = `
- <header class="hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS</div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Logged in as <strong style="color:#fff">${esc(o.full_name)}</strong>${o.district?' · '+esc(o.district):''}</div> </div> <button class="hdr-logout" onclick="logout()" title="Sign out">Sign out</button> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'&&S.f.formStep===-1&&!S.submitted?'active':''}" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'&&(S.f.formStep!==-1||S.submitted)?'active':''}" onclick="S.view='log';S.submitted=false;if(S.f.formStep===-1)S.f.formStep=0;render()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';S.dashTab=S.dashTab||'overview';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and progress of your interventions</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
- <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div> `;
+ <header class="hdr test-hdr"> <div class="hdr-bar"></div> <div class="hdr-content"> <img class="hdr-logo" src="${LOGO}" alt="DDD Logo"> <div class="hdr-titles"> <div class="hdr-brand">DATA DRIVEN DISTRICTS<span class="test-badge">TEST SITE</span></div> <div class="hdr-title">Learner Improvement Interventions Tracker</div> <div class="hdr-sub">Logged in as <strong style="color:#fff">${esc(o.full_name)}</strong>${o.district?' · '+esc(o.district):''}</div> </div> <button class="hdr-logout" onclick="logout()" title="Sign out">Sign out</button> </div> <nav class="nav"> <div class="nav-hint">Tap to switch between <span>logging</span> and <span>viewing</span></div> <div class="nav-row"> <button class="nav-btn ${S.view==='log'&&S.f.formStep===-1&&!S.submitted?'active':''}" style="flex:0 1 auto;padding:10px 10px;min-width:0" onclick="S.view='log';S.submitted=false;S.f.formStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})" title="Home">Home<span class="nav-tip">Go back to the start screen</span></button> <button class="nav-btn ${S.view==='log'&&(S.f.formStep!==-1||S.submitted)?'active':''}" onclick="showTestRedirect()">Log Activity<span class="nav-tip">Record a school visit, workshop, or any support activity you carried out</span></button> <button class="nav-btn ${S.view==='dashboard'?'active':''}" onclick="S.view='dashboard';S.dashTab=S.dashTab||'overview';render()">My Dashboard<span class="nav-tip">See your activities, follow-ups due, and progress of your interventions</span></button> <button class="nav-btn ${S.view==='toolkit'?'active':''}" onclick="S.view='toolkit';render()">Interventions Toolkit<span class="nav-tip">Explore DDD reports, find proven interventions, and design support plans</span></button> </div> </nav> </header> ${S.view === 'log' ? (S.submitted ? renderSuccess() : renderForm()) : S.view === 'dashboard' ? renderDashboard() : renderToolkit()}
+ <div class="footer"> <img src="${LOGO}" alt="DDD"> <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span> </div>
+    <div class="test-footer-banner">⚠️ This is a <strong>test environment</strong>. To capture real intervention data, use the <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank">official live tracker →</a></div> `;
  if(S.showPolicy) renderPolicyModal();
  else { const stale=document.getElementById('policy-modal-overlay'); if(stale)stale.remove(); }
  if(S.outcomeModal) renderOutcomeModal();
@@ -890,14 +956,14 @@ function render() {
 
 function renderEmailGate() {
  return `
- <header class="hdr">
+ <header class="hdr test-hdr">
    <div class="hdr-bar"></div>
    <div class="hdr-content">
      <img class="hdr-logo" src="${LOGO}" alt="DDD Logo">
      <div class="hdr-titles">
-       <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
+       <div class="hdr-brand">DATA DRIVEN DISTRICTS<span class="test-badge">TEST SITE</span></div>
        <div class="hdr-title">Learner Improvement Interventions Tracker</div>
-       <div class="hdr-sub">Sign in to continue.</div>
+       <div class="hdr-sub">Test Environment — Sign in to explore</div>
      </div>
    </div>
  </header>
@@ -905,8 +971,8 @@ function renderEmailGate() {
    <div class="gate-card">
      <div class="gate-top">
        <img src="${LOGO}" alt="DDD Logo">
-       <h1>Welcome to the Learner Improvement Interventions Tracker</h1>
-       <p>Enter your registered email address to access the tracker</p>
+       <h1>Welcome to the Test Site</h1>
+       <p>This is a <strong>testing environment</strong>. To log real activities, visit the <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank" style="color:var(--teal);font-weight:700">live site →</a></p>
      </div>
      <div class="gate-body">
        <label for="gate-email">Your email address</label>
@@ -933,19 +999,20 @@ function renderEmailGate() {
  <div class="footer" style="max-width:440px">
    <img src="${LOGO}" alt="DDD">
    <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span>
- </div>`;
+ </div>
+ <div class="test-footer-banner" style="max-width:440px">⚠️ <strong>Test environment</strong> — <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank">Go to live site →</a></div>`;
 }
 
 function renderOtpGate() {
  return `
- <header class="hdr">
+ <header class="hdr test-hdr">
    <div class="hdr-bar"></div>
    <div class="hdr-content">
      <img class="hdr-logo" src="${LOGO}" alt="DDD Logo">
      <div class="hdr-titles">
-       <div class="hdr-brand">DATA DRIVEN DISTRICTS</div>
+       <div class="hdr-brand">DATA DRIVEN DISTRICTS<span class="test-badge">TEST SITE</span></div>
        <div class="hdr-title">Learner Improvement Interventions Tracker</div>
-       <div class="hdr-sub">Sign in to continue.</div>
+       <div class="hdr-sub">Test Environment — Sign in to explore</div>
      </div>
    </div>
  </header>
@@ -981,7 +1048,8 @@ function renderOtpGate() {
  <div class="footer" style="max-width:440px">
    <img src="${LOGO}" alt="DDD">
    <span>Data Driven Districts Programme · Department of Basic Education · New Leaders Foundation</span>
- </div>`;
+ </div>
+ <div class="test-footer-banner" style="max-width:440px">⚠️ <strong>Test environment</strong> — <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank">Go to live site →</a></div>`;
 }
 
 // 
@@ -1073,16 +1141,19 @@ function renderFormStart(){
   return `<div class="form-wrap"><div class="section fade-in" style="overflow:visible">
     <div style="padding:28px 22px;text-align:center">
       
-      <h2 style="font-size:18px;color:var(--navy);margin-bottom:6px">${greeting} to log an activity?</h2>
-      <p style="font-size:13px;color:var(--grey);line-height:1.7;max-width:420px;margin:0 auto 20px">The best entries start with <strong>your DDD data</strong>. Open the dashboard first, look at your schools, then come back here to record what you found and what you did about it.</p>
+      <h2 style="font-size:18px;color:var(--navy);margin-bottom:6px">${greeting} to explore the tracker?</h2>
+      <div style="background:#FFF3E0;border:1px solid #FFE0B2;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#E65100;line-height:1.5;text-align:left">
+        <strong>⚠️ Test Site:</strong> This is a testing environment. Activity logging is disabled here. To capture real data, use the <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank" style="color:#1a6b6a;font-weight:700">official live tracker</a>.
+      </div>
+      <p style="font-size:13px;color:var(--grey);line-height:1.7;max-width:420px;margin:0 auto 20px">You can explore the <strong>Dashboard</strong> and <strong>Interventions Toolkit</strong> freely. When you're ready to log real activities, head to the live site.</p>
       <a href="${DDD_DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#074445,#0F7B7D);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(11,142,141,.3);margin-bottom:8px">
         Open DDD Dashboard
       </a>
       <div style="font-size:11px;color:var(--grey);margin-bottom:4px">Opens in a new tab — come back here when you're ready</div>
       <div style="font-size:10px;color:var(--teal-md);line-height:1.5;margin-bottom:24px">Your DDD login looks like <strong>firstname.surname@dbedashboard.co.za</strong> — not your personal email</div>
       <div style="border-top:1px solid #f3f2f1;padding-top:20px">
-        <button class="btn btn-teal" onclick="S.f.formStep=0;render()" style="min-width:200px">Start Logging \u2192</button>
-        <div style="margin-top:10px;font-size:11px;color:var(--teal-md);cursor:pointer" onclick="S.f.formStep=0;render()">or skip straight to the form</div>
+        <a href="https://ddd-interventions.github.io/ddd-tracker/" target="_blank" class="btn btn-teal" style="min-width:200px;display:inline-block;text-decoration:none;text-align:center">Go to Live Site to Log Activity \u2192</a>
+        <div style="margin-top:10px;font-size:11px;color:var(--teal-md);cursor:pointer" onclick="S.view='dashboard';S.dashTab='overview';render()">or explore the Dashboard on this test site</div>
       </div>
       <div style="margin-top:20px;background:var(--teal-lt);border-radius:8px;padding:12px 14px;text-align:left">
         <div style="font-size:10px;font-weight:700;color:var(--teal-dk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Quick tip</div>
